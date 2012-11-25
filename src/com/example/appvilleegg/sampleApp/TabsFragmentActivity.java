@@ -18,6 +18,7 @@ import com.applicasa.Promotion.Promotion;
 import com.applicasa.User.User;
 
 import com.appvilleegg.R;
+import com.example.appvilleegg.adapters.ShareDialog;
 import com.example.appvilleegg.adapters.VirtualCurrencyAdapter;
 import com.example.appvilleegg.fragments.InventoryFragment;
 import com.example.appvilleegg.fragments.VirtualCurrencyFragment;
@@ -75,9 +76,10 @@ import applicasa.kit.IAP.IAP.LiCurrency;
 public class TabsFragmentActivity extends FragmentActivity implements TabHost.OnTabChangeListener, LiCallbackInitialize {
 
 	   private static final String TAG = TabsFragmentActivity.class.getCanonicalName();
-	   private static TextView 				mBalanceMain;
-	   private static TextView 				mBalanceSecondary;
-	   private static ProgressBar			mProgressBar;
+	   private  TextView 				mBalanceMain;
+	   private  TextView 				mBalanceSecondary;
+	   private  ProgressBar			mProgressBar;
+	   private  ImageView 			mImageView;
 	   
 	   public static boolean clickEnabled = true; 
 	   Bundle mBundle;
@@ -89,8 +91,8 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 	private HashMap<String, TabInfo> mapTabInfo = new HashMap<String, TabInfo>();
 	private TabInfo mLastTab = null;
 	private Bundle args;
-	private IAPObserver mObserver;
-	private TabsFragmentActivity mActivity;
+	
+	private static TabsFragmentActivity mActivity;
 	
 
 	private class TabInfo {
@@ -154,6 +156,16 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		
 		mBalanceMain = (TextView)findViewById(R.id.txt_gridBalanceMain);
 		mBalanceSecondary = (TextView)findViewById(R.id.txt_gridBalanceSecondary);
+		
+		mImageView = (ImageView)findViewById(R.id.img_currentBalance);
+		mImageView.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				new ShareDialog(mActivity).show();
+			}
+		});
+		
 		mBalanceMain.setTypeface(Typeface.SANS_SERIF);
 		mBalanceSecondary.setTypeface(Typeface.SANS_SERIF);
 		
@@ -301,8 +313,11 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 	
 	public static void refreshUI()
 	{
-		mBalanceMain.setText(String.valueOf(IAP.getUserCurrencyBalance(LiCurrency.MainCurrency)));
-		mBalanceSecondary.setText(String.valueOf(IAP.getUserCurrencyBalance(LiCurrency.SencondaryCurrency)));
+		if (mActivity != null)
+		{
+			mActivity.mBalanceMain.setText(String.valueOf(IAP.getUserCurrencyBalance(LiCurrency.MainCurrency)));
+			mActivity.mBalanceSecondary.setText(String.valueOf(IAP.getUserCurrencyBalance(LiCurrency.SencondaryCurrency)));
+		}
 	}
 	
 	public void onCompleteInitialize() {

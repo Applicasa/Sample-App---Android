@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: C:\\Android\\repositories\\REPOSITORY\\AppVilleEgg\\SDKAndroid\\com\\android\\vending\\billing\\IMarketBillingService.aidl
+ * Original file: C:\\Android\\repositories\\REPOSITORY\\Appville-Android-public\\SDKAndroid\\com\\android\\vending\\billing\\IMarketBillingService.aidl
  */
 package com.android.vending.billing;
 public interface IMarketBillingService extends android.os.IInterface

@@ -143,6 +143,7 @@ public class LiSinglePromoDialog extends Dialog   {
 		btn_rl.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		mImageButton.setScaleType(ScaleType.FIT_CENTER);
 		mImageButton.setPadding(0, 0, 0, pxFromDp(40));
+		mImageButton.setAdjustViewBounds(true);
 		mImageButton.setBackgroundColor(00000000);
 		mImageButton.setOnClickListener(clickHandler);
 		mRelativeLayout.addView(mImageButton,btn_rl);

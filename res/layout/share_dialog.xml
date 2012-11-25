@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="right"
+    android:orientation="horizontal"
+    android:layout_marginTop="50dp"
+    android:background="@drawable/bg_tabs_play" >
+
+    <ImageButton
+        android:id="@+id/btn_shareOnFb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp"
+        android:scaleType="centerInside"
+        android:background="@android:color/transparent"
+        android:onClick="onClickHandler"
+        android:src="@drawable/btn_tab_play_share" />
+    
+     <ImageButton
+        android:id="@+id/btn_shareOnTwitter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp"
+        android:scaleType="centerInside"
+        android:background="@android:color/transparent"
+        android:onClick="onClickHandler"
+        android:src="@drawable/btn_tab_play_tweet" />
+     
+     <ImageButton
+        android:id="@+id/btn_shareOnEmail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp"
+        android:scaleType="centerInside"
+        android:background="@android:color/transparent"
+        android:onClick="onClickHandler"
+        android:src="@drawable/btn_tab_play_email" />
+
+</LinearLayout>

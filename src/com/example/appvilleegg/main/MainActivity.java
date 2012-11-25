@@ -220,7 +220,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	protected void onStop() {
 		LiLogger.LogInfo("Session", "SessionEnd");
 		LiSession.SessionEnd(this);
-		Applicasa.unBindBillingService();
+		IAP.unBindBillingService();
 		super.onStop();
 	}
 	

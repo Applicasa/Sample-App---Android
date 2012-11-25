@@ -26,6 +26,7 @@ import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
 
+import android.content.Context;
 import android.database.Cursor;
 import applicasa.LiCore.sqlDB.database.LiCoreDBBuilder;
 import applicasa.LiCore.sqlDB.database.LiDbObject;
@@ -393,8 +394,8 @@ static RequestCallback callbackHandler = new RequestCallback() {
      * Post on User's wall
      * opens a facebook dialog
      */
-    public static void PostOnUserWall(Activity activity, LiDialogListener lidialogListener){
-        LiFBmanager.PostOnUserWall( activity,  lidialogListener);
+    public static void PostOnUserWall(Context context, LiDialogListener lidialogListener){
+        LiFBmanager.PostOnUserWall( context,  lidialogListener);
     }
     
     
@@ -409,8 +410,8 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	  *		parameters.putString("description", "AppVille invitation");
 	  *     parameters.putString("picture", image url);
 	  */
-    public static void PostOnUserWall(Activity activity,Bundle params, LiDialogListener lidialogListener){
-        LiFBmanager.PostOnUserWall( activity, params,  lidialogListener);
+    public static void PostOnUserWall(Context context,Bundle params, LiDialogListener lidialogListener){
+        LiFBmanager.PostOnUserWall( context, params,  lidialogListener);
         
     }
     
@@ -429,9 +430,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	  *		parameters.putString("description", "AppVille invitation");
 	  *     parameters.putString("picture", image url);
 	  */
-	   public static void PostOnFriendsWallWithDialog(Activity activity, String fbUserID, Bundle parameters, LiDialogListener lidialogListener )
+	   public static void PostOnFriendsWallWithDialog(Context context, String fbUserID, Bundle parameters, LiDialogListener lidialogListener )
 	   {
-	    LiFBmanager.PostOnFriendsWallWithDialog(activity, fbUserID, parameters, lidialogListener);
+	    LiFBmanager.PostOnFriendsWallWithDialog(context, fbUserID, parameters, lidialogListener);
 	   }
 	   
 	 /**

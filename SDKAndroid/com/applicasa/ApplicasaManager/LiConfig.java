@@ -25,7 +25,7 @@ public class LiConfig {
 	/**
 	 * Enable push services
 	 */
-	private final static boolean EnablePush = false;
+	private final static boolean EnablePush = true;
 		
 	/**
 	 * Enable Location Services
