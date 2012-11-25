@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >  
+ 
+    <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+     <ImageView 
+        android:id="@+id/img_gridItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/coins1"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="item"
+        android:scaleType="fitCenter"
+       >
+     </ImageView>
+        <TextView 
+        android:id="@+id/txt_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="0"
+        android:textSize="16dp"
+        android:padding="8dp"
+        android:contentDescription="item"
+        android:textColor="#CFB52B"
+         android:layout_above="@id/txt_amount">
+     </TextView>
+     
+   
+   
+    <RelativeLayout 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" 
+    android:layout_centerHorizontal="true"
+     android:layout_below="@id/img_gridItem"
+     android:background="@drawable/btnbuycoins"> 
+     <TextView
+         android:layout_margin="1dp"
+         android:id="@+id/txt_gridItemText"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerInParent="true"
+         android:text="@string/name"
+         android:textColor="#ffffff"
+         android:textSize="20dp" />
+     </RelativeLayout>
+         
+</RelativeLayout>
+</RelativeLayout>

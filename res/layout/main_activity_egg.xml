@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical" >
+
+    <ImageButton
+        android:id="@+id/btn_login_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:onClick="onClickHandler"
+        android:src="@drawable/btn_nav_login" />
+    
+    <ImageButton
+        android:id="@+id/btn_my_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:onClick="onClickHandler"
+        android:src="@drawable/btn_nav_my_profile" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        
+        android:src="@drawable/egg_main" />
+
+    <ImageButton
+        android:id="@+id/btn_store"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+         android:onClick="onClickHandler"
+        android:src="@drawable/btn_store" />
+
+    <ImageButton
+        android:id="@+id/btn_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp"
+         android:onClick="onClickHandler"
+        android:background="@android:color/transparent"
+        android:src="@drawable/btn_play" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_play"
+        android:layout_centerHorizontal="true" />
+
+        <ImageButton
+            android:id="@+id/btn_findFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/btn_store"
+            android:background="@android:color/transparent"
+            android:onClick="onClickHandler"
+            android:src="@drawable/main_tab_find_friends" />
+
+        <ImageButton
+            android:id="@+id/btn_fbFeatures"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/btn_store"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/transparent"
+            android:onClick="onClickHandler"
+            android:src="@drawable/main_tab_acebook_features" />
+
+</RelativeLayout>

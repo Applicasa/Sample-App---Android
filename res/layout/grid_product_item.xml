@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" 
+    android:padding="5dp"
+    android:layout_margin="5dp">  
+ 
+    <ImageView
+        android:id="@+id/img_gridProductItem"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="item"
+        android:padding="8dp"
+        android:adjustViewBounds="true"
+		android:scaleType="fitCenter"
+        android:src="@drawable/egg_main" >
+
+     </ImageView>
+     
+    
+      <RelativeLayout 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" 
+    android:layout_centerHorizontal="true"
+     android:contentDescription="buy_Button"
+     android:layout_below="@id/img_gridProductItem"
+      android:src="@drawable/green_btn"
+     android:background="@drawable/green_btn">
+
+     <TextView
+         android:id="@+id/txt_gridItemTextPrice"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerVertical="true"
+         android:paddingLeft="7dp"
+         android:text="@string/name"
+         android:textColor="#ffffff"
+         android:textSize="16dp" />
+
+     </RelativeLayout>
+         
+</RelativeLayout>
