@@ -65,7 +65,7 @@ public class IapObserver extends LiInAppObserver{
 	}
 
 	@Override
-	public void onPurchaseFailed(VirtualCurrency item) {
+	public void onPurchaseFailed(VirtualCurrency item, LiErrorHandler error) {
 		// TODO Auto-generated method stub
 		
 	}

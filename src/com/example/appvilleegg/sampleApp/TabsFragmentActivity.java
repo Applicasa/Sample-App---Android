@@ -65,6 +65,7 @@ import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
 import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 
@@ -180,6 +181,15 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 			logout.setVisibility(View.INVISIBLE);
 		refreshUI();
 		
+	    LiPromo.setPromoCallback(new LiPromotionCallback() {
+			
+				@Override
+				public void onHasPromotionToDisplay(List<Promotion> promotions) {
+					// TODO Auto-generated method stub
+					promotions.get(0).show(mActivity);
+				}
+		});
+		
 	}
 
 	/** (non-Javadoc)
@@ -204,24 +214,25 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
  		TabInfo tabInfoInventory = new TabInfo("inventory", InventoryFragment.class,tabSpecInventory, args);
      		
  		// Product tab
- 		TabSpec tabSpecProduct = mTabHost.newTabSpec("product").setIndicator("", ressources.getDrawable(R.drawable.product_tab_selector));
- 		TabInfo tabInfoProduct = new TabInfo("product", VirtualGoodFragment.class, tabSpecProduct, args );
+ 		TabSpec tabSpecProduct = mTabHost.newTabSpec("virtualGood").setIndicator("", ressources.getDrawable(R.drawable.product_tab_selector));
+ 		TabInfo tabInfoProduct = new TabInfo("virtualGood", VirtualGoodFragment.class, tabSpecProduct, args );
       
  		// Store Tab
- 		TabSpec tabSpecStore = mTabHost.newTabSpec("store").setIndicator("", ressources.getDrawable(R.drawable.store_tab_selector));
- 		TabInfo tabInfoStore = new TabInfo("store", VirtualCurrencyFragment.class, tabSpecStore, args);
+ 		TabSpec tabSpecStore = mTabHost.newTabSpec("virtualCurrency").setIndicator("", ressources.getDrawable(R.drawable.store_tab_selector));
+ 		TabInfo tabInfoStore = new TabInfo("virtualCurrency", VirtualCurrencyFragment.class, tabSpecStore, args);
       
      		
-        TabsFragmentActivity.addTab(this, this.mTabHost, tabInfoInventory);
-        this.mapTabInfo.put(tabInfoInventory.tag, tabInfoInventory);
+        
         TabsFragmentActivity.addTab(this, this.mTabHost, tabInfoProduct);
         this.mapTabInfo.put(tabInfoProduct.tag, tabInfoProduct);
+        TabsFragmentActivity.addTab(this, this.mTabHost, tabInfoInventory);
+        this.mapTabInfo.put(tabInfoInventory.tag, tabInfoInventory);
         TabsFragmentActivity.addTab(this, this.mTabHost, tabInfoStore);
         this.mapTabInfo.put(tabInfoStore.tag, tabInfoStore);
         // Default to first tab
         
-        this.onTabChanged("product");
-      mTabHost.setCurrentTab(1);
+        this.onTabChanged("virtualGood");
+        mTabHost.setCurrentTabByTag("virtualGood");
         //
         for(int i = 0; i < mTabHost.getTabWidget().getTabCount(); i++)
 		{

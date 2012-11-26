@@ -52,7 +52,7 @@ import applicasa.kit.IAP.IAP.LiCurrency;
 public class VirtualGood extends VirtualGoodData {
  /** End of Basic SDK **/
 
-/**
+	/**
 	 * 		VirtualGood is a Special In App Billing class.
 	 * 
 	 * 
@@ -73,9 +73,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public boolean useVirtualGoods(int quantity) throws LiErrorHandler
+	public void useVirtualGoods(int quantity) throws LiErrorHandler
 	{
-		return IAP.UseVirtualGoods(this, quantity);
+		 IAP.UseVirtualGoods(this, quantity);
 	}
 	
 	/**
@@ -84,9 +84,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public boolean buyVirtualGoods(int quantity, LiCurrency licurrency) throws LiErrorHandler
+	public void buyVirtualGoods(int quantity, LiCurrency licurrency) throws LiErrorHandler
 	{
-		return IAP.BuyVirtualGoods(this, quantity, licurrency);
+		 IAP.BuyVirtualGoods(this, quantity, licurrency);
 	}
 	
 	/**
@@ -95,9 +95,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public boolean giveVirtualGoods(int quantity) throws LiErrorHandler
+	public void giveVirtualGoods(int quantity) throws LiErrorHandler
 	{
-		return IAP.GiveVirtualGoods(this, quantity);
+		 IAP.GiveVirtualGoods(this, quantity);
 	}
 	
 	/**
@@ -106,9 +106,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public boolean useVirtualGoods() throws LiErrorHandler
+	public void useVirtualGoods() throws LiErrorHandler
 	{
-		return IAP.UseVirtualGoods(this, 1);
+		 IAP.UseVirtualGoods(this, 1);
 	}
 	
 	/**
@@ -117,9 +117,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public boolean buyVirtualGoods(LiCurrency licurrency) throws LiErrorHandler
+	public void buyVirtualGoods(LiCurrency licurrency) throws LiErrorHandler
 	{
-		return IAP.BuyVirtualGoods(this, 1, licurrency);
+		 IAP.BuyVirtualGoods(this, 1, licurrency);
 	}
 	
 	/**
@@ -128,9 +128,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public boolean giveVirtualGoods() throws LiErrorHandler
+	public void giveVirtualGoods() throws LiErrorHandler
 	{
-		return IAP.GiveVirtualGoods(this, 1);
+		 IAP.GiveVirtualGoods(this, 1);
 	}
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

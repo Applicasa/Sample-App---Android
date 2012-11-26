@@ -71,14 +71,6 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    LiPromo.setPromoCallback(new LiPromotionCallback() {
-			
-			@Override
-			public void onHasPromotionToDisplay(List<Promotion> promotions) {
-				// TODO Auto-generated method stub
-				promotions.get(0).show(activity);
-			}
-		});
 	}
 	
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {

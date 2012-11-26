@@ -162,7 +162,6 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 									// TODO Auto-generated method stub
 									Log.e("completed", "succes");
 									Toast.makeText(activity, "Invitation sent", Toast.LENGTH_SHORT).show();
-									values.size();
 								}
 								
 								public void onCancel() {

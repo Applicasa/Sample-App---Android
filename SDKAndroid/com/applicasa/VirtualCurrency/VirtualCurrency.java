@@ -63,9 +63,9 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public boolean buyVirtualCurrency() throws LiErrorHandler
+	public void buyVirtualCurrency() throws LiErrorHandler
 	{
-		return IAP.BuyVirtualCurrency(this);
+		IAP.BuyVirtualCurrency(this);
 	}
 	
 	/**
@@ -73,9 +73,9 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 * @param coins
 	 * @return
 	 */
-	public static boolean GiveVirtualCurrency(int coins, LiCurrency licurrency)
+	public static void GiveVirtualCurrency(int coins, LiCurrency licurrency)
 	{
-		return IAP.GiveVirtualCurrency(coins, licurrency);
+		IAP.GiveVirtualCurrency(coins, licurrency);
 	}
 	
 	/**
@@ -83,9 +83,9 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public static boolean UseVirtualCurrency(int coins, LiCurrency licurrency) throws LiErrorHandler
+	public static void UseVirtualCurrency(int coins, LiCurrency licurrency) throws LiErrorHandler
 	{
-		return IAP.UseVirtualCurrency(coins,licurrency);
+		IAP.UseVirtualCurrency(coins,licurrency);
 	}
 	
 	/**

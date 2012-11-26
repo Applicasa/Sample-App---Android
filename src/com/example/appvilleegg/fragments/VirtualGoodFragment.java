@@ -53,14 +53,6 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		super.onActivityCreated(savedInstanceState);
 		
 		activity = getActivity();
-		LiPromo.setPromoCallback(new LiPromotionCallback() {
-			
-			@Override
-			public void onHasPromotionToDisplay(List<Promotion> promotions) {
-				// TODO Auto-generated method stub
-				promotions.get(0).show(activity);
-			}
-		});
 		 if (activity != null) {
 	            // gets an instance of the custom adapter for the Virtual Product.
 			 	mProductAdapter = VirtualGoodAdapter.getInstance(activity, IAP.GetAllVirtualGoods(GetVirtualGoodKind.ALL));

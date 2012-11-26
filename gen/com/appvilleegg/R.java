@@ -90,7 +90,7 @@ public final class R {
         public static final int btn_login_main=0x7f07001e;
         public static final int btn_my_profile=0x7f07001f;
         public static final int btn_pause=0x7f070007;
-        public static final int btn_play=0x7f070014;
+        public static final int btn_play=0x7f070013;
         public static final int btn_refresh=0x7f070024;
         public static final int btn_register=0x7f07001c;
         public static final int btn_shareOnEmail=0x7f070035;
@@ -115,7 +115,7 @@ public final class R {
         public static final int progressBar=0x7f070000;
         public static final int radius=0x7f070027;
         public static final int realtabcontent=0x01010000;
-        public static final int title_dynamic=0x7f070013;
+        public static final int title_dynamic=0x7f070014;
         public static final int title_register=0x7f07002c;
         public static final int txt_amount=0x7f07000e;
         public static final int txt_distance=0x7f07002b;

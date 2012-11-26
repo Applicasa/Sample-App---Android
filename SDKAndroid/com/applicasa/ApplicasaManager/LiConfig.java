@@ -212,14 +212,4 @@ public class LiConfig {
 	{
 		return GOOGLE_GCM;
 	}
-	
-//	// only in applicasa enviorment
-//	private final static boolean DevelopmentMode = true;
-//	
-//	public static boolean isDevelopmentMode() {
-//		return DevelopmentMode;
-//	}
-	
-
-	
 }

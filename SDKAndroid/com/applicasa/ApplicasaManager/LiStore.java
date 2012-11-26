@@ -27,9 +27,9 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static boolean BuyVirtualGoods(VirtualGood virtualGood, int quantity,LiCurrency currency) 
+	public static void BuyVirtualGoods(VirtualGood virtualGood, int quantity,LiCurrency currency) 
 	{
-		return IAP.BuyVirtualGoods(virtualGood, quantity, currency);
+		IAP.BuyVirtualGoods(virtualGood, quantity, currency);
 	}
 	
 	/**
@@ -37,8 +37,8 @@ public class LiStore {
 	 * @param appStoreItem
 	 * @return
 	 */
-	public static boolean BuyVirtualCurrency(VirtualCurrency virtualCurrency) {
-		return IAP.BuyVirtualCurrency(virtualCurrency);
+	public static void BuyVirtualCurrency(VirtualCurrency virtualCurrency) {
+		 IAP.BuyVirtualCurrency(virtualCurrency);
 	}
 	
 	/**
@@ -47,9 +47,9 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static boolean GiveVirtualGoods(VirtualGood virtualGood, int quantity) 
+	public static void GiveVirtualGoods(VirtualGood virtualGood, int quantity) 
 	{
-		return IAP.GiveVirtualGoods(virtualGood, quantity);
+		 IAP.GiveVirtualGoods(virtualGood, quantity);
 	}
 	
 	/**
@@ -57,9 +57,9 @@ public class LiStore {
 	 * @param coins
 	 * @return
 	 */
-	public static  boolean GiveVirtualCurrency(int amount, LiCurrency currency) 
+	public static void GiveVirtualCurrency(int amount, LiCurrency currency) 
 	{
-		return IAP.GiveVirtualCurrency(amount, currency);
+		 IAP.GiveVirtualCurrency(amount, currency);
 	}
 	
 	
@@ -69,9 +69,9 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static boolean UseVirtualGoods(VirtualGood virtualGood, int quantity) 
+	public static void UseVirtualGoods(VirtualGood virtualGood, int quantity) 
 	{
-		return IAP.UseVirtualGoods( virtualGood, quantity); 
+		 IAP.UseVirtualGoods( virtualGood, quantity); 
 	}
 	
 	/**
@@ -79,9 +79,9 @@ public class LiStore {
 	 * @param coins
 	 * @return
 	 */
-	public static boolean UseVirtualCurrency(int amount, LiCurrency currency) 
+	public static void UseVirtualCurrency(int amount, LiCurrency currency) 
 	{
-		return IAP.UseVirtualCurrency(amount, currency);
+		 IAP.UseVirtualCurrency(amount, currency);
 		
 	}
 

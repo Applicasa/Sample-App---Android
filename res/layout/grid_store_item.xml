@@ -7,16 +7,20 @@
     <RelativeLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
-     <ImageView 
+     
+    <ImageView
         android:id="@+id/img_gridItem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/coins1"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_centerHorizontal="true"
         android:contentDescription="item"
-        android:scaleType="fitCenter"
-       >
+        android:padding="8dp"
+        android:adjustViewBounds="true"
+		android:scaleType="fitCenter"
+        android:src="@drawable/coins1" >
+
      </ImageView>
+     
         <TextView 
         android:id="@+id/txt_amount"
         android:layout_width="wrap_content"
