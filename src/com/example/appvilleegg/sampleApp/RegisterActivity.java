@@ -49,13 +49,11 @@ import com.applicasa.ApplicasaManager.LiManager.LiObject;
 import com.applicasa.User.User;
 import com.applicasa.User.UserData.LiFieldUser;
  
-public class RegisterActivity extends Activity implements LiCallbackInitialize {
+public class RegisterActivity extends Activity  {
  
 	
 	private static final int PIC = 0;
-
 	ImageButton btnRegister;
-	
 	EditText email;
 	EditText password;
 	EditText firstName;
@@ -67,14 +65,12 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 	ProgressBar bar;
 	private static ImageView spProfile;
 	private static ImageView usProfile;
-	
-     
 	private boolean imageChanged = false;
-
 	boolean viewProfile = false;
 	private String filePath;
-
 	private RegisterActivity mActivity;
+	
+	
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -99,6 +95,7 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 		if (  extras != null && (viewProfile=extras.getBoolean("MyProfile", false)))
 		{
 			User currnetUser = Applicasa.getCurrentUser();
+			
 			
 			getUserImage(currnetUser);
 			 email.setText(currnetUser.UserEmail);
@@ -135,7 +132,7 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 
 	private void getUserImage(User currnetUser) {
 		// TODO Auto-generated method stub
-		if (!currnetUser.UserImage.isEmpty())
+		if (!currnetUser.UserImage.equals(""))
 		{
 			LiFileCacher.GetBitmapFromCache(currnetUser.UserImage, new LiCallbackGetCachedFile() {
 			
@@ -181,6 +178,7 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 		{
 			
 			case R.id.btn_register:
+				btnRegister.setClickable(false);
 				userName = email.getText().toString();
 				pass = password.getText().toString();
 					final User newUser = new User();
@@ -211,8 +209,8 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 							public void onComplete(ApplicasaResponse response, String msg,
 									RequestAction action, String itemID, LiObject liobject) {
 								// TODO Auto-generated method stub
-							
 								Toast.makeText(mActivity, "Saved successfully", Toast.LENGTH_LONG).show();
+								btnRegister.setClickable(false);
 							}
 						});
 						
@@ -221,14 +219,13 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 								
 								public void onFailure(LiErrorHandler error) {
 									// TODO Auto-generated method stub
-									LiLogger.LogInfo("UserImage", error.getMessage());
-									LiLogger.LogInfo("UserImage", Applicasa.getCurrentUser().UserImage);
-									LiObjRequest.loadCurrentUser(Applicasa.getApplicasaUserID());
+//									LiObjRequest.loadCurrentUser(Applicasa.getApplicasaUserID());
 									LiFileCacher.GetFileFromCache(Applicasa.getCurrentUser().UserImage, new LiCallbackGetCachedFile() {
 										
 										public void onSuccessfull(InputStream in) {
 											// TODO Auto-generated method stub
-											Log.w("TAG", "Succhess");
+											Log.w("TAG", "Success");
+											btnRegister.setClickable(false);
 										}
 										
 										public void onFailure(LiErrorHandler error) {
@@ -249,6 +246,7 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 										RequestAction action, String itemID, LiObject liobject) {
 									// TODO Auto-generated method stub
 									LiLogger.LogInfo("UserImage", Applicasa.getCurrentUser().UserImage);
+									Toast.makeText(mActivity, "Image loaded successfully", Toast.LENGTH_LONG).show();
 								}
 							}); 
 					}
@@ -258,14 +256,13 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 							
 							public void onSuccessfull(RequestAction action) {
 								Applicasa.getCurrentUser();
-								if (filePath != null && !filePath.isEmpty())
+								if (filePath != null && !filePath.equals(""))
 								{
 									newUser.updloadFile(LiFieldUser.UserImage, filePath, null);
 								}
-								refreshInventorry();
-								Intent i = new Intent(mActivity, TabsFragmentActivity.class);
-								startActivity(i);
+								refreshInventory();
 								finish();
+								
 							}
 							
 							public void onFailure(RequestAction action, LiErrorHandler error) {
@@ -279,7 +276,7 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 	}
 	
 	
-	private void refreshInventorry()
+	private void refreshInventory()
 	{
 		try {	IAP.refreshInventory();}
 		catch (LiErrorHandler e) {	e.printStackTrace();	}
@@ -287,8 +284,10 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 	}
 	
 	
-	
 	@Override
+	/**
+	 * Handles result after selecting an Image
+	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
 		
 			
@@ -313,14 +312,11 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			int h = metrics.heightPixels;
 			int w = metrics.widthPixels;
-			
 			view.setMaxHeight( h/4);
 			view.setMaxWidth(w/3);
 			view.setMinimumHeight( h/4);
 			view.setMinimumWidth(w/3);
 	        view.invalidate();
-	        
-	               
 	    }
 	}
 	}
@@ -368,133 +364,7 @@ public class RegisterActivity extends Activity implements LiCallbackInitialize {
 
 	        return cursor.getString(column_index);
 	}
-
-
-
-	public void onCompleteInitialize() {
-		// TODO Auto-generated method stub
-	}
-
-
-
-	public void onFailure(LiErrorHandler error) {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	
-	
-//	/**
-//	 * Download and return a thumb specified by url, subsampling 
-//	 * it to a smaller size.
-//	 */
-//	private Bitmap loadThumb(String url) {
-//
-//		
-//		
-//		// the downloaded thumb (none for now!)
-//		Bitmap thumb = null;
-//
-////		// sub-sampling options
-////		BitmapFactory.Options opts = new BitmapFactory.Options();
-////		opts.inSampleSize = 1;
-//
-//		
-//
-//			// open a connection to the URL
-//			// Note: pay attention to permissions in the Manifest file!
-//			
-//			 HttpClient httpclient = new DefaultHttpClient();
-//
-//			    // Prepare a request object
-//			    HttpGet httpget = new HttpGet(url); 
-//
-//			    // Execute the request
-//			    HttpResponse response;
-//			    try {
-//			        response = httpclient.execute(httpget);
-//			        // Examine the response status
-//			        Log.i("Praeda",response.getStatusLine().toString());
-//
-//			        // Get hold of the response entity
-//			        HttpEntity entity = response.getEntity();
-//			        // If the response does not enclose an entity, there is no need
-//			        // to worry about connection release
-//
-//			        if (entity != null) {
-//
-//			            // A Simple JSON Response Read
-//			            InputStream instream = entity.getContent();
-//			         // read data
-//						BufferedInputStream stream = new BufferedInputStream(instream);
-//
-//						// decode the data, subsampling along the way
-//						image = BitmapFactory.decodeStream(stream);//, null, opts);
-//
-//						// close the stream
-//						stream.close();
-//			        }
-//			
-//			
-//		} catch (MalformedURLException e) {
-//			Log.e("Threads03", "malformed url: " + url);
-//		} catch (IOException e) {
-//			Log.e("Threads03", "An error has occurred downloading the image: " + url);
-//		}
-//
-//		// return the fetched thumb (or null, if error)
-//		return thumb;
-//	}
-//	
-//	// the class that will create a background thread and generate thumbs
-//	private class LoadThumbsTask extends AsyncTask<String, Void, Void> {
-//
-//		/**
-//		 * Generate thumbs for each of the Image objects in the array
-//		 * passed to this method. This method is run in a background task.
-//		 */
-//		@Override
-//		protected Void doInBackground(String... url) {
-//
-//			// iterate over all images ...
-//			// if our task has been cancelled then let's stop processing
-//			if(isCancelled()) return null;
-//
-//			// artificially cause latency!
-//			SystemClock.sleep(500);
-//				
-//			// download and generate a thumb for this image
-//			if (!url[0].isEmpty())
-//				loadThumb(url[0]);
-//
-//			// some unit of work has been completed, update the UI
-//			publishProgress();
-//			
-//			return null;
-//		}
-//
-//
-//		/**
-//		 * Update the UI thread when requested by publishProgress()
-//		 */
-//		@Override
-//		protected void onProgressUpdate(Void... param) {
-//			view.setImageBitmap(image);
-//			DisplayMetrics metrics = new DisplayMetrics();
-//			getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//
-//			int h = metrics.heightPixels;
-//			int w = metrics.widthPixels;
-//			
-//			view.setMaxHeight( h/4);
-//			view.setMaxWidth(w/3);
-//			view.setMinimumHeight( h/4);
-//			view.setMinimumWidth(w/3);
-//			view.invalidate();
-//			bar.setVisibility(View.INVISIBLE);
-//	        bar.invalidate();
-//		}
-//	}
 	
 	public static void refreshUI()
 	{

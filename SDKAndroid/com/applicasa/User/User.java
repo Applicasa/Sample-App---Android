@@ -612,11 +612,26 @@ static RequestCallback callbackHandler = new RequestCallback() {
       
     }
     
-    public  static void forgotPassword(LiCallbackUser liCallbackUser)  
+    /**
+     * Sends email to this user with a new password
+     * @param username
+     * @param liCallbackUser
+     */
+    public static void forgotPassword(String username, LiCallbackUser liCallbackUser) 
     {
         LiObjRequest request = new LiObjRequest();
         request.setAction(RequestAction.FORGOT_PASSWORD);
         request.setClassName(kClassName);
+        try {
+			request.addParametersArrayValue(LiFieldUser.UserName, username);
+		} catch (LiErrorHandler error) {
+			// TODO Auto-generated catch block
+			if (liCallbackUser!= null)
+			{
+				liCallbackUser.onFailure(RequestAction.FORGOT_PASSWORD, error);
+				return;
+			}
+		}
         request.setCallback(liCallbackUser);
         request.startASync();
     }

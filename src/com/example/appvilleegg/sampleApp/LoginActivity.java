@@ -13,7 +13,9 @@ import com.example.appvilleegg.main.MainActivity;
 
 import android.R.bool;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TabActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
@@ -30,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 import applicasa.LiCore.Applicasa;
@@ -52,7 +55,7 @@ import applicasa.kit.FaceBook.LiFacebookResponse;
 import applicasa.kit.FaceBook.LiObjFacebookFriends;
 import applicasa.kit.IAP.IAP;
  
-public class LoginActivity extends Activity implements LiCallbackInitialize {
+public class LoginActivity extends Activity  {
  
 	ImageButton btnLoginLater;
 	ImageButton btnLogin;
@@ -62,6 +65,7 @@ public class LoginActivity extends Activity implements LiCallbackInitialize {
 	EditText email;
 	EditText password;
 	private LoginActivity mActivity;
+	private TextView textForgot;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,9 +76,12 @@ public class LoginActivity extends Activity implements LiCallbackInitialize {
 		btnLogin = (ImageButton)findViewById(R.id.btn_log_in);
 		btnLoginFB = (ImageButton)findViewById(R.id.btn_log_in_fb);
 		btnRegister = (ImageButton)findViewById(R.id.btn_register);
-		
+		textForgot = (TextView)findViewById(R.id.txt_forgotPassword);
 		email = (EditText)findViewById(R.id.txt_input_email);
 		password = (EditText)findViewById(R.id.txt_input_password);
+		
+		
+		textForgot.setClickable(true);
 		
 	}
 
@@ -97,9 +104,6 @@ public class LoginActivity extends Activity implements LiCallbackInitialize {
 				 User.logInUserWithUserName(userName, pass, new LiCallbackUser () {
 					
 					public void onSuccessfull(RequestAction action) {
-						refreshInventorry();
-								Intent i = new Intent(mActivity, MainActivity.class);
-								startActivity(i);
 						finish();
 					}
 					
@@ -114,93 +118,94 @@ public class LoginActivity extends Activity implements LiCallbackInitialize {
 			case R.id.btn_log_in_fb:
 				btnLoginFB.setClickable(false);
 				User.LoginWithFacebookUser(this, new String[]{"publish_stream"}, new LiFacebookResponse() {
-					
-					public void onGetFriendsResponse(LiObjResponse requestResponse,
-							List<LiObjFacebookFriends> friendsList) {
-						// TODO Auto-generated method stub
-					}
-					
-					public void onFBLoginResponse(User currentUser) {
-						// TODO Auto-generated method stub
-						refreshInventorry();	
-//						Intent i = new Intent(getApplicationContext(), TabsFragmentActivity.class);
-//						startActivity(i);
-						finish();
-					}
-					
-					public void onFBError(LiErrorHandler error) {
-						// TODO Auto-generated method stub
-						btnLoginFB.setClickable(true);
-						LiLogger.LogError("LoginActivity", error.getMessage());
-					}
-				});
+						
+						public void onGetFriendsResponse(LiObjResponse requestResponse,
+								List<LiObjFacebookFriends> friendsList) {
+							// TODO Auto-generated method stub
+						}
+						
+						public void onFBLoginResponse(User currentUser) {
+							// TODO Auto-generated method stub
+							finish();
+						}
+						
+						public void onFBError(LiErrorHandler error) {
+							// TODO Auto-generated method stub
+							btnLoginFB.setClickable(true);
+							LiLogger.LogError("LoginActivity", error.getMessage());
+						}
+					});
 				
 			break;
 			
 			case R.id.btn_register:
-			
-				refreshInventorry();
+				// Go to Register user Activity
 				Intent i = new Intent(this, RegisterActivity.class);
 				startActivity(i);
+				finish();
 			break;
+			
+			case R.id.txt_forgotPassword:
+				textForgot.setClickable(false);
+				createDialog();
 		}
 	}
 	
 	
-	private void refreshInventorry()
-	{
-//		try {	IAP.refreshInventory();}
-//		catch (LiErrorHandler e) {	e.printStackTrace();	}
 
-	}
-
-	
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		@Override
+		/**
+		 * Handles result from fb login
+		 */
+		protected void onActivityResult(int requestCode, int resultCode, Intent data){
+			
+			LiFBmanager.onActivityResult(requestCode, resultCode, data);
+			finish();
+		}
 		
-		LiFBmanager.onActivityResult(requestCode, resultCode, data);
-		finish();
-//			LiFBmanager.onActivityResult(requestCode, resultCode, data);
-	}
-	
-	
-	LiCallbackAction callback = new LiCallbackAction() {
 		
-		public void onFailure(LiErrorHandler error) {
+		/**
+		 * Create alert dialog to receive username to retreive the user's email address
+		 */
+		private void createDialog() {
 			// TODO Auto-generated method stub
-			
+				  final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+				    final EditText input = new EditText(this);
+				    input.setHint("Username");
+				    alert.setTitle("Forgot Password");
+				    
+				    alert.setView(input);
+				    alert.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int whichButton) {
+				            String username = input.getText().toString().trim();
+				            forgotPassword(username);
+				        }
+				    });
+
+				    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int whichButton) {
+				            dialog.cancel();
+				        }
+				    });
+				    alert.show();  
+
 		}
-		
-		public void onComplete(ApplicasaResponse response, String msg,
-				RequestAction action, String itemID, LiObject liobject) {
-			// TODO Auto-generated method stub
-			
-			switch (action)
-			{
-				case UPLOAD_FILE:
-					Log.w("error", "failed");
-				default:
-					 	//To open up a gallery browser
-						Intent intent = new Intent();
-						intent.setType("image/*");
-						intent.setAction(Intent.ACTION_GET_CONTENT);
-						startActivityForResult(Intent.createChooser(intent, "Select Picture"),20);
-						
-			}
-			
-		}
-	};
 	
-
-	public void onCompleteInitialize() {
-		// TODO Auto-generated method stub
-	}
-
-
-
-	public void onFailure(LiErrorHandler error) {
-		// TODO Auto-generated method stub
-		
-	}
+		private void forgotPassword(String userName)
+		{
+			User.forgotPassword(userName,new LiCallbackUser() {
+				
+				public void onSuccessfull(RequestAction arg0) {
+					// TODO Auto-generated method stub
+					 Toast.makeText(getApplicationContext(), "An email with password was sent", Toast.LENGTH_SHORT).show();
+					 textForgot.setClickable(true);
+				}
+				
+				public void onFailure(RequestAction arg0, LiErrorHandler ex) {
+					// TODO Auto-generated method stub
+					textForgot.setClickable(true);
+					 Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
 }

@@ -47,7 +47,23 @@ import applicasa.kit.IAP.IAP;
 
 public class MainActivity extends Activity implements LiCallbackInitialize {
 	
-	LiPromotionCallback promo = new LiPromotionCallback() {
+	Context cont;
+	List<Dynamic> arrDynamic;
+	ListView lvMain;
+	Context context;
+	Activity mActivity = this;
+	ImageButton btn_login;
+	ImageButton btn_play;
+	ImageButton btn_Store;
+	ImageButton btn_Radius_Friends;
+	ImageButton btn_myProfile;
+	ImageButton btn_fb_Friends;;
+	ProgressBar bar;
+		
+	/**
+	 * Promotion Callback listener
+	 */
+	LiPromotionCallback promoCallback = new LiPromotionCallback() {
 		
 		@Override
 		public void onHasPromotionToDisplay(List<Promotion> promotions) {
@@ -55,18 +71,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			promotions.get(0).show(mActivity);
 		}
 	};
-
-	Context cont;
-	List<Dynamic> arrDynamic;
-	ListView lvMain;
-	protected Context context;
-	protected Activity mActivity = this;
-		ImageButton btn_login;
-		ImageButton btn_play;
-		ImageButton btn_Store;
-		ImageButton btn_Friends;
-		ImageButton myProfile;
-		ProgressBar bar;
+	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,34 +82,29 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
         btn_login = (ImageButton)findViewById(R.id.btn_login_main);
         btn_play = (ImageButton)findViewById(R.id.btn_play);
         btn_Store = (ImageButton)findViewById(R.id.btn_store);
-        myProfile = (ImageButton)findViewById(R.id.btn_my_profile);
+        btn_myProfile = (ImageButton)findViewById(R.id.btn_my_profile);
         
         bar = (ProgressBar)findViewById(R.id.progressBar);
-        btn_Friends = (ImageButton)findViewById(R.id.btn_findFriends);
-        
+        btn_Radius_Friends = (ImageButton)findViewById(R.id.btn_findFriends);
+        btn_fb_Friends = (ImageButton)findViewById(R.id.btn_fbFeatures);
+			
         btn_login.setClickable(false);
         btn_play.setClickable(false);
         btn_Store.setClickable(false);
+        btn_Radius_Friends.setClickable(false);
+        btn_fb_Friends.setClickable(false);
+        btn_myProfile.setClickable(false);
         
-        btn_Friends.setClickable(false);
         context = this;
-      	LiPromo.setPromoCallback(promo);
+      	LiPromo.setPromoCallback(promoCallback);
       	
-      	if (!Applicasa.isInitialized())
-        {
-			try {
-				LiManager.initialize(this, this);
-			
-			} catch (LiErrorHandler e) {
-				// TODO Auto-generated catch block
-				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-			}
-        }
-      	else
-      	{
-      		initView();
-      		LiSession.SessionStart(this,promo);
-      	}
+		try {
+			LiManager.initialize(this, this);
+		
+		} catch (LiErrorHandler e) {
+			// TODO Auto-generated catch block
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+		}
         
     }
     
@@ -112,12 +112,13 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
     public void initView()
     {
     	  btn_login.setClickable(true);
-	        btn_play.setClickable(true);
-	        btn_Store.setClickable(true);
-	        btn_Friends.setClickable(true);
-	        bar.setVisibility(View.INVISIBLE);
+	      btn_play.setClickable(true);
+	      btn_Store.setClickable(true);
+	      btn_Radius_Friends.setClickable(true);
+	      btn_myProfile.setClickable(true);
+	      btn_fb_Friends.setClickable(true);
+	      bar.setVisibility(View.INVISIBLE);
 	        
-	       Applicasa.getCurrentUser(); 
 	       if(Applicasa.isCurrentUserRegistered())
 	        {
 	        	btn_login.setImageResource(R.drawable.btn_logout);
@@ -129,8 +130,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		initView();
 		
 		//Start session
-		LiSession.SessionStart(this,promo);
-		LiLogger.LogInfo("Session", "SessionStart");
+		LiSession.SessionStart(this,promoCallback);
 		
 		// Updates User Location
 		LiUserLocation.updateLocation();
@@ -150,7 +150,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		case R.id.btn_login_main: // or logout
 			if (Applicasa.isCurrentUserRegistered())
 			{
-				bar.setVisibility(View.VISIBLE);
+			    btn_login.setClickable(false);
 				User.logoutUser(new LiCallbackUser() {
 					
 					public void onSuccessfull(RequestAction action) {
@@ -177,31 +177,32 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			break;
 			
 		case R.id.btn_play:
-			
+			 btn_play.setClickable(false);
 			i = new Intent(this, GameActivity.class);
 			startActivity(i);
 			
 			break;
 			
 		case R.id.btn_store:
+			   btn_Store.setClickable(false);
 			 i = new Intent(this, TabsFragmentActivity.class);
 			startActivity(i);
 			break;
 			
 		case R.id.btn_findFriends:
+			btn_Radius_Friends.setClickable(false);
 			 i = new Intent(this, UsersRadiusListActivity.class);
 				startActivity(i); 
 			break;
 			 
 		case R.id.btn_my_profile:
+			btn_myProfile.setClickable(false);
 			 i = new Intent(this, RegisterActivity.class);
-			  if(Applicasa.isCurrentUserRegistered())
-	          {
-				i.putExtra("MyProfile", true);
-	          }
+			i.putExtra("MyProfile", true);
 			startActivity(i); 
 			break;
 		case R.id.btn_fbFeatures:
+			  btn_fb_Friends.setClickable(false);
 			 i = new Intent(this, FriendsListActivity.class);
 				startActivity(i); 
 			
@@ -234,29 +235,5 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-	}
-	
-	
-	// And to convert the image URI to the direct file system path of the image file
-	public String getRealPathFromURI(Uri contentUri) {
-
-	        // can post image
-	        String [] proj={MediaStore.Images.Media.DATA};
-	        Cursor cursor = managedQuery( contentUri,
-	                        proj, // Which columns to return
-	                        null,       // WHERE clause; which rows to return (all rows)
-	                        null,       // WHERE clause selection arguments (none)
-	                        null); // Order-by clause (ascending by name)
-	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	        cursor.moveToFirst();
-
-	        return cursor.getString(column_index);
-	}
-
-
-	public void onHasPromotionToDisplay(List<Promotion> promotions) {
-		// TODO Auto-generated method stub
-		promotions.get(0).show(this);
-		LiLogger.LogError("Promo", "Has Events");
 	}
 }

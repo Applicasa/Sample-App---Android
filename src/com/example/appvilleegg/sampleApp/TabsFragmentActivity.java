@@ -74,7 +74,7 @@ import applicasa.kit.IAP.IAP.LiCurrency;
  * @author mwho
  *
  */
-public class TabsFragmentActivity extends FragmentActivity implements TabHost.OnTabChangeListener, LiCallbackInitialize {
+public class TabsFragmentActivity extends FragmentActivity implements TabHost.OnTabChangeListener {
 
 	   private static final String TAG = TabsFragmentActivity.class.getCanonicalName();
 	   private  TextView 				mBalanceMain;
@@ -127,8 +127,8 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 	     */
 	    public View createTabContent(String tag) {
 	        View v = new View(mContext);
-	        v.setMinimumWidth(0);
-	        v.setMinimumHeight(0);
+	        v.setMinimumWidth(20);
+	        v.setMinimumHeight(20);
 	        return v;
 	    }
 
@@ -143,12 +143,13 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		// Step 1: Inflate layout
 		setContentView(R.layout.tab_host);
 		mActivity = this;
-		IAP.RegisterLiInAppObserver(new IapObserver(mActivity));
+		
+		
+//		IAP.RegisterLiInAppObserver(new IapObserver(mActivity));
 		
 		
 		LiSession.SessionStart(mActivity,null);
 		
-		// Step 2: Setup TabHost
 		initialiseTabHost();
 		
 		if (args != null) {
@@ -157,6 +158,8 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		
 		mBalanceMain = (TextView)findViewById(R.id.txt_gridBalanceMain);
 		mBalanceSecondary = (TextView)findViewById(R.id.txt_gridBalanceSecondary);
+		mBalanceMain.setTypeface(Typeface.SANS_SERIF);
+		mBalanceSecondary.setTypeface(Typeface.SANS_SERIF);
 		
 		mImageView = (ImageView)findViewById(R.id.img_currentBalance);
 		mImageView.setOnClickListener(new View.OnClickListener() {
@@ -167,20 +170,17 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 			}
 		});
 		
-		mBalanceMain.setTypeface(Typeface.SANS_SERIF);
-		mBalanceSecondary.setTypeface(Typeface.SANS_SERIF);
-		
-		
-	 	
+	
 		logout 	=  (ImageButton) findViewById(R.id.btn_Logout);
 		if (Applicasa.isCurrentUserRegistered())
-		{
 			logout.setVisibility(View.VISIBLE);
-		}
 		else
 			logout.setVisibility(View.INVISIBLE);
+		
+		
 		refreshUI();
 		
+		// ReRegister for promotion callback 
 	    LiPromo.setPromoCallback(new LiPromotionCallback() {
 			
 				@Override
@@ -295,11 +295,15 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		}
     }
 
+	/**
+	 * Handles Click event
+	 * @param v
+	 */
 	public void clickHandler(View v)
 	{
-		if (v.getId() == R.id.btn_Logout && clickEnabled) {
+		if (v.getId() == R.id.btn_Logout) {
+			logout.setClickable(false);
 			mProgressBar.setVisibility(View.VISIBLE);
-			clickEnabled = false;
 			User.logoutUser(new LiCallbackUser() {
 				
 				public void onSuccessfull(RequestAction action) {
@@ -308,7 +312,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 					Intent i = new Intent(mActivity, MainActivity.class);
 					startActivity(i);
 					mProgressBar.setVisibility(View.INVISIBLE);
-					clickEnabled = true;
+					logout.setClickable(true);
 					finish();
 				}
 				
@@ -316,7 +320,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 					// TODO Auto-generated method stub
 					mProgressBar.setVisibility(View.INVISIBLE);
 					Toast.makeText(mActivity, "failed logout user", Toast.LENGTH_SHORT).show();
-					clickEnabled = true;
+					logout.setClickable(true);
 				}
 			});
 		}
@@ -329,14 +333,6 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 			mActivity.mBalanceMain.setText(String.valueOf(IAP.getUserCurrencyBalance(LiCurrency.MainCurrency)));
 			mActivity.mBalanceSecondary.setText(String.valueOf(IAP.getUserCurrencyBalance(LiCurrency.SencondaryCurrency)));
 		}
-	}
-	
-	public void onCompleteInitialize() {
-		
-	}
-	
-	public void onFailure(LiErrorHandler error) {
-		// TODO Auto-generated method stub
 	}
 	
 	protected void onPause() {

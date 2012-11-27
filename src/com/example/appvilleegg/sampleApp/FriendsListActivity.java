@@ -31,6 +31,9 @@ public class FriendsListActivity extends ListActivity {
 		act = this;
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		bar.setVisibility(View.VISIBLE);
+		/**
+		 * see if the user is register to facebook, if so retreives his friends. If not, show an error Via toast message
+		 */
 		if (Applicasa.getCurrentUser().UserIsRegisteredFacebook)
 		 {
 			 User.GetFacebookFriendsWithUser(this, new LiFacebookResponse() {
