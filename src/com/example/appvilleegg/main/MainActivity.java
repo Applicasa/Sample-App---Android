@@ -1,7 +1,9 @@
 package com.example.appvilleegg.main;
 
+import java.util.Iterator;
 import java.util.List;
 
+import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiManager;
 import com.applicasa.ApplicasaManager.LiPromo;
@@ -27,6 +29,7 @@ import android.database.Cursor;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -41,6 +44,8 @@ import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
 import applicasa.LiCore.promotion.sessions.LiSessionManager;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionAction;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResult;
 import applicasa.LiCore.promotion.sessions.LiSessionManager.LiGameResult;
 import applicasa.LiJson.LiJSONException;
 import applicasa.kit.IAP.IAP;
@@ -59,6 +64,9 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	ImageButton btn_myProfile;
 	ImageButton btn_fb_Friends;;
 	ProgressBar bar;
+	private static ImageView spProfile;
+	private static ImageView usProfile;
+
 		
 	/**
 	 * Promotion Callback listener
@@ -68,7 +76,14 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		@Override
 		public void onHasPromotionToDisplay(List<Promotion> promotions) {
 			// TODO Auto-generated method stub
-			promotions.get(0).show(mActivity);
+			promotions.get(0).show(mActivity, new LiPromotionResultCallback() {
+				
+				public void onPromotionResultCallback(LiPromotionAction arg0,
+						LiPromotionResult arg1, Object arg2) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 		}
 	};
 	
@@ -88,6 +103,9 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
         btn_Radius_Friends = (ImageButton)findViewById(R.id.btn_findFriends);
         btn_fb_Friends = (ImageButton)findViewById(R.id.btn_fbFeatures);
 			
+    	spProfile = (ImageView)findViewById(R.id.img_sp_profile);
+    	usProfile = (ImageView)findViewById(R.id.img_profile);
+    	
         btn_login.setClickable(false);
         btn_play.setClickable(false);
         btn_Store.setClickable(false);
@@ -123,6 +141,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	        {
 	        	btn_login.setImageResource(R.drawable.btn_logout);
 	        }
+	       refreshProfileImages();
     }
 
 	public void onCompleteInitialize() {
@@ -137,8 +156,52 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		
 		// Register IAP Observer
 		IAP.RegisterLiInAppObserver(new IapObserver(this));
+		
 	 }
-		       
+		
+	
+	public static void refreshProfileImages()
+	{
+		if ( spProfile != null && usProfile != null)
+		{
+			
+		
+			switch(Applicasa.getUserSpendProfile())
+			{
+				case None:
+					break;
+				case Rockefeller:
+					spProfile.setImageResource(R.drawable.rockfelle);
+					break;
+				case TaxPayer:
+					spProfile.setImageResource(R.drawable.taxpayer);
+					break;
+				case Tourist:
+					spProfile.setImageResource(R.drawable.turist);
+					break;
+				case Zombie:
+					spProfile.setImageResource(R.drawable.ombie);
+					break;
+			}
+			switch(Applicasa.getUserUsageProfile())
+			{
+				case None:
+					break;
+				case General:
+					usProfile.setImageResource(R.drawable.general);
+					break;
+				case Hippie:
+					usProfile.setImageResource(R.drawable.hippie);
+					break;
+				case Private:
+					usProfile.setImageResource(R.drawable.us_private);
+					break;
+				case Serganet:
+					usProfile.setImageResource(R.drawable.sergeantx);
+					break;
+			}
+		}
+	}
 
 	public void onClickHandler(View v) throws LiErrorHandler
 	{

@@ -20,8 +20,13 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import applicasa.LiCore.communication.LiCallback;
+import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiRequestConst.QueryKind;
+import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
 import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiFilters.Operation;
+import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
 
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetArrayCallback;
@@ -30,19 +35,13 @@ import com.applicasa.ApplicasaManager.LiManager.LiObject;
 import android.database.Cursor;
 import applicasa.LiCore.sqlDB.database.LiCoreDBBuilder;
 import applicasa.LiCore.sqlDB.database.LiDbObject;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.communication.LiObjRequest;
-import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
 
-import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
 
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
@@ -63,9 +62,9 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public void buyVirtualCurrency() throws LiErrorHandler
+	public boolean buyVirtualCurrency() throws LiErrorHandler
 	{
-		IAP.BuyVirtualCurrency(this);
+		return IAP.BuyVirtualCurrency(this);
 	}
 	
 	/**
@@ -73,9 +72,9 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 * @param coins
 	 * @return
 	 */
-	public static void GiveVirtualCurrency(int coins, LiCurrency licurrency)
+	public static boolean  GiveVirtualCurrency(int coins, LiCurrency licurrency)
 	{
-		IAP.GiveVirtualCurrency(coins, licurrency);
+		return IAP.GiveVirtualCurrency(coins, licurrency);
 	}
 	
 	/**
@@ -83,9 +82,9 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public static void UseVirtualCurrency(int coins, LiCurrency licurrency) throws LiErrorHandler
+	public static boolean  UseVirtualCurrency(int coins, LiCurrency licurrency) throws LiErrorHandler
 	{
-		IAP.UseVirtualCurrency(coins,licurrency);
+		return IAP.UseVirtualCurrency(coins,licurrency);
 	}
 	
 	/**
@@ -94,7 +93,7 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 */
 	public static List<VirtualCurrency> GetAllVirtualCurrency() 
 	{
-		return IAP.GetAllVirtualCurrency();
+		 return IAP.GetAllVirtualCurrency();
 	}
 	
 	/**

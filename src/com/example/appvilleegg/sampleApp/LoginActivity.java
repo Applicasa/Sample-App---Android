@@ -31,6 +31,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TabHost.TabSpec;
@@ -66,6 +67,7 @@ public class LoginActivity extends Activity  {
 	EditText password;
 	private LoginActivity mActivity;
 	private TextView textForgot;
+	private ProgressBar progressBar;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,10 +79,9 @@ public class LoginActivity extends Activity  {
 		btnLoginFB = (ImageButton)findViewById(R.id.btn_log_in_fb);
 		btnRegister = (ImageButton)findViewById(R.id.btn_register);
 		textForgot = (TextView)findViewById(R.id.txt_forgotPassword);
-		email = (EditText)findViewById(R.id.txt_input_email);
+		email = (EditText)findViewById(R.id.txt_input_userName);
 		password = (EditText)findViewById(R.id.txt_input_password);
-		
-		
+		progressBar = (ProgressBar)findViewById(R.id.progressBar1);
 		textForgot.setClickable(true);
 		
 	}
@@ -99,16 +100,21 @@ public class LoginActivity extends Activity  {
 			
 			case R.id.btn_log_in:
 				btnLogin.setClickable(false);
+				progressBar.setVisibility(View.VISIBLE);
 				userName = email.getText().toString();
 				pass = password.getText().toString();
 				 User.logInUserWithUserName(userName, pass, new LiCallbackUser () {
 					
 					public void onSuccessfull(RequestAction action) {
+						progressBar.setVisibility(View.INVISIBLE);
+						btnLoginFB.setClickable(true);
 						finish();
 					}
 					
 					public void onFailure(RequestAction action, LiErrorHandler error) {
+						progressBar.setVisibility(View.INVISIBLE);
 						Toast.makeText(mActivity, "Can't Login User", Toast.LENGTH_LONG).show();
+						
 						btnLogin.setClickable(true);
 					}
 				});
@@ -126,6 +132,7 @@ public class LoginActivity extends Activity  {
 						
 						public void onFBLoginResponse(User currentUser) {
 							// TODO Auto-generated method stub
+							btnLoginFB.setClickable(true);
 							finish();
 						}
 						
@@ -193,16 +200,19 @@ public class LoginActivity extends Activity  {
 	
 		private void forgotPassword(String userName)
 		{
+			progressBar.setVisibility(View.VISIBLE);
 			User.forgotPassword(userName,new LiCallbackUser() {
 				
 				public void onSuccessfull(RequestAction arg0) {
 					// TODO Auto-generated method stub
+					progressBar.setVisibility(View.INVISIBLE);
 					 Toast.makeText(getApplicationContext(), "An email with password was sent", Toast.LENGTH_SHORT).show();
 					 textForgot.setClickable(true);
 				}
 				
 				public void onFailure(RequestAction arg0, LiErrorHandler ex) {
 					// TODO Auto-generated method stub
+					progressBar.setVisibility(View.INVISIBLE);
 					textForgot.setClickable(true);
 					 Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
 				}

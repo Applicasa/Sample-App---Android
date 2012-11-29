@@ -1,11 +1,9 @@
 package com.applicasa.ApplicasaManager;
 
-import java.util.List;
-import java.util.ArrayList;
-import org.apache.http.NameValuePair;
 import java.util.HashMap;
 import java.util.Map;
 	/** Applicasa imports **/
+import com.applicasa.Dynamic.Dynamic;
 import com.applicasa.User.User;
 import com.applicasa.VirtualCurrency.VirtualCurrency;
 import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
@@ -14,7 +12,6 @@ import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
 import android.content.Context;
-import applicasa.LiCore.Push.LiPushManager;
 import applicasa.LiJson.LiJSONArray;
 import applicasa.LiJson.LiJSONException;
 
@@ -66,6 +63,7 @@ public class LiManager {
 		array.put(VirtualCurrency.createDB());
 		array.put(VirtualGoodCategory.createDB());
 		array.put(VirtualGood.createDB());
+		array.put(Dynamic.createDB());
 		
 		return array;
 	}

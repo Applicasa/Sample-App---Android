@@ -63,12 +63,13 @@ public class RegisterActivity extends Activity  {
 	Bitmap image;
 	ImageView title_register;
 	ProgressBar bar;
-	private static ImageView spProfile;
-	private static ImageView usProfile;
+	
 	private boolean imageChanged = false;
 	boolean viewProfile = false;
 	private String filePath;
 	private RegisterActivity mActivity;
+	private EditText userName;
+	private ProgressBar progressBar;
 	
 	
 	
@@ -80,6 +81,7 @@ public class RegisterActivity extends Activity  {
 		
 		btnRegister = (ImageButton)findViewById(R.id.btn_register);
 		
+		userName = (EditText)findViewById(R.id.txt_input_userName);
 		email = (EditText)findViewById(R.id.txt_input_email);
 		password = (EditText)findViewById(R.id.txt_input_password);
 		firstName = (EditText)findViewById(R.id.txt_firstName);
@@ -87,8 +89,8 @@ public class RegisterActivity extends Activity  {
 		phoneNumber = (EditText)findViewById(R.id.txt_phone);
 		title_register = (ImageView)findViewById(R.id.title_register);
 		bar = (ProgressBar)findViewById(R.id.progressBar);
-		spProfile = (ImageView)findViewById(R.id.img_sp_profile);
-		usProfile = (ImageView)findViewById(R.id.img_profile);
+		
+		progressBar = (ProgressBar)findViewById(R.id.progressBar1);
 		
 		view = (ImageView)findViewById(R.id.img_picture);
 		
@@ -97,14 +99,15 @@ public class RegisterActivity extends Activity  {
 			User currnetUser = Applicasa.getCurrentUser();
 			
 			
-			getUserImage(currnetUser);
-			 email.setText(currnetUser.UserEmail);
-			 email.setClickable(false);
-			 email.setEnabled(false);
+			 getUserImage(currnetUser);
+			 userName.setText(currnetUser.UserName);
+			 userName.setClickable(false);
+			 userName.setEnabled(false);
 			 password.setEnabled(false);
-			 email.setFocusable(false);
+			 userName.setFocusable(false);
 			 password.setFocusable(false);
 			 
+			 email.setText(currnetUser.UserEmail);
 			 firstName.setText(currnetUser.UserFirstName);
 			 lastName.setText(currnetUser.UserLastName);
 			 phoneNumber.setText(currnetUser.UserPhone);
@@ -126,8 +129,6 @@ public class RegisterActivity extends Activity  {
 			}
 		
 		});
-		
-		refreshUI();
 	}
 
 	private void getUserImage(User currnetUser) {
@@ -178,14 +179,19 @@ public class RegisterActivity extends Activity  {
 		{
 			
 			case R.id.btn_register:
+				
 				btnRegister.setClickable(false);
-				userName = email.getText().toString();
+				userName = this.userName.getText().toString();
 				pass = password.getText().toString();
 					final User newUser = new User();
 					newUser.UserEmail = userName;
 					
 					if (firstName.getText() != null)
 						newUser.UserFirstName = firstName.getText().toString();
+					
+					if (email.getText() != null)
+						newUser.UserEmail = email.getText().toString();
+					
 					if (lastName.getText() != null)
 						newUser.UserLastName = lastName.getText().toString();
 					if (phoneNumber.getText() != null)
@@ -197,6 +203,7 @@ public class RegisterActivity extends Activity  {
 						User currentUser = Applicasa.getCurrentUser();
 						currentUser.UserEmail = userName;
 						currentUser.UserFirstName = firstName.getText().toString();
+						currentUser.UserEmail = email.getText().toString();
 						currentUser.UserLastName = lastName.getText().toString();
 						currentUser.UserPhone = phoneNumber.getText().toString();
 						currentUser.save(new LiCallbackAction() {
@@ -210,22 +217,24 @@ public class RegisterActivity extends Activity  {
 									RequestAction action, String itemID, LiObject liobject) {
 								// TODO Auto-generated method stub
 								Toast.makeText(mActivity, "Saved successfully", Toast.LENGTH_LONG).show();
-								btnRegister.setClickable(false);
+								btnRegister.setClickable(true);
 							}
 						});
 						
 						if (imageChanged)
+						{
+							progressBar.setVisibility(View.VISIBLE);
 							currentUser.updloadFile(LiFieldUser.UserImage, filePath,new LiCallbackAction() {
 								
 								public void onFailure(LiErrorHandler error) {
 									// TODO Auto-generated method stub
-//									LiObjRequest.loadCurrentUser(Applicasa.getApplicasaUserID());
 									LiFileCacher.GetFileFromCache(Applicasa.getCurrentUser().UserImage, new LiCallbackGetCachedFile() {
 										
 										public void onSuccessfull(InputStream in) {
 											// TODO Auto-generated method stub
 											Log.w("TAG", "Success");
-											btnRegister.setClickable(false);
+											
+											btnRegister.setClickable(true);
 										}
 										
 										public void onFailure(LiErrorHandler error) {
@@ -245,27 +254,34 @@ public class RegisterActivity extends Activity  {
 								public void onComplete(ApplicasaResponse response, String msg,
 										RequestAction action, String itemID, LiObject liobject) {
 									// TODO Auto-generated method stub
+									progressBar.setVisibility(View.INVISIBLE);
 									LiLogger.LogInfo("UserImage", Applicasa.getCurrentUser().UserImage);
 									Toast.makeText(mActivity, "Image loaded successfully", Toast.LENGTH_LONG).show();
 								}
 							}); 
+						}
 					}
 					else
 					{
+						progressBar.setVisibility(View.VISIBLE);
 						 newUser.registerUser(userName, pass,new LiCallbackUser () {
 							
 							public void onSuccessfull(RequestAction action) {
-								Applicasa.getCurrentUser();
+								progressBar.setVisibility(View.INVISIBLE);
 								if (filePath != null && !filePath.equals(""))
 								{
 									newUser.updloadFile(LiFieldUser.UserImage, filePath, null);
 								}
+								
+								btnRegister.setClickable(true);
 								refreshInventory();
 								finish();
 								
 							}
 							
 							public void onFailure(RequestAction action, LiErrorHandler error) {
+								btnRegister.setClickable(true);
+								progressBar.setVisibility(View.INVISIBLE);
 								Toast.makeText(mActivity, "Can't Register User", Toast.LENGTH_SHORT).show();
 							}
 						});
@@ -365,47 +381,4 @@ public class RegisterActivity extends Activity  {
 	        return cursor.getString(column_index);
 	}
 	
-	
-	public static void refreshUI()
-	{
-		if ( spProfile != null && usProfile != null)
-		{
-			
-		
-			switch(Applicasa.getUserSpendProfile())
-			{
-				case None:
-					break;
-				case Rockefeller:
-					spProfile.setImageResource(R.drawable.rockfelle);
-					break;
-				case TaxPayer:
-					spProfile.setImageResource(R.drawable.taxpayer);
-					break;
-				case Tourist:
-					spProfile.setImageResource(R.drawable.turist);
-					break;
-				case Zombie:
-					spProfile.setImageResource(R.drawable.ombie);
-					break;
-			}
-			switch(Applicasa.getUserUsageProfile())
-			{
-				case None:
-					break;
-				case General:
-					usProfile.setImageResource(R.drawable.general);
-					break;
-				case Hippie:
-					usProfile.setImageResource(R.drawable.hippie);
-					break;
-				case Private:
-					usProfile.setImageResource(R.drawable.us_private);
-					break;
-				case Serganet:
-					usProfile.setImageResource(R.drawable.sergeantx);
-					break;
-			}
-		}
-	}
 }

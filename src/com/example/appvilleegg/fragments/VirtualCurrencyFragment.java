@@ -92,10 +92,6 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 		super.onResume();
 		LiLogger.LogInfo("TABS Virtual" , "on resume");
 		activity = getActivity();
-		List<Promotion> promos = LiPromo.GetAvailablePromotions();	
-		if (!promos.isEmpty())
-			promos.get(0).show(activity);
-		
 	}
 	
 	

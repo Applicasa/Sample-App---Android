@@ -92,13 +92,6 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		mProductAdapter.notifyDataSetChanged();
 	}
 
-
-	public void onHasPromotionToDisplay(List<Promotion> promotions) {
-		// TODO Auto-generated method stub
-		LiLogger.LogInfo("TABS Virtual" , "new Promotion");
-		promotions.get(0).show(activity);
-	}
-	
 	@Override
 	public void onPause() {
 		

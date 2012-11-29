@@ -20,8 +20,13 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import applicasa.LiCore.communication.LiCallback;
+import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiRequestConst.QueryKind;
+import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
 import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiFilters.Operation;
+import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
 
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetArrayCallback;
@@ -30,19 +35,13 @@ import com.applicasa.ApplicasaManager.LiManager.LiObject;
 import android.database.Cursor;
 import applicasa.LiCore.sqlDB.database.LiCoreDBBuilder;
 import applicasa.LiCore.sqlDB.database.LiDbObject;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.communication.LiObjRequest;
-import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
 
-import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
 
 import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
 import applicasa.kit.IAP.IAP;
@@ -52,7 +51,7 @@ import applicasa.kit.IAP.IAP.LiCurrency;
 public class VirtualGood extends VirtualGoodData {
  /** End of Basic SDK **/
 
-	/**
+/**
 	 * 		VirtualGood is a Special In App Billing class.
 	 * 
 	 * 
@@ -73,9 +72,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public void useVirtualGoods(int quantity) throws LiErrorHandler
+	public boolean useVirtualGoods(int quantity) throws LiErrorHandler
 	{
-		 IAP.UseVirtualGoods(this, quantity);
+		return IAP.UseVirtualGoods(this, quantity);
 	}
 	
 	/**
@@ -84,9 +83,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public void buyVirtualGoods(int quantity, LiCurrency licurrency) throws LiErrorHandler
+	public boolean buyVirtualGoods(int quantity, LiCurrency licurrency) throws LiErrorHandler
 	{
-		 IAP.BuyVirtualGoods(this, quantity, licurrency);
+		return IAP.BuyVirtualGoods(this, quantity, licurrency);
 	}
 	
 	/**
@@ -95,9 +94,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public void giveVirtualGoods(int quantity) throws LiErrorHandler
+	public boolean giveVirtualGoods(int quantity) throws LiErrorHandler
 	{
-		 IAP.GiveVirtualGoods(this, quantity);
+		return IAP.GiveVirtualGoods(this, quantity);
 	}
 	
 	/**
@@ -106,9 +105,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public void useVirtualGoods() throws LiErrorHandler
+	public boolean useVirtualGoods() throws LiErrorHandler
 	{
-		 IAP.UseVirtualGoods(this, 1);
+		return IAP.UseVirtualGoods(this, 1);
 	}
 	
 	/**
@@ -117,9 +116,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public void buyVirtualGoods(LiCurrency licurrency) throws LiErrorHandler
+	public boolean buyVirtualGoods(LiCurrency licurrency) throws LiErrorHandler
 	{
-		 IAP.BuyVirtualGoods(this, 1, licurrency);
+		return IAP.BuyVirtualGoods(this, 1, licurrency);
 	}
 	
 	/**
@@ -128,9 +127,9 @@ public class VirtualGood extends VirtualGoodData {
 	 * @return
 	 * @throws LiErrorHandler
 	 */
-	public void giveVirtualGoods() throws LiErrorHandler
+	public boolean giveVirtualGoods() throws LiErrorHandler
 	{
-		 IAP.GiveVirtualGoods(this, 1);
+		 return IAP.GiveVirtualGoods(this, 1);
 	}
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

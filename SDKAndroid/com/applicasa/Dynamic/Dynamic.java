@@ -1,36 +1,17 @@
 package com.applicasa.Dynamic;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.GregorianCalendar;
 
-import org.apache.http.ParseException;
-
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiUtility;
 
-import applicasa.LiCore.LiLocation;
-import java.net.URL;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
-import applicasa.LiCore.communication.LiCallback;
 import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import applicasa.LiCore.communication.LiFilters.Operation;
-
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
 
 import android.database.Cursor;
-import android.util.Log;
-import applicasa.LiCore.sqlDB.database.LiCoreDBBuilder;
 import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiUtility;
@@ -40,11 +21,13 @@ import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.communication.LiObjRequest;
 import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
 import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiFilters;
+import applicasa.LiCore.communication.LiQuery;
+import applicasa.LiCore.communication.LiFilters.Operation;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
 
-import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
 
 
 public class Dynamic extends DynamicData {
@@ -191,7 +174,7 @@ public class Dynamic extends DynamicData {
 	        request.startASync();
 	    }
 	   
-		public void getLocalyWithRawSQLQuery(String whereClause, String[] args, LiDynamicGetArrayCallback liDynamicGetArrayCallback)
+		public static void getLocalyWithRawSQLQuery(String whereClause, String[] args, LiDynamicGetArrayCallback liDynamicGetArrayCallback)
 	    {
 			LiObjRequest request = new LiObjRequest();
 	        request.setCallback(callbackHandler);
@@ -311,7 +294,6 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		if (cursor == null || cursor.getCount() == 0 ) {}// nothing received
 		else
 		{
-			Log.i("Statistics", "start creating"+String.valueOf(cursor.getCount())+" Object");
 			cursor.moveToFirst();
 			ArrayList<String> idsList = LiObjRequest.IdsMap.get(requestID);
             ArrayList<String> idsToDelete = new ArrayList<String>();
@@ -335,10 +317,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				LiObjRequest.DeleteUnlistedIds(kClassName,requestID, idsToDelete);
 			}
 			idsList = null;
-			idsToDelete = null;
-			Log.i("Statistics", "end creating"+String.valueOf(cursor.getCount())+" Object");
-			cursor.close();
+			idsToDelete = null;			
 		}
+		cursor.close();
 	
 		return returnList;
 		
@@ -370,14 +351,13 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public Dynamic()
 	{
 		this.DynamicID = "0";
-		(this.DynamicLastUpdate = new GregorianCalendar()).setTimeInMillis(0000);
+		(this.DynamicLastUpdate = new GregorianCalendar()).setTimeInMillis(0);
 		this.DynamicText = "";
 		this.DynamicNumber = 0;
 		this.DynamicReal = 0f;
-		(this.DynamicDate = new GregorianCalendar()).setTimeInMillis(1350331200);
+		(this.DynamicDate = new GregorianCalendar()).setTimeInMillis(0);
 		this.DynamicBool = true;
-		this.DynamicImage = "";
-		this.DynamicGeo = new LiLocation(0, 0);
+		this.DynamicHtml = "";
 	}
 
 	public Dynamic(Cursor cursor) 
@@ -385,9 +365,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		initWithCursor(cursor);
 	}
 	
-	public Dynamic(Cursor cursor,String header) 
+	public Dynamic(Cursor cursor,String header,int level) 
 	{
-		initWithCursor(cursor,header);
+		initWithCursor(cursor,header,level);
 	}
 	
 	public Dynamic(String DynamicID)
@@ -402,7 +382,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	*/
 	public Dynamic initWithCursor(Cursor cursor)
 	{
-		return initWithCursor(cursor,"");
+		return initWithCursor(cursor,"",0);
 	}
 	
 	/**
@@ -410,7 +390,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	* @param corsor
 	* @return
 	*/
-	public Dynamic initWithCursor(Cursor cursor,String header)
+	public Dynamic initWithCursor(Cursor cursor,String header,int level)
 	{
 		int columnIndex;
 	
@@ -451,28 +431,12 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		columnIndex = cursor.getColumnIndex(header + LiFieldDynamic.DynamicBool.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 		{
-			String strBool = cursor.getString(columnIndex);
-			if (strBool != null && strBool != "-1")
-				this.DynamicBool = Boolean.valueOf(strBool);
+			this.DynamicBool = cursor.getInt(columnIndex)==1?true:false;
 		}
 		
-		columnIndex = cursor.getColumnIndex(header + LiFieldDynamic.DynamicImage.toString());
+		columnIndex = cursor.getColumnIndex(header + LiFieldDynamic.DynamicHtml.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
-			this.DynamicImage = cursor.getString(columnIndex);
-		
-		float Longitude = 0, Latitude  = 0;
-		columnIndex = cursor.getColumnIndex(header + LiFieldDynamic.DynamicGeo.toString()+"Long");
-		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
-			 Longitude= cursor.getFloat(columnIndex);
-		columnIndex = cursor.getColumnIndex(header + LiFieldDynamic.DynamicGeo.toString()+"Lat");
-		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
-			 Latitude= cursor.getFloat(columnIndex);
-		this.DynamicGeo = new LiLocation(Longitude, Latitude);
-		
-		
-		columnIndex = cursor.getColumnIndex(header + LiObjRequest.DistanceFromCurrent);
-		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
-			this.DistanceFromCurrent = LiUtility.convertPartialDistanceToKm(cursor.getDouble(columnIndex));
+			this.DynamicHtml = cursor.getString(columnIndex);
 		
 	
 		try{this.receivedFields = this.dictionaryRepresentation(false);}
@@ -494,8 +458,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		this.DynamicReal			= item.DynamicReal;
 		this.DynamicDate			= item.DynamicDate;
 		this.DynamicBool			= item.DynamicBool;
-		this.DynamicImage			= item.DynamicImage;
-		this.DynamicGeo			= item.DynamicGeo;
+		this.DynamicHtml			= item.DynamicHtml;
 	
 		return DynamicID;
 	}
@@ -529,9 +492,7 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	
 		dictionary.put(LiFieldDynamic.DynamicBool, DynamicBool);
 	
-		dictionary.put(LiFieldDynamic.DynamicImage, DynamicImage);
-	
-		dictionary.put(LiFieldDynamic.DynamicGeo, DynamicGeo.getJsonArrayRepresentation());
+		dictionary.put(LiFieldDynamic.DynamicHtml, DynamicHtml);
 	
 		return dictionary;
 		}
@@ -545,14 +506,13 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		LiDbObject dbObject = new LiDbObject();
 		dbObject.put("LiClassName", kClassName);
 		dbObject.put(LiFieldDynamic.DynamicID, LiCoreDBmanager.PRIMARY_KEY,-1);
-		dbObject.put(LiFieldDynamic.DynamicLastUpdate, LiCoreDBmanager.DATE,0000);
+		dbObject.put(LiFieldDynamic.DynamicLastUpdate, LiCoreDBmanager.DATE,0);
 		dbObject.put(LiFieldDynamic.DynamicText, LiCoreDBmanager.TEXT,"");
 		dbObject.put(LiFieldDynamic.DynamicNumber, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldDynamic.DynamicReal, LiCoreDBmanager.REAL,0f);
-		dbObject.put(LiFieldDynamic.DynamicDate, LiCoreDBmanager.DATE,1350331200);
+		dbObject.put(LiFieldDynamic.DynamicDate, LiCoreDBmanager.DATE,0);
 		dbObject.put(LiFieldDynamic.DynamicBool, LiCoreDBmanager.BOOL,true);
-		dbObject.put(LiFieldDynamic.DynamicImage, LiCoreDBmanager.TEXT,"");
-		dbObject.put(LiFieldDynamic.DynamicGeo, LiCoreDBmanager.LOCATION,"[0,0]");
+		dbObject.put(LiFieldDynamic.DynamicHtml, LiCoreDBmanager.TEXT,"");
 	return dbObject;
 }
 	public void increment(LiFieldDynamic liFieldDynamic) throws LiErrorHandler

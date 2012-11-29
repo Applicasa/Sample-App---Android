@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.applicasa.Promotion.Promotion;
+import com.applicasa.VirtualCurrency.VirtualCurrency;
 import com.applicasa.VirtualGood.VirtualGood;
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,8 +31,10 @@ import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionAction;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResult;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResultCallback;
 import applicasa.LiJson.LiJSONException;
-import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 
 
@@ -42,19 +45,22 @@ public class LiSinglePromoDialog extends Dialog   {
 	private ImageView mExitButton;
 	
 	private Promotion mSinglePromo;
+	
 	FrameLayout mFrameLayout;
 	RelativeLayout mRelativeLayout; 
 	ProgressDialog mSpinner;
 	ImageButton mImageButton;
 	RelativeLayout.LayoutParams rl;
+	LiPromotionResultCallback mLiPromotionResultCallback;
 	
 	protected boolean isBackgroundAvailable = false;
 	protected boolean isButtonAvailable = false;
 	
-    public LiSinglePromoDialog(final Activity activity, Promotion singlePromo) {
+    public LiSinglePromoDialog(final Activity activity, Promotion singlePromo, LiPromotionResultCallback liPromotionResultCallback) {
         super(activity, android.R.style.Theme_Translucent_NoTitleBar);
         mActivity = activity;
         mSinglePromo = singlePromo;
+        mLiPromotionResultCallback = liPromotionResultCallback;
         
     }
 
@@ -142,8 +148,8 @@ public class LiSinglePromoDialog extends Dialog   {
 		btn_rl.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		btn_rl.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		mImageButton.setScaleType(ScaleType.FIT_CENTER);
-		mImageButton.setPadding(0, 0, 0, pxFromDp(40));
 		mImageButton.setAdjustViewBounds(true);
+		mImageButton.setPadding(0, 0, 0, pxFromDp(40));
 		mImageButton.setBackgroundColor(00000000);
 		mImageButton.setOnClickListener(clickHandler);
 		mRelativeLayout.addView(mImageButton,btn_rl);
@@ -174,7 +180,12 @@ public class LiSinglePromoDialog extends Dialog   {
             public void onClick(View v) {
 //        		// updates analytics that the Promo was only viewed
             	mSinglePromo.updateViewUseCount(1, 0);
+            	
+            	 if (mLiPromotionResultCallback != null)
+                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Cancelled, LiPromotionResult.PromotionResultNothing, null);
+            	 
                 LiSinglePromoDialog.this.dismiss();
+               
             }
         });
        
@@ -258,12 +269,16 @@ public class LiSinglePromoDialog extends Dialog   {
 		
 		public void onClick(View v) {
 		try {
+				boolean result = true;
 			   mSinglePromo.updateViewUseCount( 1, 1);
 			  switch (mSinglePromo.PromotionActionKind)
 			  {
 				  case NULL:
 					  break;
 				  case NOTHING:
+					  if (mLiPromotionResultCallback != null)
+		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultNothing, null);
+					  
 					  break;
 				  case LINK:
 					  if (mSinglePromo.PromotionActionData.has("link"))
@@ -275,6 +290,9 @@ public class LiSinglePromoDialog extends Dialog   {
 						  
 						  mActivity.startActivity(webIntent);
 						 
+						  if (mLiPromotionResultCallback != null)
+			                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultLinkOpened, link);
+						  
 						 dismiss();
 					  }
 					  break;
@@ -282,25 +300,51 @@ public class LiSinglePromoDialog extends Dialog   {
 					  // The promotion text is retreived 
 					  String text = mSinglePromo.PromotionActionData.getString("string");
 
+					  if (mLiPromotionResultCallback != null)
+		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultStringInfo, text);
+					  
 					  break;
 				  case GIVE_VC:
 					  int amount = mSinglePromo.PromotionActionData.getInt("amount");
 					  int vcKind = mSinglePromo.PromotionActionData.getInt("virtualCurrencyKind");
-					  IAP.GiveVirtualCurrency(amount, LiCurrency.values()[vcKind]);
-					  IAP.notifyObserver();
+					  LiStore.GiveVirtualCurrency(amount, LiCurrency.values()[vcKind]);
+					  /**
+					   * Notifies IAP Obeserver
+					   */
+					  LiStore.notifyObserver();
+					  if (mLiPromotionResultCallback != null)
+		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded,(vcKind==1)?LiPromotionResult.PromotionResultGiveMainCurrencyVirtualCurrency:
+		                 		LiPromotionResult.PromotionResultGiveSeconedaryCurrencyVirtualCurrency, amount);
+					  
 					  break;
 				  case GIVE_VG:
 					  String id= mSinglePromo.PromotionActionData.getString("_id");
-					  IAP.GiveVirtualGoods(IAP.GetVirtualGoodById(id), 1);
+					  VirtualGood item = LiStore.GetVirtualGoodById(id);
+					  LiStore.GiveVirtualGoods(item, 1);
+					 
+					  if (mLiPromotionResultCallback != null)
+		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultGiveVirtualGood, item);
+					  
 					  break;
 				  case DEAL_VC:
 					   id= mSinglePromo.PromotionActionData.getString("_id");
-					   IAP.BuyVirtualCurrency(IAP.GetVirtualCurrencyDealById(id));
+					   VirtualCurrency itemVC = LiStore.GetVirtualCurrencyDealById(id);
+					   result = LiStore.BuyVirtualCurrency(itemVC);
+					   
+					   if (mLiPromotionResultCallback != null)
+		                 	mLiPromotionResultCallback.onPromotionResultCallback(result?LiPromotionAction.Succeded:LiPromotionAction.Failed, (itemVC.VirtualCurrencyKind==LiCurrency.MainCurrency)?LiPromotionResult.PromotionResultDealMainVirtualCurrency:
+		                 		LiPromotionResult.PromotionResultDealSeconedaryVirtualCurrency, itemVC);
 					  break;
 				  case DEAL_VG:
 					   id= mSinglePromo.PromotionActionData.getString("_id");
-					   VirtualGood vg = IAP.GetVirtualGoodDealById(id);
-					   IAP.BuyVirtualGoods(vg, 1, (vg.VirtualGoodMainCurrency!=0) ? LiCurrency.MainCurrency:LiCurrency.SencondaryCurrency);
+					   item = LiStore.GetVirtualGoodDealById(id);
+					   
+					   result = LiStore.BuyVirtualGoods(item, 1, (item.VirtualGoodMainCurrency!=0) ? LiCurrency.MainCurrency:LiCurrency.SencondaryCurrency);
+					   
+					   if (mLiPromotionResultCallback != null)
+		                 	mLiPromotionResultCallback.onPromotionResultCallback(result?LiPromotionAction.Succeded:LiPromotionAction.Failed, LiPromotionResult.PromotionResultGiveVirtualGood, item);
+					   
+					   
 					  break;
 				  }
 			  dismiss();

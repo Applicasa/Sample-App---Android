@@ -14,7 +14,7 @@
         android:background="@android:color/transparent"
         android:onClick="onClickHandler"
         android:src="@drawable/btn_nav_login" />
-    
+
     <ImageButton
         android:id="@+id/btn_my_profile"
         android:layout_width="wrap_content"
@@ -32,7 +32,6 @@
         android:layout_below="@+id/btn_login"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        
         android:src="@drawable/egg_main" />
 
     <ImageButton
@@ -42,7 +41,7 @@
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
-         android:onClick="onClickHandler"
+        android:onClick="onClickHandler"
         android:src="@drawable/btn_store" />
 
     <ImageButton
@@ -52,8 +51,8 @@
         android:layout_alignBottom="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="18dp"
-         android:onClick="onClickHandler"
         android:background="@android:color/transparent"
+        android:onClick="onClickHandler"
         android:src="@drawable/btn_play" />
 
     <ProgressBar
@@ -64,24 +63,40 @@
         android:layout_above="@+id/btn_play"
         android:layout_centerHorizontal="true" />
 
-        <ImageButton
-            android:id="@+id/btn_findFriends"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/btn_store"
-            android:background="@android:color/transparent"
-            android:onClick="onClickHandler"
-            android:src="@drawable/main_tab_find_friends" />
+    <ImageButton
+        android:id="@+id/btn_findFriends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/btn_store"
+        android:background="@android:color/transparent"
+        android:onClick="onClickHandler"
+        android:src="@drawable/main_tab_find_friends" />
 
-        <ImageButton
-            android:id="@+id/btn_fbFeatures"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/btn_store"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/transparent"
-            android:onClick="onClickHandler"
-            android:src="@drawable/main_tab_acebook_features" />
+    <ImageButton
+        android:id="@+id/btn_fbFeatures"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_store"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        android:onClick="onClickHandler"
+        android:src="@drawable/main_tab_acebook_features" />
+
+    <ImageView
+        android:id="@+id/img_profile"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignLeft="@+id/btn_my_profile"
+        android:layout_below="@+id/btn_my_profile"
+        android:src="@drawable/ombie" />
+    
+     <ImageView
+        android:id="@+id/img_sp_profile"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/btn_my_profile"
+        android:layout_toRightOf="@id/img_profile"
+        android:src="@drawable/hippie" />
 
 </RelativeLayout>

@@ -1,14 +1,7 @@
 package com.applicasa.ApplicasaManager;
-import java.util.Map;
-
-import com.example.appvilleegg.main.MainActivity;
-import com.example.appvilleegg.sampleApp.UsersRadiusListActivity;
-
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
 
@@ -22,11 +15,6 @@ public class LiGCMActivity extends Activity{
 		 */
 		//setContentView(R.layout.main);
 		super.onCreate(savedInstanceState);
-		
-		Intent i = new Intent(this, MainActivity.class);
-		startActivity(i); 
-		finish();
-		 
 		Bundle extras = getIntent().getExtras();
 		LiJSONObject jsonTag;
 		

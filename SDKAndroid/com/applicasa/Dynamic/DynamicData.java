@@ -3,10 +3,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import applicasa.LiCore.communication.LiUtility;
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetByIDCallback;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetArrayCallback;
 import applicasa.LiCore.LiLocation;
 import applicasa.LiCore.LiField;
 import applicasa.LiJson.LiJSONObject;
@@ -28,8 +24,7 @@ public class DynamicData {
 	, DynamicReal
 	, DynamicDate
 	, DynamicBool
-	, DynamicImage
-	, DynamicGeo
+	, DynamicHtml
 
 	;
 
@@ -65,11 +60,8 @@ public class DynamicData {
 	
 		public Boolean DynamicBool;
 	
-		public String DynamicImage;
+		public String DynamicHtml;
 	
-		public LiLocation DynamicGeo;
-	
-		public double DistanceFromCurrent;
 	
 		public String getDynamicID() {
 			return DynamicID;
@@ -127,20 +119,12 @@ public class DynamicData {
 			this.DynamicBool = DynamicBool;
 		}
 		
-		public String getDynamicImage() {
-			return DynamicImage;
+		public String getDynamicHtml() {
+			return DynamicHtml;
 		}
 		
-		public void setDynamicImage(String DynamicImage) {
-			this.DynamicImage = DynamicImage;
-		}
-		
-		public LiLocation getDynamicGeo() {
-			return DynamicGeo;
-		}
-		
-		public void setDynamicGeo(LiLocation DynamicGeo) {
-			this.DynamicGeo = DynamicGeo;
+		public void setDynamicHtml(String DynamicHtml) {
+			this.DynamicHtml = DynamicHtml;
 		}
 		
 		public static String getDynamicSortField(DynamicData.LiFieldDynamic field)
@@ -174,8 +158,8 @@ public class DynamicData {
 			case DynamicBool:
 					return DynamicBool;
 					
-			case DynamicImage:
-				return DynamicImage;
+			case DynamicHtml:
+				return DynamicHtml;
 				
 			default:
 				return "";
@@ -217,12 +201,8 @@ public class DynamicData {
 					DynamicBool = (Boolean)value;
 					break;
 					
-			case DynamicImage:
-					DynamicImage = (String)value;
-					break;
-					
-			case DynamicGeo:
-					DynamicGeo = (LiLocation)value;
+			case DynamicHtml:
+					DynamicHtml = (String)value;
 					break;
 					
 			default:

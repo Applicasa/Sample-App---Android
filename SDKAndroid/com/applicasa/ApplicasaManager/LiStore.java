@@ -27,9 +27,9 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static void BuyVirtualGoods(VirtualGood virtualGood, int quantity,LiCurrency currency) 
+	public static boolean BuyVirtualGoods(VirtualGood virtualGood, int quantity,LiCurrency currency) 
 	{
-		IAP.BuyVirtualGoods(virtualGood, quantity, currency);
+		return  IAP.BuyVirtualGoods(virtualGood, quantity, currency);
 	}
 	
 	/**
@@ -37,8 +37,8 @@ public class LiStore {
 	 * @param appStoreItem
 	 * @return
 	 */
-	public static void BuyVirtualCurrency(VirtualCurrency virtualCurrency) {
-		 IAP.BuyVirtualCurrency(virtualCurrency);
+	public static boolean BuyVirtualCurrency(VirtualCurrency virtualCurrency) {
+		return IAP.BuyVirtualCurrency(virtualCurrency);
 	}
 	
 	/**
@@ -47,9 +47,9 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static void GiveVirtualGoods(VirtualGood virtualGood, int quantity) 
+	public static boolean GiveVirtualGoods(VirtualGood virtualGood, int quantity) 
 	{
-		 IAP.GiveVirtualGoods(virtualGood, quantity);
+		return  IAP.GiveVirtualGoods(virtualGood, quantity);
 	}
 	
 	/**
@@ -57,9 +57,9 @@ public class LiStore {
 	 * @param coins
 	 * @return
 	 */
-	public static void GiveVirtualCurrency(int amount, LiCurrency currency) 
+	public static  boolean GiveVirtualCurrency(int amount, LiCurrency currency) 
 	{
-		 IAP.GiveVirtualCurrency(amount, currency);
+		return IAP.GiveVirtualCurrency(amount, currency);
 	}
 	
 	
@@ -69,9 +69,9 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static void UseVirtualGoods(VirtualGood virtualGood, int quantity) 
+	public static boolean UseVirtualGoods(VirtualGood virtualGood, int quantity) 
 	{
-		 IAP.UseVirtualGoods( virtualGood, quantity); 
+		return IAP.UseVirtualGoods( virtualGood, quantity); 
 	}
 	
 	/**
@@ -79,9 +79,9 @@ public class LiStore {
 	 * @param coins
 	 * @return
 	 */
-	public static void UseVirtualCurrency(int amount, LiCurrency currency) 
+	public static boolean  UseVirtualCurrency(int amount, LiCurrency currency) 
 	{
-		 IAP.UseVirtualCurrency(amount, currency);
+		return IAP.UseVirtualCurrency(amount, currency);
 		
 	}
 
@@ -172,6 +172,26 @@ public class LiStore {
 	public static void reloadIAPLocaly()
 	{
 		IAP.reloadIAPLocaly();
+	}
+
+	public static VirtualGood GetVirtualGoodById(String id) {
+		// TODO Auto-generated method stub
+		return IAP.GetVirtualGoodById(id);
+	}
+	
+	public static VirtualCurrency GetVirtualCurrencyDealById(String id) {
+		// TODO Auto-generated method stub
+		return IAP.GetVirtualCurrencyDealById(id);
+	}
+
+	public static void notifyObserver() {
+		// TODO Auto-generated method stub
+		IAP.notifyObserver();
+	}
+
+	public static VirtualGood GetVirtualGoodDealById(String id) {
+		// TODO Auto-generated method stub
+		return IAP.GetVirtualGoodDealById(id);
 	}
 	
 }

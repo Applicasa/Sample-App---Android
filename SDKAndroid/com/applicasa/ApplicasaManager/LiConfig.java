@@ -58,7 +58,7 @@ public class LiConfig {
 	/**
      * Schema Generated Timestamp in sec
      */
-    private final static int SCHEMA_DATE = 1353260496;
+    private final static int SCHEMA_DATE = 1353262497;
 	
 	/**
 	* Indicates whether working in live or sandbox environment

@@ -2,9 +2,11 @@ package com.applicasa.ApplicasaManager;
 
 import java.util.List;
 
+import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.promotion.sessions.LiEventManager;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
 
+import com.applicasa.Promotion.LiPromotionManager;
 import com.applicasa.Promotion.Promotion;
 
 public class LiPromo {
@@ -24,7 +26,19 @@ public class LiPromo {
 	 */
 	public static List<Promotion> GetAvailablePromotions()
 	{
-		return LiEventManager.GetAvailablePromotions();
+		return LiPromotionManager.GetAvailablePromotions();
 	}
+	
+	/**
+	 * 
+	 * @return the available promotions
+	 * @throws LiErrorHandler 
+	 */
+	public static void RefreshPromotions() throws LiErrorHandler
+	{
+		LiPromotionManager.GetPromotions();
+	}
+	
+	
 	
 }

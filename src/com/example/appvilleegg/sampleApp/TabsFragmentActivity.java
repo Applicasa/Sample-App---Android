@@ -66,6 +66,8 @@ import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionAction;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResult;
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 
@@ -186,7 +188,14 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 				@Override
 				public void onHasPromotionToDisplay(List<Promotion> promotions) {
 					// TODO Auto-generated method stub
-					promotions.get(0).show(mActivity);
+					promotions.get(0).show(mActivity, new LiPromotionResultCallback() {
+						
+						public void onPromotionResultCallback(LiPromotionAction arg0,
+								LiPromotionResult arg1, Object arg2) {
+							// TODO Auto-generated method stub
+							
+						}
+					});
 				}
 		});
 		
