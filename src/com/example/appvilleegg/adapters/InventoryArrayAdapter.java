@@ -87,11 +87,6 @@ public class InventoryArrayAdapter extends ArrayAdapter<VirtualGood> {
 				}
 			});
 			
-			
-			
-			
-//			if (inAppObjectList[position].used)
-//				holder.buy.setEnabled(false);
 		}
 		
 		return rowView;

@@ -3,6 +3,7 @@ package com.example.appvilleegg.fragments;
 import java.util.List;
 
 
+import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.VirtualGood.VirtualGood;
 import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.InventoryArrayAdapter;
@@ -41,7 +42,9 @@ public class InventoryFragment extends ListFragment implements OnItemClickListen
 		
 		
 		 	View view = inflater.inflate(R.layout.inventory_list_holder, container, false);
-		 	list = IAP.GetAllVirtualGoods(GetVirtualGoodKind.HasInventory);
+		 	
+		 	// Get all Virtual good with inventory
+		 	list = LiStore.GetAllVirtualGoods(GetVirtualGoodKind.HasInventory);
 		 	mInventoryAdapter = new InventoryArrayAdapter(this.getActivity(),list );
 		 	setListAdapter(mInventoryAdapter);
 		 	

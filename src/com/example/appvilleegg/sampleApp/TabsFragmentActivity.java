@@ -16,6 +16,8 @@ import com.applicasa.Dynamic.Dynamic;
 import com.applicasa.Dynamic.DynamicData.LiFieldDynamic;
 import com.applicasa.Promotion.Promotion;
 import com.applicasa.User.User;
+import com.applicasa.VirtualCurrency.VirtualCurrency;
+import com.applicasa.VirtualGood.VirtualGood;
 
 import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.ShareDialog;
@@ -68,6 +70,7 @@ import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionAction;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResult;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResultCallback;
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 
@@ -76,7 +79,7 @@ import applicasa.kit.IAP.IAP.LiCurrency;
  * @author mwho
  *
  */
-public class TabsFragmentActivity extends FragmentActivity implements TabHost.OnTabChangeListener {
+public class TabsFragmentActivity extends FragmentActivity implements TabHost.OnTabChangeListener, LiPromotionResultCallback{
 
 	   private static final String TAG = TabsFragmentActivity.class.getCanonicalName();
 	   private  TextView 				mBalanceMain;
@@ -87,6 +90,8 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 	   public static boolean clickEnabled = true; 
 	   Bundle mBundle;
 	   private ImageButton logout;
+	   
+	   LiPromotionCallback mLiPromotionCallback;
 	   
 	 
 	
@@ -149,7 +154,6 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		
 //		IAP.RegisterLiInAppObserver(new IapObserver(mActivity));
 		
-		
 		LiSession.SessionStart(mActivity,null);
 		
 		initialiseTabHost();
@@ -188,14 +192,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 				@Override
 				public void onHasPromotionToDisplay(List<Promotion> promotions) {
 					// TODO Auto-generated method stub
-					promotions.get(0).show(mActivity, new LiPromotionResultCallback() {
-						
-						public void onPromotionResultCallback(LiPromotionAction arg0,
-								LiPromotionResult arg1, Object arg2) {
-							// TODO Auto-generated method stub
-							
-						}
-					});
+					promotions.get(0).show(mActivity,mActivity);
 				}
 		});
 		
@@ -354,5 +351,57 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		LiSession.SessionStart(mActivity,null);
 		super.onResume();
 	}
+
+	public void onPromotionResultCallback(LiPromotionAction action,
+			LiPromotionResult result, Object info) {
+		// TODO Auto-generated method stub
+		if (action.equals(LiPromotionAction.Cancelled))
+		{
+			Log.i("Promotion", "action cancelled");
+			return;
+		}
+		if (action.equals(LiPromotionAction.Failed))
+		{
+			Log.i("Promotion", "action "+ result.toString()+" Failed ");
+			return;
+		}
+		switch (result)
+		{
+		case PromotionResultDealMainVirtualCurrency:
+			Log.i("Promotion", "Deal of "+((VirtualCurrency)info).VirtualCurrencyCredit +"received" );
+			refreshUI();
+			break;
+		case PromotionResultDealSeconedaryVirtualCurrency:
+			Log.i("Promotion", "Deal of "+((VirtualCurrency)info).VirtualCurrencyCredit +"received" );
+			refreshUI();
+			break;
+		case PromotionResultDealVirtualGood:
+			Log.i("Promotion", ((VirtualGood)info).VirtualGoodTitle +" Deal was received");
+			refreshUI();
+			LiStore.reloadVirtualGoodInventory();
+			break;
+		case PromotionResultGiveMainCurrencyVirtualCurrency:
+			Log.i("Promotion", String.valueOf((Integer)info)+" Main Currency received");
+			refreshUI();
+			break;
+		case PromotionResultGiveSeconedaryCurrencyVirtualCurrency:
+			Log.i("Promotion", String.valueOf((Integer)info)+" Secondary Currency received");
+			refreshUI();
+			break;
+		case PromotionResultGiveVirtualGood:
+			Log.i("Promotion", ((VirtualGood)info).VirtualGoodTitle +" was received");
+			LiStore.reloadVirtualGoodInventory();
+			break;
+		case PromotionResultLinkOpened:
+			Log.i("Promotion", "Link "+(String)info+" Opened");
+			break;
+		case PromotionResultNothing:
+			break;
+		case PromotionResultStringInfo:
+			break;
+			
+		}
+	}
 }
+
 

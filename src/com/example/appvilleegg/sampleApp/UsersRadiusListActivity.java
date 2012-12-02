@@ -100,12 +100,6 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 		LiObjPushMessage push = new LiObjPushMessage();
 		push.mMSG="I'm only " +String.valueOf((int)(user.DistanceFromCurrent*1000)) +"m From U";
 		push.mBadge = 1;
-//		try {
-//			push.addTag("id", User.getCurrentUser().UserID);
-//		} catch (LiJSONException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	
 		push.addReceipientUserIDList(user.UserID);
 		push.sendAsync(new LiCallbackPush() {

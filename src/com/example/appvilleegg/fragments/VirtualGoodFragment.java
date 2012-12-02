@@ -4,6 +4,7 @@ package com.example.appvilleegg.fragments;
 import java.util.List;
 
 import com.applicasa.ApplicasaManager.LiPromo;
+import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.Promotion.Promotion;
 
 import com.appvilleegg.R;
@@ -23,7 +24,6 @@ import android.widget.Toast;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
-import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.GetVirtualGoodKind;
 import applicasa.kit.IAP.IAP.LiCurrency;
 
@@ -55,7 +55,7 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		activity = getActivity();
 		 if (activity != null) {
 	            // gets an instance of the custom adapter for the Virtual Product.
-			 	mProductAdapter = VirtualGoodAdapter.getInstance(activity, IAP.GetAllVirtualGoods(GetVirtualGoodKind.ALL));
+			 	mProductAdapter = VirtualGoodAdapter.getInstance(activity, LiStore.GetAllVirtualGoods(GetVirtualGoodKind.ALL));
 	            
 	            if (mGridView != null) {
 	                mGridView.setAdapter(mProductAdapter);
@@ -78,7 +78,7 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		if (TabsFragmentActivity.clickEnabled)	
 		{
 			try {
-				(IAP.GetAllVirtualGoods(GetVirtualGoodKind.ALL)).get(position).buyVirtualGoods(1,LiCurrency.MainCurrency);
+				(LiStore.GetAllVirtualGoods(GetVirtualGoodKind.ALL)).get(position).buyVirtualGoods(1,LiCurrency.MainCurrency);
 				TabsFragmentActivity.refreshUI();
 			} catch (LiErrorHandler e) {
 				// TODO Auto-generated catch block

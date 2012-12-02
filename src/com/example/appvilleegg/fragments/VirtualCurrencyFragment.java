@@ -3,6 +3,7 @@ package com.example.appvilleegg.fragments;
 import java.util.List;
 
 import com.applicasa.ApplicasaManager.LiPromo;
+import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.Promotion.Promotion;
 import com.applicasa.VirtualCurrency.VirtualCurrency;
 
@@ -57,7 +58,7 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 	            // Create an instance of the custom adapter for the GridView. A static array of location data
 	            // is stored in the Application sub-class for this app. This data would normally come
 	            // from a database or a web service.
-			 	mStoreAdapter = VirtualCurrencyAdapter.getInstance(activity, IAP.GetAllVirtualCurrency());
+			 	mStoreAdapter = VirtualCurrencyAdapter.getInstance(activity, LiStore.GetAllVirtualCurrency());
 	            
 	            if (mGridView != null) {
 	                mGridView.setAdapter(mStoreAdapter);
@@ -78,8 +79,8 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 		LiLogger.LogWarning(Tag, "Clicked");
 		if (TabsFragmentActivity.clickEnabled)	
 		{
-			VirtualCurrency vc = IAP.GetAllVirtualCurrency().get(position);
-			IAP.BuyVirtualCurrency(vc);
+			VirtualCurrency vc = LiStore.GetAllVirtualCurrency().get(position);
+			LiStore.BuyVirtualCurrency(vc);
 		}
 	}
 	

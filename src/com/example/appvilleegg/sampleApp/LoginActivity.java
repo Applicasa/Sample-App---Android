@@ -81,7 +81,7 @@ public class LoginActivity extends Activity  {
 		textForgot = (TextView)findViewById(R.id.txt_forgotPassword);
 		email = (EditText)findViewById(R.id.txt_input_userName);
 		password = (EditText)findViewById(R.id.txt_input_password);
-		progressBar = (ProgressBar)findViewById(R.id.progressBar1);
+		progressBar = (ProgressBar)findViewById(R.id.progressBar);
 		textForgot.setClickable(true);
 		
 	}

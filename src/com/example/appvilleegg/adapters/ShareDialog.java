@@ -3,6 +3,7 @@ package com.example.appvilleegg.adapters;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.Promotion.Promotion;
 import com.applicasa.User.User;
 import com.applicasa.VirtualGood.VirtualGood;
@@ -81,7 +82,7 @@ public class ShareDialog extends Dialog   {
     	{
 	    	case R.id.btn_shareOnFb:
 	    		 Bundle parameters = new Bundle();
-	    		 parameters.putString("message", "I have "+String.valueOf(IAP.getUserCurrencyBalance(LiCurrency.MainCurrency)) +" Gold Coins ");
+	    		 parameters.putString("message", "I have "+String.valueOf(LiStore.getUserCurrencyBalance(LiCurrency.MainCurrency)) +" Gold Coins ");
 	    		 parameters.putString("name", "AppVille");
 	    		 parameters.putString("link", "www.applicasa.com");
 	    		 parameters.putString("description", "Richi rich");

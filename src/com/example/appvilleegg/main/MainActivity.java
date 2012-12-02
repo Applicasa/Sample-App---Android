@@ -8,6 +8,7 @@ import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiManager;
 import com.applicasa.ApplicasaManager.LiPromo;
 import com.applicasa.ApplicasaManager.LiSession;
+import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.ApplicasaManager.LiUserLocation;
 import com.applicasa.Dynamic.Dynamic;
 import com.applicasa.Promotion.Promotion;
@@ -123,7 +124,6 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			// TODO Auto-generated catch block
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
-        
     }
     
     
@@ -157,6 +157,9 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		// Register IAP Observer
 		IAP.RegisterLiInAppObserver(new IapObserver(this));
 		
+		List<Promotion> list = LiPromo.GetAvailablePromotions();
+		if (list.size()>0)
+			list.get(0).show(mActivity, null);
 	 }
 		
 	
@@ -240,9 +243,11 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			break;
 			
 		case R.id.btn_play:
-			 btn_play.setClickable(false);
-			i = new Intent(this, GameActivity.class);
-			startActivity(i);
+			// Soon...
+			
+//			btn_play.setClickable(false);
+//			i = new Intent(this, GameActivity.class);
+//			startActivity(i);
 			
 			break;
 			
@@ -290,6 +295,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	
 	protected void onResume() {
 		super.onResume();
+		
 	}
 	protected void onRestart() {
 		super.onRestart();

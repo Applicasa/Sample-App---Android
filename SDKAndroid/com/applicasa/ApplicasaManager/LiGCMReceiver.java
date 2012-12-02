@@ -1,6 +1,7 @@
 package com.applicasa.ApplicasaManager;
 
 import com.appvilleegg.R;
+import com.example.appvilleegg.main.MainActivity;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -29,7 +30,7 @@ public class LiGCMReceiver extends BroadcastReceiver {
 		 * @param pushClass
 		 * Enter class and remove comment 
 		 */
-		pushManager.setNotificationClass( LiGCMActivity.class , context.getPackageName());
+		pushManager.setNotificationClass( MainActivity.class , context.getPackageName());
 
 		
 		/** 

@@ -69,7 +69,8 @@ public class RegisterActivity extends Activity  {
 	private String filePath;
 	private RegisterActivity mActivity;
 	private EditText userName;
-	private ProgressBar progressBar;
+//	private ProgressBar progressBar;
+	private ProgressBar progressBarBig;
 	
 	
 	
@@ -88,9 +89,7 @@ public class RegisterActivity extends Activity  {
 		lastName = (EditText)findViewById(R.id.txt_lastName);
 		phoneNumber = (EditText)findViewById(R.id.txt_phone);
 		title_register = (ImageView)findViewById(R.id.title_register);
-		bar = (ProgressBar)findViewById(R.id.progressBar);
-		
-		progressBar = (ProgressBar)findViewById(R.id.progressBar1);
+		progressBarBig = (ProgressBar)findViewById(R.id.progressBarBig);
 		
 		view = (ImageView)findViewById(R.id.img_picture);
 		
@@ -200,7 +199,8 @@ public class RegisterActivity extends Activity  {
 					
 					if (viewProfile)
 					{
-						User currentUser = Applicasa.getCurrentUser();
+						progressBarBig.setVisibility(View.VISIBLE);
+						User currentUser = User.getCurrentUser();
 						currentUser.UserEmail = userName;
 						currentUser.UserFirstName = firstName.getText().toString();
 						currentUser.UserEmail = email.getText().toString();
@@ -211,6 +211,7 @@ public class RegisterActivity extends Activity  {
 							public void onFailure(LiErrorHandler error) {
 								// TODO Auto-generated method stub
 								Toast.makeText(mActivity, "error occured "+error.getMessage(), Toast.LENGTH_LONG).show();
+								progressBarBig.setVisibility(View.INVISIBLE);
 							}
 							
 							public void onComplete(ApplicasaResponse response, String msg,
@@ -218,12 +219,13 @@ public class RegisterActivity extends Activity  {
 								// TODO Auto-generated method stub
 								Toast.makeText(mActivity, "Saved successfully", Toast.LENGTH_LONG).show();
 								btnRegister.setClickable(true);
+								progressBarBig.setVisibility(View.INVISIBLE);
 							}
 						});
 						
 						if (imageChanged)
 						{
-							progressBar.setVisibility(View.VISIBLE);
+							progressBarBig.setVisibility(View.VISIBLE);
 							currentUser.updloadFile(LiFieldUser.UserImage, filePath,new LiCallbackAction() {
 								
 								public void onFailure(LiErrorHandler error) {
@@ -233,7 +235,6 @@ public class RegisterActivity extends Activity  {
 										public void onSuccessfull(InputStream in) {
 											// TODO Auto-generated method stub
 											Log.w("TAG", "Success");
-											
 											btnRegister.setClickable(true);
 										}
 										
@@ -254,20 +255,20 @@ public class RegisterActivity extends Activity  {
 								public void onComplete(ApplicasaResponse response, String msg,
 										RequestAction action, String itemID, LiObject liobject) {
 									// TODO Auto-generated method stub
-									progressBar.setVisibility(View.INVISIBLE);
+									progressBarBig.setVisibility(View.INVISIBLE);
 									LiLogger.LogInfo("UserImage", Applicasa.getCurrentUser().UserImage);
 									Toast.makeText(mActivity, "Image loaded successfully", Toast.LENGTH_LONG).show();
 								}
 							}); 
 						}
 					}
-					else
+					else // if not viewing, then registering user
 					{
-						progressBar.setVisibility(View.VISIBLE);
+						progressBarBig.setVisibility(View.VISIBLE);
 						 newUser.registerUser(userName, pass,new LiCallbackUser () {
 							
 							public void onSuccessfull(RequestAction action) {
-								progressBar.setVisibility(View.INVISIBLE);
+								progressBarBig.setVisibility(View.INVISIBLE);
 								if (filePath != null && !filePath.equals(""))
 								{
 									newUser.updloadFile(LiFieldUser.UserImage, filePath, null);
@@ -281,7 +282,7 @@ public class RegisterActivity extends Activity  {
 							
 							public void onFailure(RequestAction action, LiErrorHandler error) {
 								btnRegister.setClickable(true);
-								progressBar.setVisibility(View.INVISIBLE);
+								progressBarBig.setVisibility(View.INVISIBLE);
 								Toast.makeText(mActivity, "Can't Register User", Toast.LENGTH_SHORT).show();
 							}
 						});

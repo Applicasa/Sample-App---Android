@@ -148,7 +148,7 @@ public class LiStore {
 	public static int getUserCurrencyBalance(LiCurrency currency){return IAP.getUserCurrencyBalance(currency);}
 	
 	/**
-	 * Get's the User's Inventory
+	 * Retrieves User's Inventory from the server
 	 * @throws LiErrorHandler
 	 */
 	public static void refreshInventory() throws LiErrorHandler
@@ -158,7 +158,7 @@ public class LiStore {
 	
 	
 	/**
-	 * Get's the User's Inventory
+	 * Retrieves the whole store from server
 	 * @throws LiErrorHandler
 	 */
 	public static void refreshStore() throws LiErrorHandler
@@ -167,11 +167,20 @@ public class LiStore {
 	}
 	
 	/**
-	 *  Reload IPA
+	 *  Reload IAP Localy
 	 */
 	public static void reloadIAPLocaly()
 	{
 		IAP.reloadIAPLocaly();
+	}
+	
+	/**
+	 * Reload User's Inventory from local db
+	 * @throws LiErrorHandler
+	 */
+	public static void reloadVirtualGoodInventory() 
+	{
+		IAP.reloadVirtualGoodInventory();
 	}
 
 	public static VirtualGood GetVirtualGoodById(String id) {
