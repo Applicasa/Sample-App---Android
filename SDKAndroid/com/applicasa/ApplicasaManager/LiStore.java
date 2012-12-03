@@ -203,4 +203,9 @@ public class LiStore {
 		return IAP.GetVirtualGoodDealById(id);
 	}
 	
+	public static void unBindBillingService()
+	{
+		IAP.unBindBillingService();
+	}
+	
 }

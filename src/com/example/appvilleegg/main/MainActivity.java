@@ -53,6 +53,7 @@ import applicasa.kit.IAP.IAP;
 
 public class MainActivity extends Activity implements LiCallbackInitialize {
 	
+	
 	Context cont;
 	List<Dynamic> arrDynamic;
 	ListView lvMain;
@@ -68,7 +69,6 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	private static ImageView spProfile;
 	private static ImageView usProfile;
 
-		
 	/**
 	 * Promotion Callback listener
 	 */
@@ -125,7 +125,6 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
     }
-    
     
     public void initView()
     {
@@ -289,7 +288,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	protected void onStop() {
 		LiLogger.LogInfo("Session", "SessionEnd");
 		LiSession.SessionEnd(this);
-		IAP.unBindBillingService();
+		LiStore.unBindBillingService();
 		super.onStop();
 	}
 	

@@ -43,9 +43,11 @@ Now that you have cloned the repo, open the project up in Eclipse. At this point
 
 Because this is a sandboxed app, we have added Android's static In app product item. (The only item with an avatar image)
 
+**NOTE:** You can also **download** the App from [Google Play](https://play.google.com/store/apps/details?id=com.appvilleegg)
+
 ## Android Version Targeting
 
-Egg is currently built to work with Android API 15(Ice Cream Sandwich). However, Egg's minimum SDK support is 10(Gingerbread).
+Egg is currently built to work with Android API 15(Ice Cream Sandwich). **However**, Egg's minimum SDK support is 10(Gingerbread).
 
 ## Other Remarks
 

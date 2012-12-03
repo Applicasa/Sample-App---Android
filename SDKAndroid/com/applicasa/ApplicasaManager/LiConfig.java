@@ -10,7 +10,7 @@ public class LiConfig {
 	/**
 	 * Enter Application Key
 	 */
-	private final static String APPLICATION_KEY ="179adc22b6213c63";
+	private final static String APPLICATION_KEY = "179adc22b6213c63";
 	
 	/**
 	* Enter GCM SenderID (projectId or email)
