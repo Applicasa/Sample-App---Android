@@ -70,11 +70,11 @@ Three types of Promotions can be used in your game:
 
 All customization of IAP items, Promotions, Virtual Currencies, Virtual Goods, and custom data are handled via the Applicsa web console. [Sign up for a private beta account](http://applicasa.com/#Register) to experience more.
 
-<img src="https://raw.github.com/Applicasa/Sample-App---Android/stable/readme_imgs/web-console.png"/>
+<img src="https://raw.github.com/Applicasa/Sample-App---iOS/stable/readme_imgs/web-console.png"/>
 
 The screenshot below is one of the steps required to create a promotion. Here it's a promo in the form of a deal, offering 20% off on another virtual good. This promo is triggered once the player has made his/her first purchase. Our promotional tool offers many different events that can trigger these kinds of promotions during the game.
 
-<img src="https://raw.github.com/Applicasa/Sample-App---Android/stable/readme_imgs/Offer.png"/>
+<img src="https://raw.github.com/Applicasa/Sample-App---iOS/stable/readme_imgs/Offer.png"/>
 
 ### A Word on Branches
 
