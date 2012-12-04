@@ -208,6 +208,7 @@ public class LiSinglePromoDialog extends Dialog   {
 			public void onFailure(LiErrorHandler error) {
 				// TODO Auto-generated method stub
 				LiLogger.LogError("Promo Adapter", "Source not found");
+				dismiss();
 			}
 
 			public void onSuccessfullBitmap(Bitmap bitmap) {
@@ -229,6 +230,7 @@ public class LiSinglePromoDialog extends Dialog   {
 			public void onFailure(LiErrorHandler error) {
 				// TODO Auto-generated method stub
 				LiLogger.LogError("Promo Adapter", "Source not found");
+				dismiss();
 			}
 
 			public void onSuccessfullBitmap(Bitmap bitmap) {
