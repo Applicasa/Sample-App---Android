@@ -51,7 +51,7 @@ public class UserData {
 
 	protected static Map<String, Object > userCallbacks = new HashMap<String, Object>();
 	//Class Name 
-	public final static String kClassName                =  "User";
+	public final static String kClassName  =  "User";
 	
 	////
 	//// Class fields name - Static Fields

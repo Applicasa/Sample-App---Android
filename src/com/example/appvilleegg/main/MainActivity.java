@@ -36,6 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
+import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.LiLocation;
 import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.Push.LiObjPushMessage;
@@ -289,6 +290,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		LiLogger.LogInfo("Session", "SessionEnd");
 		LiSession.SessionEnd(this);
 		LiStore.unBindBillingService();
+		LiFileCacher.ClearMemory();
 		super.onStop();
 	}
 	
