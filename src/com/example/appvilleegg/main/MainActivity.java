@@ -67,6 +67,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	ImageButton btn_myProfile;
 	ImageButton btn_fb_Friends;;
 	ProgressBar bar;
+	
 	private static ImageView spProfile;
 	private static ImageView usProfile;
 
@@ -295,9 +296,10 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	}
 	
 	protected void onResume() {
+		LiSession.SessionResume(context);
 		super.onResume();
-		
 	}
+	
 	protected void onRestart() {
 		super.onRestart();
 		initView();

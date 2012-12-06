@@ -1,6 +1,7 @@
 package com.applicasa.ApplicasaManager;
 
 import android.content.Context;
+import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
 import applicasa.LiCore.promotion.sessions.LiSessionManager;
@@ -25,7 +26,13 @@ public class LiSession {
 		LiSessionManager.SessionEnd(context);
 	}
 	
-	
+	/**
+	 * Method to indicate when the app session Resumes
+	 */
+	public static void SessionResume(Context context)
+	{
+		LiSessionManager.SessionResume(context);
+	}
 	/**
 	 * Method to cal when user starts new level.
 	 * On one level can exist  in a given time, 

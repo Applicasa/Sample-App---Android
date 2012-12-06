@@ -8,6 +8,7 @@ import com.example.appvilleegg.adapters.FriendsArrayAdapter;
 import com.example.appvilleegg.adapters.UserRadiusArrayAdapter;
 
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetArrayCallback;
+import com.applicasa.ApplicasaManager.LiGCMPushMessage;
 import com.applicasa.ApplicasaManager.LiUserLocation;
 import com.applicasa.User.User;
 import com.applicasa.User.UserData.LiFieldUser;
@@ -97,16 +98,15 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 	
 	private void sendPushToUser(User user)
 	{
-		LiObjPushMessage push = new LiObjPushMessage();
-		push.mMSG="I'm only " +String.valueOf((int)(user.DistanceFromCurrent*1000)) +"m From U";
-		push.mBadge = 1;
-	
-		push.addReceipientUserIDList(user.UserID);
-		push.sendAsync(new LiCallbackPush() {
+		LiGCMPushMessage message = new LiGCMPushMessage();
+		
+		message.setMessage("I'm only " +String.valueOf((int)(user.DistanceFromCurrent*1000)) +"m From U");
+		message.setBadge(1);
+		message.addReceipient(user);
+		message.sendPush(new LiCallbackPush() {
 			
 			public void onFailure(LiErrorHandler arg0) {
 				// TODO Auto-generated method stub
-				
 			}
 			
 			public void onComplete() {

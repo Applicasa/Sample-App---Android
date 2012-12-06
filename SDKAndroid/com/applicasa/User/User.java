@@ -34,6 +34,8 @@ import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
+import applicasa.LiCore.Push.LiCallbackPush;
+import applicasa.LiCore.Push.LiObjPushMessage;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.communication.LiObjRequest;
 import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
@@ -659,6 +661,12 @@ static RequestCallback callbackHandler = new RequestCallback() {
     {
     	Applicasa.unRegisterFromGCM();
     }
+    
+    public static void SendPush(LiObjPushMessage liObjPushMessage, LiCallbackPush liCallbackPush)
+    {
+    	if (liObjPushMessage != null)
+    		liObjPushMessage.sendAsync(liCallbackPush);
+    }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -990,6 +998,8 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		try {	receivedFields = dictionaryRepresentation(false);} 
 		catch (LiErrorHandler e) {}
 	}
+	
+	
 	
 
 }

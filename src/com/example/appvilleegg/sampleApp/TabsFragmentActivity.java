@@ -152,7 +152,6 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		mActivity = this;
 		
 		
-//		IAP.RegisterLiInAppObserver(new IapObserver(mActivity));
 		
 		LiSession.SessionStart(mActivity,null);
 		
@@ -348,7 +347,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.SessionStart(mActivity,null);
+		LiSession.SessionResume(mActivity);
 		super.onResume();
 	}
 
