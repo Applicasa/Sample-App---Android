@@ -45,6 +45,7 @@ import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 
+import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
 import com.applicasa.User.User;
 import com.applicasa.User.UserData.LiFieldUser;
@@ -78,6 +79,7 @@ public class RegisterActivity extends Activity  {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register);
 		mActivity = this;
+		
 		Bundle extras = getIntent().getExtras();
 		
 		btnRegister = (ImageButton)findViewById(R.id.btn_register);
@@ -90,6 +92,8 @@ public class RegisterActivity extends Activity  {
 		phoneNumber = (EditText)findViewById(R.id.txt_phone);
 		title_register = (ImageView)findViewById(R.id.title_register);
 		progressBarBig = (ProgressBar)findViewById(R.id.progressBarBig);
+		
+		LiSession.SessionStart(mActivity,null);
 		
 		view = (ImageView)findViewById(R.id.img_picture);
 		
@@ -380,6 +384,17 @@ public class RegisterActivity extends Activity  {
 	        cursor.moveToFirst();
 
 	        return cursor.getString(column_index);
+	}
+	
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		LiSession.SessionEnd(mActivity);
+		super.onPause();
+	}
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		LiSession.SessionResume(mActivity);
+		super.onResume();
 	}
 	
 }

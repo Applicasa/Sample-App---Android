@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.applicasa.ApplicasaManager.LiManager;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
+import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.User.User;
 import com.facebook.android.LiFacebook;
 
@@ -84,6 +85,7 @@ public class LoginActivity extends Activity  {
 		progressBar = (ProgressBar)findViewById(R.id.progressBar);
 		textForgot.setClickable(true);
 		
+		LiSession.SessionStart(mActivity,null);
 	}
 
  
@@ -217,5 +219,16 @@ public class LoginActivity extends Activity  {
 					 Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
 				}
 			});
+		}
+		
+		protected void onPause() {
+			// TODO Auto-generated method stub
+			LiSession.SessionEnd(mActivity);
+			super.onPause();
+		}
+		protected void onResume() {
+			// TODO Auto-generated method stub
+			LiSession.SessionResume(mActivity);
+			super.onResume();
 		}
 }

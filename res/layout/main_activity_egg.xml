@@ -63,26 +63,6 @@
         android:layout_above="@+id/btn_play"
         android:layout_centerHorizontal="true" />
 
-    <ImageButton
-        android:id="@+id/btn_findFriends"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/btn_store"
-        android:background="@android:color/transparent"
-        android:onClick="onClickHandler"
-        android:src="@drawable/main_tab_find_friends" />
-
-    <ImageButton
-        android:id="@+id/btn_fbFeatures"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btn_store"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/transparent"
-        android:onClick="onClickHandler"
-        android:src="@drawable/main_tab_acebook_features" />
-
     <ImageView
         android:id="@+id/img_profile"
         android:layout_width="45dp"
@@ -98,5 +78,38 @@
         android:layout_below="@+id/btn_my_profile"
         android:layout_toRightOf="@id/img_profile"
         android:src="@drawable/hippie" />
+
+     <ImageButton
+         android:id="@+id/btn_fbFeatures"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentLeft="true"
+         android:layout_margin="5dp"
+         android:background="@android:color/transparent"
+         android:onClick="onClickHandler"
+         android:src="@drawable/main_tab_acebook_features" />
+
+     <ImageButton
+         android:id="@+id/btn_findFriends"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+          android:layout_alignParentRight="true"
+         android:layout_margin="5dp"
+         android:background="@android:color/transparent"
+         android:onClick="onClickHandler"
+         android:src="@drawable/main_tab_find_friends" />
+
+     <ImageButton
+         android:id="@+id/btn_DynamicContent"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerHorizontal="true"
+         android:layout_alignParentBottom="true"
+         android:layout_margin="5dp"
+         android:background="@android:color/transparent"
+         android:onClick="onClickHandler"
+         android:src="@drawable/main_tab_dynamic_content" />
 
 </RelativeLayout>

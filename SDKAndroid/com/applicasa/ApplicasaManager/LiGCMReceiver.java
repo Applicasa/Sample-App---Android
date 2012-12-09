@@ -30,7 +30,7 @@ public class LiGCMReceiver extends BroadcastReceiver {
 		 * @param pushClass
 		 * Enter class and remove comment 
 		 */
-		pushManager.setNotificationClass( MainActivity.class , context.getPackageName());
+		pushManager.setNotificationClass( LiGCMActivity.class , context.getPackageName());
 
 		
 		/** 

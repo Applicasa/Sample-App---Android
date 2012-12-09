@@ -114,6 +114,11 @@
             </intent-filter>
         </activity>
         
+         <activity android:name="com.example.appvilleegg.sampleApp.DynamicListActivity"
+             android:screenOrientation="portrait"
+             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        
          <activity android:name="com.applicasa.ApplicasaManager.LiGCMActivity"
              android:screenOrientation="portrait"
              android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >

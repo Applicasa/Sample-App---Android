@@ -2,6 +2,7 @@ package com.example.appvilleegg.sampleApp;
 
 import java.util.List;
 
+import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.User.User;
 import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.FriendsArrayAdapter;
@@ -22,15 +23,19 @@ import applicasa.kit.FaceBook.LiObjFacebookFriends;
 public class FriendsListActivity extends ListActivity {
 
 	static FriendsArrayAdapter adpater;
-	static Activity act;
+	static Activity mActivity;
 	 ProgressBar bar;
      
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
-		act = this;
+		mActivity = this;
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		bar.setVisibility(View.VISIBLE);
+		
+		LiSession.SessionStart(mActivity,null);
+		
+		
 		/**
 		 * see if the user is register to facebook, if so retreives his friends. If not, show an error Via toast message
 		 */
@@ -41,7 +46,7 @@ public class FriendsListActivity extends ListActivity {
 				public void onGetFriendsResponse(LiObjResponse requestResponse,
 						List<LiObjFacebookFriends> friendsList) {
 					// TODO Auto-generated method stub
-					adpater = new FriendsArrayAdapter(act, friendsList);
+					adpater = new FriendsArrayAdapter(mActivity, friendsList);
 					setListAdapter(adpater);
 					bar.setVisibility(View.INVISIBLE);
 					
@@ -54,7 +59,7 @@ public class FriendsListActivity extends ListActivity {
 				
 				public void onFBError(LiErrorHandler error) {
 					// TODO Auto-generated method stub
-					Toast.makeText(act, error.getMessage(), Toast.LENGTH_LONG).show();
+					Toast.makeText(mActivity, error.getMessage(), Toast.LENGTH_LONG).show();
 					finish();
 				}
 			});
@@ -62,8 +67,19 @@ public class FriendsListActivity extends ListActivity {
 		else
 		{
 			bar.setVisibility(View.INVISIBLE);
-			Toast.makeText(act, "please login to facebook", Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, "please login to facebook", Toast.LENGTH_LONG).show();
 			finish();
 		}
+	}
+	
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		LiSession.SessionEnd(mActivity);
+		super.onPause();
+	}
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		LiSession.SessionResume(mActivity);
+		super.onResume();
 	}
 }

@@ -14,6 +14,7 @@ import com.applicasa.Dynamic.Dynamic;
 import com.applicasa.Promotion.Promotion;
 import com.applicasa.User.User;
 import com.appvilleegg.R;
+import com.example.appvilleegg.sampleApp.DynamicListActivity;
 import com.example.appvilleegg.sampleApp.FriendsListActivity;
 import com.example.appvilleegg.sampleApp.LoginActivity;
 import com.example.appvilleegg.sampleApp.RegisterActivity;
@@ -65,7 +66,8 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	ImageButton btn_Store;
 	ImageButton btn_Radius_Friends;
 	ImageButton btn_myProfile;
-	ImageButton btn_fb_Friends;;
+	ImageButton btn_fb_Friends;
+	ImageButton btn_dynamicContent;
 	ProgressBar bar;
 	
 	private static ImageView spProfile;
@@ -104,17 +106,20 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
         
         bar = (ProgressBar)findViewById(R.id.progressBar);
         btn_Radius_Friends = (ImageButton)findViewById(R.id.btn_findFriends);
+        btn_dynamicContent = (ImageButton)findViewById(R.id.btn_DynamicContent);
         btn_fb_Friends = (ImageButton)findViewById(R.id.btn_fbFeatures);
 			
     	spProfile = (ImageView)findViewById(R.id.img_sp_profile);
     	usProfile = (ImageView)findViewById(R.id.img_profile);
     	
+    	// Disable all buttons before init is completed
         btn_login.setClickable(false);
         btn_play.setClickable(false);
         btn_Store.setClickable(false);
         btn_Radius_Friends.setClickable(false);
         btn_fb_Friends.setClickable(false);
         btn_myProfile.setClickable(false);
+        btn_dynamicContent.setClickable(false);
         
         context = this;
       	LiPromo.setPromoCallback(promoCallback);
@@ -130,12 +135,14 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
     
     public void initView()
     {
+    	// enable all buttons before init is completed
     	  btn_login.setClickable(true);
 	      btn_play.setClickable(true);
 	      btn_Store.setClickable(true);
 	      btn_Radius_Friends.setClickable(true);
 	      btn_myProfile.setClickable(true);
 	      btn_fb_Friends.setClickable(true);
+	      btn_dynamicContent.setClickable(true);
 	      bar.setVisibility(View.INVISIBLE);
 	        
 	       if(Applicasa.isCurrentUserRegistered())
@@ -273,6 +280,12 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		case R.id.btn_fbFeatures:
 			  btn_fb_Friends.setClickable(false);
 			 i = new Intent(this, FriendsListActivity.class);
+				startActivity(i);
+			break;
+				
+		case R.id.btn_DynamicContent:
+			btn_dynamicContent.setClickable(false);
+			 i = new Intent(this, DynamicListActivity.class);
 				startActivity(i); 
 			
 			break;
