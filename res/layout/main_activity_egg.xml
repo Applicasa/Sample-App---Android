@@ -69,7 +69,7 @@
         android:layout_height="45dp"
         android:layout_alignLeft="@+id/btn_my_profile"
         android:layout_below="@+id/btn_my_profile"
-        android:src="@drawable/ombie" />
+        android:src="@drawable/zombie" />
     
      <ImageView
         android:id="@+id/img_sp_profile"

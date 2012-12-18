@@ -53,7 +53,6 @@ public class ShareDialog extends Dialog   {
     public ShareDialog(final Context context) {
         super(context, android.R.style.Theme_Translucent_NoTitleBar);
         mContext = context;
-        setCanceledOnTouchOutside(true);
     }
 
     @Override

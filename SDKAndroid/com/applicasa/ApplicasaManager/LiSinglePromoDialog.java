@@ -215,7 +215,6 @@ public class LiSinglePromoDialog extends Dialog   {
 				
 				Drawable dr = new BitmapDrawable(bitmap);
 				mRelativeLayout.setBackgroundDrawable(dr);
-				
 				// indicates bg is ready
 				isBackgroundAvailable  = true;
 				showPromo();
@@ -309,11 +308,10 @@ public class LiSinglePromoDialog extends Dialog   {
 				  case GIVE_VC:
 					  int amount = mSinglePromo.PromotionActionData.getInt("amount");
 					  int vcKind = mSinglePromo.PromotionActionData.getInt("virtualCurrencyKind");
-					  LiStore.GiveVirtualCurrency(amount, LiCurrency.values()[vcKind]);
+					  LiStore.GiveVirtualCurrency(amount, LiCurrency.values()[vcKind], null);
 					  /**
 					   * Notifies IAP Obeserver
 					   */
-					  LiStore.notifyObserver();
 					  if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded,(vcKind==1)?LiPromotionResult.PromotionResultGiveMainCurrencyVirtualCurrency:
 		                 		LiPromotionResult.PromotionResultGiveSeconedaryCurrencyVirtualCurrency, amount);
@@ -322,7 +320,7 @@ public class LiSinglePromoDialog extends Dialog   {
 				  case GIVE_VG:
 					  String id= mSinglePromo.PromotionActionData.getString("_id");
 					  VirtualGood item = LiStore.GetVirtualGoodById(id);
-					  LiStore.GiveVirtualGoods(item, 1);
+					  LiStore.GiveVirtualGoods(item, 1 ,null );
 					 
 					  if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultGiveVirtualGood, item);
@@ -331,7 +329,7 @@ public class LiSinglePromoDialog extends Dialog   {
 				  case DEAL_VC:
 					   id= mSinglePromo.PromotionActionData.getString("_id");
 					   VirtualCurrency itemVC = LiStore.GetVirtualCurrencyDealById(id);
-					   result = LiStore.BuyVirtualCurrency(itemVC);
+					   result = LiStore.BuyVirtualCurrency(mActivity, itemVC, null );
 					   
 					   if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(result?LiPromotionAction.Succeded:LiPromotionAction.Failed, (itemVC.VirtualCurrencyKind==LiCurrency.MainCurrency)?LiPromotionResult.PromotionResultDealMainVirtualCurrency:
@@ -341,7 +339,7 @@ public class LiSinglePromoDialog extends Dialog   {
 					   id= mSinglePromo.PromotionActionData.getString("_id");
 					   item = LiStore.GetVirtualGoodDealById(id);
 					   
-					   result = LiStore.BuyVirtualGoods(item, 1, (item.VirtualGoodMainCurrency!=0) ? LiCurrency.MainCurrency:LiCurrency.SencondaryCurrency);
+					   result = LiStore.BuyVirtualGoods(item, 1, (item.VirtualGoodMainCurrency!=0) ? LiCurrency.MainCurrency:LiCurrency.SencondaryCurrency, null );
 					   
 					   if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(result?LiPromotionAction.Succeded:LiPromotionAction.Failed, LiPromotionResult.PromotionResultGiveVirtualGood, item);

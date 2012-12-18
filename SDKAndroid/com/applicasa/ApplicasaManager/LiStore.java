@@ -2,11 +2,19 @@ package com.applicasa.ApplicasaManager;
 
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Intent;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.GetVirtualGoodKind;
 import applicasa.kit.IAP.IAP.LiCurrency;
-import applicasa.kit.IAP.LiInAppObserver;
+import applicasa.kit.IAP.Callbacks.LiCallbackIAPBalanceChanged;
+import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
+import applicasa.kit.IAP.Callbacks.LiCallbackVirtualCurrencyRequest;
+import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
+import applicasa.kit.IAP.billing.Utils.LiPurchase;
+import applicasa.kit.IAP.billing.Utils.LiIabHelper.OnConsumeFinishedListener;
+import applicasa.kit.IAP.billing.Utils.LiIabHelper.QueryInventoryFinishedListener;
 
 import com.applicasa.VirtualCurrency.VirtualCurrency;
 import com.applicasa.VirtualGood.VirtualGood;
@@ -16,10 +24,7 @@ public class LiStore {
 	
 	private static String TAG = LiStore.class.getName();
 	
-	public static void RegisterLiInAppObserver(LiInAppObserver liInAppObserver)
-	{
-		IAP.RegisterLiInAppObserver(liInAppObserver);
-	}
+	public final static int IAB_REQUEST = 287; 
 	
 	/**
 	 * Buy the Given virtual store - using Credits
@@ -27,9 +32,9 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static boolean BuyVirtualGoods(VirtualGood virtualGood, int quantity,LiCurrency currency) 
+	public static boolean BuyVirtualGoods(VirtualGood virtualGood, int quantity,LiCurrency currency,LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest ) 
 	{
-		return  IAP.BuyVirtualGoods(virtualGood, quantity, currency);
+		return  IAP.BuyVirtualGoods(virtualGood, quantity, currency, liCallbackVirtualGoodRequest);
 	}
 	
 	/**
@@ -37,8 +42,8 @@ public class LiStore {
 	 * @param appStoreItem
 	 * @return
 	 */
-	public static boolean BuyVirtualCurrency(VirtualCurrency virtualCurrency) {
-		return IAP.BuyVirtualCurrency(virtualCurrency);
+	public static boolean BuyVirtualCurrency(Activity activity, VirtualCurrency virtualCurrency, LiCallbackIAPPurchase liCallbackIAPPurchase) {
+		return IAP.BuyVirtualCurrency(activity, virtualCurrency, liCallbackIAPPurchase);
 	}
 	
 	/**
@@ -47,9 +52,9 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static boolean GiveVirtualGoods(VirtualGood virtualGood, int quantity) 
+	public static boolean GiveVirtualGoods(VirtualGood virtualGood, int quantity,LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest ) 
 	{
-		return  IAP.GiveVirtualGoods(virtualGood, quantity);
+		return  IAP.GiveVirtualGoods(virtualGood, quantity, liCallbackVirtualGoodRequest);
 	}
 	
 	/**
@@ -57,9 +62,9 @@ public class LiStore {
 	 * @param coins
 	 * @return
 	 */
-	public static  boolean GiveVirtualCurrency(int amount, LiCurrency currency) 
+	public static  boolean GiveVirtualCurrency(int amount, LiCurrency currency, LiCallbackVirtualCurrencyRequest LiCallbackVirtualCurrencyRequest) 
 	{
-		return IAP.GiveVirtualCurrency(amount, currency);
+		return IAP.GiveVirtualCurrency(amount, currency,LiCallbackVirtualCurrencyRequest);
 	}
 	
 	
@@ -69,9 +74,9 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static boolean UseVirtualGoods(VirtualGood virtualGood, int quantity) 
+	public static boolean UseVirtualGoods(VirtualGood virtualGood, int quantity, LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest ) 
 	{
-		return IAP.UseVirtualGoods( virtualGood, quantity); 
+		return IAP.UseVirtualGoods( virtualGood, quantity, liCallbackVirtualGoodRequest); 
 	}
 	
 	/**
@@ -79,9 +84,9 @@ public class LiStore {
 	 * @param coins
 	 * @return
 	 */
-	public static boolean  UseVirtualCurrency(int amount, LiCurrency currency) 
+	public static boolean  UseVirtualCurrency(int amount, LiCurrency currency, LiCallbackVirtualCurrencyRequest LiCallbackVirtualCurrencyRequest) 
 	{
-		return IAP.UseVirtualCurrency(amount, currency);
+		return IAP.UseVirtualCurrency(amount, currency, LiCallbackVirtualCurrencyRequest);
 		
 	}
 
@@ -166,10 +171,13 @@ public class LiStore {
 		IAP.refreshStore();
 	}
 	
+	
+	
 	/**
 	 *  Reload IAP Localy
+	 * @throws LiErrorHandler 
 	 */
-	public static void reloadIAPLocaly()
+	public static void reloadIAPLocaly() throws LiErrorHandler
 	{
 		IAP.reloadIAPLocaly();
 	}
@@ -183,29 +191,94 @@ public class LiStore {
 		IAP.reloadVirtualGoodInventory();
 	}
 
+	/**
+	 * return the virtual good by Id
+	 * @param id
+	 * @return
+	 */
 	public static VirtualGood GetVirtualGoodById(String id) {
 		// TODO Auto-generated method stub
 		return IAP.GetVirtualGoodById(id);
 	}
 	
+	/**
+	 * return the virtual currency deal by Id
+	 * @param id
+	 * @return
+	 */
 	public static VirtualCurrency GetVirtualCurrencyDealById(String id) {
 		// TODO Auto-generated method stub
 		return IAP.GetVirtualCurrencyDealById(id);
 	}
 
-	public static void notifyObserver() {
-		// TODO Auto-generated method stub
-		IAP.notifyObserver();
-	}
 
+	/**
+	 * return the virtual good deal by Id
+	 * @param id
+	 * @return
+	 */
 	public static VirtualGood GetVirtualGoodDealById(String id) {
 		// TODO Auto-generated method stub
 		return IAP.GetVirtualGoodDealById(id);
 	}
 	
-	public static void unBindBillingService()
+	/**
+	 * After purchase is completed the calling activity will go to foreground and onActivityResult method is called,
+	 * In order to complete it process this method must be called to update the usere's balance
+	 * @param requestCode == LiStore.IAB_REQUEST
+	 * @param resultCode
+	 * @param data
+	 */
+	public static void onActivityResult(int requestCode, int resultCode, Intent data) {
+		IAP.onActivityResult(requestCode,  resultCode,  data);
+    }
+	
+	/**
+	 * Callback that notifies when usere's balance has changed
+	 * @param liCallbackIAPBalanceChanged
+	 */
+	public static void setLiCallbackIAPBalanceChanged(LiCallbackIAPBalanceChanged liCallbackIAPBalanceChanged)
 	{
-		IAP.unBindBillingService();
+		IAP.setLiCallbackIAPBalanceChanged(liCallbackIAPBalanceChanged);
 	}
 	
+	/**
+	 * dispose the IAB service, must be called when application is destroyed
+	 */
+	public static void dispose()
+	{
+		IAP.dispose();
+	}
+	
+	/**
+	 * In cases when application restarts after in app billing purchase to complete the process this method is called during applicasa's initialization
+	 * However, it can be called at any other time.
+	 *  
+	 */
+	public static void handleFailedOnActivityResultRequests()
+	{
+		IAP.handleFailedOnActivityResultRequests();
+	}
+
+	/**
+	 * Return the currency inventory that the user has currently
+	 * @param mGotInventoryListener
+	 */
+	public static void queryInventoryAsync(
+			QueryInventoryFinishedListener mGotInventoryListener) {
+		// TODO Auto-generated method stub
+		IAP.queryInventoryAsync(mGotInventoryListener);
+	}
+	
+	/**
+	 * In-App-Billing V3 requires that user's inventory is consumed before making another purchase for the same product
+	 * Applicasa does that automatically for the product it manages, To enable support for other product you may use it combined with queryInventoryAsync
+	 * @param purchase - the purchase to consume
+	 * @param mConsumeFinishedListener
+	 */
+	public static void consumeAsync(LiPurchase purchase,
+			OnConsumeFinishedListener mConsumeFinishedListener) {
+		// TODO Auto-generated method stub
+		IAP.consumeAsync(purchase, mConsumeFinishedListener);
+	}
 }

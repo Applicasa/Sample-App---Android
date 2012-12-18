@@ -33,6 +33,8 @@ import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
+import applicasa.LiCore.Applicasa.SpendProfile;
+import applicasa.LiCore.Applicasa.UsageProfile;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
 import applicasa.LiCore.Push.LiCallbackPush;
 import applicasa.LiCore.Push.LiObjPushMessage;
@@ -47,6 +49,7 @@ import applicasa.LiJson.LiJSONObject;
 import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
 
 import applicasa.LiCore.Applicasa;
+import applicasa.LiCore.LiCoreManager;
 import applicasa.LiCore.LiLocationCallback;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
 import applicasa.LiCore.communication.LiFilters.Operation;
@@ -89,7 +92,6 @@ public class User extends UserData {
 			request.setAction(RequestAction.UPDATE_ACTION);
 			request.setRecordID(UserID);
 			request.setIncrementedFields(incrementedFields);
-			request.setReceivedObject(receivedFields);
 			resetIncrementedFields();
 		}
 		else
@@ -212,7 +214,7 @@ public class User extends UserData {
 		request.setAction(RequestAction.UPLOAD_FILE);
 		request.setClassName(User.kClassName);
 		request.setRecordID(UserID);
-		
+		request.setAddedObject(this);
 		request.setFileFieldName(liFieldUser);
 		request.setFilePath(filePath);
 		
@@ -345,7 +347,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 
 	private static void setActionCallback(LiCallbackAction ActionCallback, String reqID) {
 		// TODO Auto-generated method stub
-		LiCallback.ActionCallbacks.put(reqID, ActionCallback);
+		userCallbacks.put(reqID, ActionCallback);
 	}
 		
  /** End of Basic SDK **/
@@ -667,6 +669,16 @@ static RequestCallback callbackHandler = new RequestCallback() {
     	if (liObjPushMessage != null)
     		liObjPushMessage.sendAsync(liCallbackPush);
     }
+    
+	public static SpendProfile getCurrentUserSpendProfile()
+	{
+		return Applicasa.getUserSpendProfile();
+	}
+	
+	public static UsageProfile getCurrentUserUsageProfile()
+	{
+		return Applicasa.getUserUsageProfile();
+	}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -832,9 +844,6 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.DistanceFromCurrent = LiUtility.convertPartialDistanceToKm(cursor.getDouble(columnIndex));
 		
-	
-		try{this.receivedFields = this.dictionaryRepresentation(false);}
-		catch (LiErrorHandler ex){}
 		return this;
 	}
 	
@@ -995,8 +1004,6 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	private void resetIncrementedFields() {
 		// TODO Auto-generated method stub
 		incrementedFields = new LiJSONObject();
-		try {	receivedFields = dictionaryRepresentation(false);} 
-		catch (LiErrorHandler e) {}
 	}
 	
 	

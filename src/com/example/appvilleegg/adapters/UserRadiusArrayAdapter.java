@@ -111,10 +111,7 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 			viewHolder.pic = (ImageView) rowView.findViewById(R.id.friend_img_contact);
 			viewHolder.bar = (ProgressBar)rowView.findViewById(R.id.progressBar);
 			
-			
 			rowView.setTag(viewHolder);
-			
-			
 		}
 
 		ViewHolder holder = (ViewHolder) rowView.getTag();

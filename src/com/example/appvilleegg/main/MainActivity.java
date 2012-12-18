@@ -3,8 +3,30 @@ package com.example.appvilleegg.main;
 import java.util.Iterator;
 import java.util.List;
 
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetArrayCallback;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetByIDCallback;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+import applicasa.LiCore.Applicasa;
+import applicasa.LiCore.LiErrorHandler;
+import applicasa.LiCore.LiFileCacher;
+import applicasa.LiCore.LiLogger;
+import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
+import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
+import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
+import applicasa.kit.IAP.billing.Utils.LiIabHelper;
+import applicasa.kit.IAP.billing.Utils.LiIabResult;
+import applicasa.kit.IAP.billing.Utils.LiInventory;
+import applicasa.kit.IAP.billing.Utils.LiPurchase;
+
 import com.applicasa.ApplicasaManager.LiManager;
 import com.applicasa.ApplicasaManager.LiPromo;
 import com.applicasa.ApplicasaManager.LiSession;
@@ -20,38 +42,6 @@ import com.example.appvilleegg.sampleApp.LoginActivity;
 import com.example.appvilleegg.sampleApp.RegisterActivity;
 import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
 import com.example.appvilleegg.sampleApp.UsersRadiusListActivity;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-import applicasa.LiCore.Applicasa;
-import applicasa.LiCore.LiErrorHandler;
-import applicasa.LiCore.LiFileCacher;
-import applicasa.LiCore.LiLocation;
-import applicasa.LiCore.LiLogger;
-import applicasa.LiCore.Push.LiObjPushMessage;
-import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
-import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
-import applicasa.LiCore.promotion.sessions.LiSessionManager;
-import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionAction;
-import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResult;
-import applicasa.LiCore.promotion.sessions.LiSessionManager.LiGameResult;
-import applicasa.LiJson.LiJSONException;
-import applicasa.kit.IAP.IAP;
 
 public class MainActivity extends Activity implements LiCallbackInitialize {
 	
@@ -124,13 +114,10 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
         context = this;
       	LiPromo.setPromoCallback(promoCallback);
       	
-		try {
-			LiManager.initialize(this, this);
+		LiManager.initialize(this, this);
 		
-		} catch (LiErrorHandler e) {
-			// TODO Auto-generated catch block
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+		
+		
     }
     
     public void initView()
@@ -162,12 +149,11 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		// Updates User Location
 		LiUserLocation.updateLocation();
 		
-		// Register IAP Observer
-		IAP.RegisterLiInAppObserver(new IapObserver(this));
 		
 		List<Promotion> list = LiPromo.GetAvailablePromotions();
 		if (list.size()>0)
 			list.get(0).show(mActivity, null);
+		
 	 }
 		
 	
@@ -175,9 +161,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	{
 		if ( spProfile != null && usProfile != null)
 		{
-			
-		
-			switch(Applicasa.getUserSpendProfile())
+			switch(User.getCurrentUserSpendProfile())
 			{
 				case None:
 					break;
@@ -191,17 +175,17 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 					spProfile.setImageResource(R.drawable.turist);
 					break;
 				case Zombie:
-					spProfile.setImageResource(R.drawable.ombie);
+					spProfile.setImageResource(R.drawable.zombie);
 					break;
 			}
-			switch(Applicasa.getUserUsageProfile())
+			switch(User.getCurrentUserUsageProfile())
 			{
 				case None:
 					break;
 				case General:
 					usProfile.setImageResource(R.drawable.general);
 					break;
-				case Hippie:
+				case Civilan:
 					usProfile.setImageResource(R.drawable.hippie);
 					break;
 				case Private:
@@ -251,11 +235,6 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			break;
 			
 		case R.id.btn_play:
-			// Soon...
-			
-//			btn_play.setClickable(false);
-//			i = new Intent(this, GameActivity.class);
-//			startActivity(i);
 			
 			break;
 			
@@ -303,11 +282,8 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	protected void onStop() {
 		LiLogger.LogInfo("Session", "SessionEnd");
 		LiSession.SessionEnd(this);
-		LiStore.unBindBillingService();
-		LiFileCacher.ClearMemory();
 		super.onStop();
 	}
-	
 	protected void onResume() {
 		LiSession.SessionResume(context);
 		super.onResume();
@@ -318,7 +294,10 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		initView();
 	}
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
+		// dispose the IAB services 
+		LiStore.dispose();
+		LiFileCacher.ClearMemory();
 		super.onDestroy();
 	}
+	
 }

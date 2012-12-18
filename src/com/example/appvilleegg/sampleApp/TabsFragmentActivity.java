@@ -1,71 +1,30 @@
 package com.example.appvilleegg.sampleApp;
 
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetArrayCallback;
-import com.applicasa.ApplicasaManager.LiManager;
-import com.applicasa.ApplicasaManager.LiPromo;
-import com.applicasa.ApplicasaManager.LiSession;
-import com.applicasa.ApplicasaManager.LiStore;
-import com.applicasa.ApplicasaManager.LiManager.LiObject;
-import com.applicasa.Dynamic.Dynamic;
-import com.applicasa.Dynamic.DynamicData.LiFieldDynamic;
-import com.applicasa.Promotion.Promotion;
-import com.applicasa.User.User;
-import com.applicasa.VirtualCurrency.VirtualCurrency;
-import com.applicasa.VirtualGood.VirtualGood;
-
-import com.appvilleegg.R;
-import com.example.appvilleegg.adapters.ShareDialog;
-import com.example.appvilleegg.adapters.VirtualCurrencyAdapter;
-import com.example.appvilleegg.fragments.InventoryFragment;
-import com.example.appvilleegg.fragments.VirtualCurrencyFragment;
-import com.example.appvilleegg.fragments.VirtualGoodFragment;
-import com.example.appvilleegg.main.IapObserver;
-import com.example.appvilleegg.main.MainActivity;
-
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Typeface;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.Toast;
 import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
-import applicasa.LiCore.LiSharedPrefrences;
-import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.LiLogger;
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
-import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionAction;
@@ -73,6 +32,23 @@ import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResult
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResultCallback;
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
+import applicasa.kit.IAP.IAP.LiIapAction;
+import applicasa.kit.IAP.Callbacks.LiCallbackIAPBalanceChanged;
+import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
+
+import com.applicasa.ApplicasaManager.LiPromo;
+import com.applicasa.ApplicasaManager.LiSession;
+import com.applicasa.ApplicasaManager.LiStore;
+import com.applicasa.Promotion.Promotion;
+import com.applicasa.User.User;
+import com.applicasa.VirtualCurrency.VirtualCurrency;
+import com.applicasa.VirtualGood.VirtualGood;
+import com.appvilleegg.R;
+import com.example.appvilleegg.adapters.ShareDialog;
+import com.example.appvilleegg.fragments.InventoryFragment;
+import com.example.appvilleegg.fragments.VirtualCurrencyFragment;
+import com.example.appvilleegg.fragments.VirtualGoodFragment;
+import com.example.appvilleegg.main.MainActivity;
 
 
 /**
@@ -151,10 +127,6 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		setContentView(R.layout.tab_host);
 		mActivity = this;
 		
-		
-		
-		LiSession.SessionStart(mActivity,null);
-		
 		initialiseTabHost();
 		
 		if (args != null) {
@@ -171,12 +143,24 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				new ShareDialog(mActivity).show();
+				ShareDialog dialog = new ShareDialog(mActivity);
+				dialog.setCanceledOnTouchOutside(true);
+				dialog.show();
 			}
 		});
 		
 	
 		logout 	=  (ImageButton) findViewById(R.id.btn_Logout);
+		
+
+		/*
+		 * Start session
+		 */
+		LiSession.SessionStart(mActivity,null);
+		
+		/*
+		 * If User is register then show logout button, else login
+		 */
 		if (Applicasa.isCurrentUserRegistered())
 			logout.setVisibility(View.VISIBLE);
 		else
@@ -184,6 +168,12 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		
 		
 		refreshUI();
+		
+		
+		/*
+		 * Sets call back to handle balance changed events
+		 */
+		LiStore.setLiCallbackIAPBalanceChanged(balanceChangedCallback);
 		
 		// ReRegister for promotion callback 
 	    LiPromo.setPromoCallback(new LiPromotionCallback() {
@@ -333,6 +323,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 	
 	public static void refreshUI()
 	{
+		
 		if (mActivity != null)
 		{
 			mActivity.mBalanceMain.setText(String.valueOf(IAP.getUserCurrencyBalance(LiCurrency.MainCurrency)));
@@ -341,16 +332,23 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 	}
 	
 	protected void onPause() {
-		// TODO Auto-generated method stub
+		/*
+		 * End session 
+		 */
 		LiSession.SessionEnd(mActivity);
 		super.onPause();
 	}
 	protected void onResume() {
-		// TODO Auto-generated method stub
+		/*
+		 * Resume session 
+		 */
 		LiSession.SessionResume(mActivity);
 		super.onResume();
 	}
 
+	/**
+	 * example of implementation of Promotion callback
+	 */
 	public void onPromotionResultCallback(LiPromotionAction action,
 			LiPromotionResult result, Object info) {
 		// TODO Auto-generated method stub
@@ -366,41 +364,100 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		}
 		switch (result)
 		{
-		case PromotionResultDealMainVirtualCurrency:
-			Log.i("Promotion", "Deal of "+((VirtualCurrency)info).VirtualCurrencyCredit +"received" );
-			refreshUI();
-			break;
-		case PromotionResultDealSeconedaryVirtualCurrency:
-			Log.i("Promotion", "Deal of "+((VirtualCurrency)info).VirtualCurrencyCredit +"received" );
-			refreshUI();
-			break;
-		case PromotionResultDealVirtualGood:
-			Log.i("Promotion", ((VirtualGood)info).VirtualGoodTitle +" Deal was received");
-			refreshUI();
-			LiStore.reloadVirtualGoodInventory();
-			break;
-		case PromotionResultGiveMainCurrencyVirtualCurrency:
-			Log.i("Promotion", String.valueOf((Integer)info)+" Main Currency received");
-			refreshUI();
-			break;
-		case PromotionResultGiveSeconedaryCurrencyVirtualCurrency:
-			Log.i("Promotion", String.valueOf((Integer)info)+" Secondary Currency received");
-			refreshUI();
-			break;
-		case PromotionResultGiveVirtualGood:
-			Log.i("Promotion", ((VirtualGood)info).VirtualGoodTitle +" was received");
-			LiStore.reloadVirtualGoodInventory();
-			break;
-		case PromotionResultLinkOpened:
-			Log.i("Promotion", "Link "+(String)info+" Opened");
-			break;
-		case PromotionResultNothing:
-			break;
-		case PromotionResultStringInfo:
-			break;
+			case PromotionResultDealMainVirtualCurrency:
+				Log.i("Promotion", "Deal of "+((VirtualCurrency)info).VirtualCurrencyCredit +"received" );
+				refreshUI();
+				break;
+				
+			case PromotionResultDealSeconedaryVirtualCurrency:
+				Log.i("Promotion", "Deal of "+((VirtualCurrency)info).VirtualCurrencyCredit +"received" );
+				refreshUI();
+				break;
+				
+			case PromotionResultDealVirtualGood:
+				Log.i("Promotion", ((VirtualGood)info).VirtualGoodTitle +" Deal was received");
+				refreshUI();
+				LiStore.reloadVirtualGoodInventory();
+				break;
+				
+			case PromotionResultGiveMainCurrencyVirtualCurrency:
+				Log.i("Promotion", String.valueOf((Integer)info)+" Main Currency received");
+				refreshUI();
+				break;
+				
+			case PromotionResultGiveSeconedaryCurrencyVirtualCurrency:
+				Log.i("Promotion", String.valueOf((Integer)info)+" Secondary Currency received");
+				refreshUI();
+				break;
+				
+			case PromotionResultGiveVirtualGood:
+				Log.i("Promotion", ((VirtualGood)info).VirtualGoodTitle +" was received");
+				LiStore.reloadVirtualGoodInventory();
+				break;
+			case PromotionResultLinkOpened:
+				Log.i("Promotion", "Link "+(String)info+" Opened");
+				break;
+				
+			case PromotionResultNothing:
+				break;
+			case PromotionResultStringInfo:
+				break;
 			
 		}
 	}
+	
+	public static LiCallbackIAPPurchase purchaseCallback = new LiCallbackIAPPurchase() {
+		
+		@Override
+		public void onActionFinisedSuccessfully(LiIapAction liIapAction,
+				VirtualCurrency item) {
+			// TODO Auto-generated method stub
+			Log.i("VirtualCurrency", "Purchase Currency success");
+			refreshUI();
+			
+		}
+		
+		@Override
+		public void onActionFailed(LiIapAction liIapAction, VirtualCurrency item,
+				LiErrorHandler errors) {
+			// TODO Auto-generated method stub
+			Log.i("VirtualCurrency", "Purchase Currency Failed");
+			Toast.makeText(mActivity, "Purchase failed "+((errors!=null)?errors.getMessage():""), Toast.LENGTH_LONG).show();
+			
+		}
+	};
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		
+		if (LiStore.IAB_REQUEST == requestCode )
+		{
+			LiStore.onActivityResult(requestCode, resultCode, data);
+		}
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	LiCallbackIAPBalanceChanged balanceChangedCallback = new LiCallbackIAPBalanceChanged() {
+
+		@Override
+		public void onBalanceChanged(LiCurrency currency, int balance) {
+			// TODO Auto-generated method stub
+			switch (currency)
+			{
+				case MainCurrency:
+					mActivity.mBalanceMain.setText(balance);
+					break;
+					
+				case SencondaryCurrency:
+					mActivity.mBalanceSecondary.setText(balance);
+					break;
+			}
+		}
+	};
+	
+	
 }
 
 

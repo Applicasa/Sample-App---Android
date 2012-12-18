@@ -72,23 +72,6 @@
       </intent-filter>
     </receiver> 
 	
-       <!-- for IAP -->
-        <service android:name="applicasa.kit.IAP.LiBillingService" />
-
-        <receiver android:name="applicasa.kit.IAP.LiBillingReceiver" >
-            <intent-filter>
-                <action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
-                <action android:name="com.android.vending.billing.RESPONSE_CODE" />
-                <action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
-            </intent-filter>
-        </receiver>
-        <!-- END -->
-     
-     
-     
-     
-  
-        
         
        <activity android:name="com.example.appvilleegg"
                 android:screenOrientation="portrait"

@@ -1,31 +1,22 @@
 package com.example.appvilleegg.fragments;
 
-import java.util.List;
-
-import com.applicasa.ApplicasaManager.LiPromo;
-import com.applicasa.ApplicasaManager.LiStore;
-import com.applicasa.Promotion.Promotion;
-import com.applicasa.VirtualCurrency.VirtualCurrency;
-
-import com.appvilleegg.R;
-import com.example.appvilleegg.adapters.VirtualCurrencyAdapter;
-import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
-
 import android.app.Activity;
-import android.graphics.Typeface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
-import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiLogger;
-import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
-import applicasa.kit.IAP.IAP;
-import applicasa.kit.IAP.IAP.LiCurrency;
+
+import com.applicasa.ApplicasaManager.LiStore;
+import com.applicasa.VirtualCurrency.VirtualCurrency;
+import com.appvilleegg.R;
+import com.example.appvilleegg.adapters.VirtualCurrencyAdapter;
+import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
 
 
 public class VirtualCurrencyFragment extends Fragment implements GridView.OnItemClickListener{
@@ -35,7 +26,7 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 	String Tag = VirtualCurrencyFragment.class.getSimpleName();
 	
     private GridView                mGridView;
-    private VirtualCurrencyAdapter  			mStoreAdapter;
+    private VirtualCurrencyAdapter  			mStoreAdapter = null;
     Activity activity;
 	   
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,17 +45,17 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 		
 		activity = getActivity();
 		
-		 if (activity != null) {
+		 if (activity != null ) {
 	            // Create an instance of the custom adapter for the GridView. A static array of location data
 	            // is stored in the Application sub-class for this app. This data would normally come
 	            // from a database or a web service.
+			 if (mStoreAdapter == null)
 			 	mStoreAdapter = VirtualCurrencyAdapter.getInstance(activity, LiStore.GetAllVirtualCurrency());
 	            
 	            if (mGridView != null) {
 	                mGridView.setAdapter(mStoreAdapter);
 	            }
 	            mGridView.setOnItemClickListener(this);
-	 	
 		 }
 	}
 	
@@ -80,7 +71,7 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 		if (TabsFragmentActivity.clickEnabled)	
 		{
 			VirtualCurrency vc = LiStore.GetAllVirtualCurrency().get(position);
-			LiStore.BuyVirtualCurrency(vc);
+			LiStore.BuyVirtualCurrency(activity, vc, TabsFragmentActivity.purchaseCallback);
 		}
 	}
 	
@@ -94,8 +85,4 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 		LiLogger.LogInfo("TABS Virtual" , "on resume");
 		activity = getActivity();
 	}
-	
-	
-	
-	
 }

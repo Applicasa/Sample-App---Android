@@ -2,18 +2,19 @@ package com.applicasa.ApplicasaManager;
 
 import java.util.HashMap;
 import java.util.Map;
-	/** Applicasa imports **/
-import com.applicasa.Dynamic.Dynamic;
-import com.applicasa.User.User;
-import com.applicasa.VirtualCurrency.VirtualCurrency;
-import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
-import com.applicasa.VirtualGood.VirtualGood;
+
+import android.content.Context;
 import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
-import android.content.Context;
 import applicasa.LiJson.LiJSONArray;
 import applicasa.LiJson.LiJSONException;
+import applicasa.kit.IAP.Callbacks.LiCallbackIAPInitialize;
+import com.applicasa.Dynamic.Dynamic;
+import com.applicasa.User.User;
+import com.applicasa.VirtualCurrency.VirtualCurrency;
+import com.applicasa.VirtualGood.VirtualGood;
+import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
 
 public class LiManager {
 	
@@ -24,9 +25,25 @@ public class LiManager {
 	* if initialize is Successful
 	* @throws LiErrorHandler
 	*/
-	public static void initialize(Context context,LiCallbackInitialize liCallbackInitialize) throws LiErrorHandler
+	public static void initialize(Context context,LiCallbackInitialize liCallbackInitialize)
 	{		
 		Applicasa.initializeApplicasa(context,LiConfig.getApplicationKey(),liCallbackInitialize);	
+	}
+	
+	
+	/**
+	 * Initialize applicasa's Framework Using application context and application Key
+	 * @param context
+	 * @param liCallbackInitialize
+	 * a callback to indicate when the initialize operation has Finished.
+	 * if initialize is Successful
+	 * @param liCallbackIAPInitialize
+	 *   a callback to indicate when the In App billing initialize operation has Finished.
+	 * if initialize is Successful
+	 */
+	public static void initialize(Context context,LiCallbackInitialize liCallbackInitialize, LiCallbackIAPInitialize liCallbackIAPInitialize) 
+	{		
+		Applicasa.initializeApplicasa(context,LiConfig.getApplicationKey(),liCallbackInitialize, liCallbackIAPInitialize);	
 	}
 	
 	// GCM

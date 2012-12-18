@@ -1,50 +1,20 @@
 package com.applicasa.VirtualCurrency;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-import org.apache.http.ParseException;
-
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiQuery;
-import applicasa.LiCore.communication.LiUtility;
-
-import java.net.URL;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import applicasa.LiCore.communication.LiCallback;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import applicasa.LiCore.communication.LiFilters.Operation;
-import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
-
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetByIDCallback;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetArrayCallback;
-import com.applicasa.ApplicasaManager.LiManager.LiObject;
-
+import android.app.Activity;
 import android.database.Cursor;
-import applicasa.LiCore.sqlDB.database.LiCoreDBBuilder;
-import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.communication.LiObjRequest;
+import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
+import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
-
-
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
+import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
+import applicasa.kit.IAP.Callbacks.LiCallbackVirtualCurrencyRequest;
 
 public class VirtualCurrency extends VirtualCurrencyData {
  /** End of Basic SDK **/
@@ -60,11 +30,10 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	/**
 	 * Purchase from Google Store the Virtual Currency
 	 * @return
-	 * @throws LiErrorHandler
 	 */
-	public boolean buyVirtualCurrency() throws LiErrorHandler
+	public boolean buyVirtualCurrency(Activity activity, LiCallbackIAPPurchase liCallbackIAPPurchase) 
 	{
-		return IAP.BuyVirtualCurrency(this);
+		return IAP.BuyVirtualCurrency(activity, this, liCallbackIAPPurchase);
 	}
 	
 	/**
@@ -72,19 +41,18 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 * @param coins
 	 * @return
 	 */
-	public static boolean  GiveVirtualCurrency(int coins, LiCurrency licurrency)
+	public static boolean  GiveVirtualCurrency(int coins, LiCurrency licurrency, LiCallbackVirtualCurrencyRequest liCallbackVirtualCurrencyRequest )
 	{
-		return IAP.GiveVirtualCurrency(coins, licurrency);
+		return IAP.GiveVirtualCurrency(coins, licurrency, liCallbackVirtualCurrencyRequest);
 	}
 	
 	/**
 	 * Use the Virtual Currency (e.g. decrease User's credit balance)
 	 * @return
-	 * @throws LiErrorHandler
 	 */
-	public static boolean  UseVirtualCurrency(int coins, LiCurrency licurrency) throws LiErrorHandler
+	public static boolean  UseVirtualCurrency(int coins, LiCurrency licurrency, LiCallbackVirtualCurrencyRequest liCallbackVirtualCurrencyRequest) 
 	{
-		return IAP.UseVirtualCurrency(coins,licurrency);
+		return IAP.UseVirtualCurrency(coins,licurrency,liCallbackVirtualCurrencyRequest);
 	}
 	
 	/**
