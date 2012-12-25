@@ -32,7 +32,7 @@ public class Global {
 		}
 		message.setBadge(1);
 		message.setSound("egg");
-		message.addReceipient(user);
+		message.addRecipient(user);
 		message.sendPush(new LiCallbackPush() {
 			
 			public void onFailure(LiErrorHandler arg0) {

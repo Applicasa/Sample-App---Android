@@ -22,18 +22,27 @@ public class LiGCMPushMessage {
 	 * Add Recipient
 	 * @param user
 	 */
-	public void addReceipient(User user)
+	public void addRecipient(User user)
 	{
-		message.addReceipientUserIDList(user.UserID);
+		message.addRecipientUserIDList(user.UserID);
 	}
 	
 	/**
 	 * Add Recipients 
 	 * @param user
 	 */
-	public void addReceipients(List<User> users)
+	public void addRecipients(List<User> users)
 	{
-		message.addReceipients(users);
+		message.addRecipients(users);
+	}
+	
+	/**
+	 * Add Recipient
+	 * @param userId
+	 */
+	public void addRecipient(String userId)
+	{
+		message.addRecipientUserIDList(userId);
 	}
 	
 	/**
@@ -46,10 +55,11 @@ public class LiGCMPushMessage {
 	}
 	
 	/**
-	 * Set the ringtone sound
-	 * enter the file name of the ringtone
-	 * @param sound
-	 */
+	* Set the ringtone sound
+	* enter the file name of the ringtone
+	* sound file should be stored under res\raw\filename
+	* @param sound
+	*/
 	public void setSound(String sound)
 	{
 		message.setSound(sound);

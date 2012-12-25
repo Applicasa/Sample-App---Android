@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -46,7 +47,6 @@ import com.example.appvilleegg.sampleApp.UsersRadiusListActivity;
 public class MainActivity extends Activity implements LiCallbackInitialize {
 	
 	
-	Context cont;
 	List<Dynamic> arrDynamic;
 	ListView lvMain;
 	Context context;
@@ -87,7 +87,6 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity_egg);
-        cont = this;
         mActivity = this;
         btn_login = (ImageButton)findViewById(R.id.btn_login_main);
         btn_play = (ImageButton)findViewById(R.id.btn_play);
@@ -112,6 +111,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
         btn_dynamicContent.setClickable(false);
         
         context = this;
+        addShortcut(context);
       	LiPromo.setPromoCallback(promoCallback);
       	
 		LiManager.initialize(this, this);
@@ -274,6 +274,34 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		Log.w("Applicasa", "failed init");
 	}
 	
+	
+	
+	// Add Shotcut
+	public void addShortcut(Context context) {
+		SharedPreferences settings = context.getSharedPreferences("AppVille", 0);
+		SharedPreferences.Editor editor = settings.edit();
+		
+		if (!settings.getBoolean("ShortcutAdded", false))
+		{
+			Intent shortcutIntent = new Intent();
+			shortcutIntent.setClassName(getPackageName(),this.getLocalClassName());
+			shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			shortcutIntent.setAction(Intent.ACTION_MAIN);
+			
+			Intent intent = new Intent();
+			intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+			intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "AppVill 2.0");
+			intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_launcher));
+			intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+			context.sendBroadcast(intent);
+			
+			editor.putBoolean("ShortcutAdded", true);
+			editor.commit();
+		}
+    }
+	
+		
 	protected void onPause()
 	{
 		super.onPause();

@@ -6,6 +6,7 @@ import java.util.List;
 import com.applicasa.ApplicasaManager.LiPromo;
 import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.Promotion.Promotion;
+import com.applicasa.VirtualGood.VirtualGood;
 
 import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.VirtualGoodAdapter;
@@ -78,7 +79,11 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		if (TabsFragmentActivity.clickEnabled)	
 		{
 			try {
-				(LiStore.GetAllVirtualGoods(GetVirtualGoodKind.ALL)).get(position).buyVirtualGoods(1,LiCurrency.MainCurrency);
+				VirtualGood vg = LiStore.GetAllVirtualGoods(GetVirtualGoodKind.ALL).get(position);
+				if (vg.VirtualGoodMainCurrency != 0)
+					vg.buyVirtualGoods(1, LiCurrency.MainCurrency);
+				else
+					vg.buyVirtualGoods(1, LiCurrency.SencondaryCurrency);
 				TabsFragmentActivity.refreshUI();
 			} catch (LiErrorHandler e) {
 				// TODO Auto-generated catch block

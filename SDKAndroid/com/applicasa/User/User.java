@@ -1,26 +1,15 @@
 package com.applicasa.User;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.GregorianCalendar;
 
-import org.apache.http.ParseException;
 
 import applicasa.LiCore.communication.LiFilters;
 import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiUtility;
 
 import applicasa.LiCore.LiLocation;
-import java.net.URL;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
-import applicasa.LiCore.communication.LiCallback;
 import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetArrayCallback;
@@ -28,13 +17,11 @@ import com.applicasa.ApplicasaManager.LiManager.LiObject;
 
 import android.content.Context;
 import android.database.Cursor;
-import applicasa.LiCore.sqlDB.database.LiCoreDBBuilder;
 import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
-import applicasa.LiCore.Applicasa.SpendProfile;
-import applicasa.LiCore.Applicasa.UsageProfile;
+import applicasa.LiCore.Applicasa.LiSpendProfile;
+import applicasa.LiCore.Applicasa.LiUsageProfile;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
 import applicasa.LiCore.Push.LiCallbackPush;
 import applicasa.LiCore.Push.LiObjPushMessage;
@@ -46,17 +33,13 @@ import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
 
-import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
 
 import applicasa.LiCore.Applicasa;
-import applicasa.LiCore.LiCoreManager;
-import applicasa.LiCore.LiLocationCallback;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
 import applicasa.LiCore.communication.LiFilters.Operation;
 import applicasa.kit.FaceBook.LiFBmanager;
 
 import com.facebook.android.LiFacebook;
-import com.facebook.android.LiAsyncFacebookRunner.LiRequestListener;
 import applicasa.kit.FaceBook.LiFacebookResponse;
 import applicasa.kit.FaceBook.LiObjFacebookRequest;
 import com.facebook.android.LiFacebook.LiDialogListener;
@@ -670,12 +653,12 @@ static RequestCallback callbackHandler = new RequestCallback() {
     		liObjPushMessage.sendAsync(liCallbackPush);
     }
     
-	public static SpendProfile getCurrentUserSpendProfile()
+	public static LiSpendProfile getCurrentUserSpendProfile()
 	{
 		return Applicasa.getUserSpendProfile();
 	}
 	
-	public static UsageProfile getCurrentUserUsageProfile()
+	public static LiUsageProfile getCurrentUserUsageProfile()
 	{
 		return Applicasa.getUserUsageProfile();
 	}
