@@ -3,10 +3,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import applicasa.LiCore.communication.LiUtility;
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetByIDCallback;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetArrayCallback;
 import applicasa.LiCore.LiLocation;
 import applicasa.LiCore.LiField;
 import applicasa.LiJson.LiJSONObject;
@@ -17,7 +13,6 @@ public class VirtualGoodData {
 
 	protected static Map<String, LiFieldVirtualGood> stringMap = new HashMap<String, LiFieldVirtualGood>();
 	LiJSONObject incrementedFields = new LiJSONObject();
-	LiJSONObject receivedFields;
 	public static boolean EnableOffline = true;
 	public enum LiFieldVirtualGood implements LiField
 	{

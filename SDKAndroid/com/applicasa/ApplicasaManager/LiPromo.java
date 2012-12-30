@@ -24,9 +24,9 @@ public class LiPromo {
 	 * 
 	 * @return the available promotions
 	 */
-	public static List<Promotion> GetAvailablePromotions()
+	public static List<Promotion> getAvailablePromotions()
 	{
-		return LiPromotionManager.GetAvailablePromotions();
+		return LiPromotionManager.getAvailablePromotions();
 	}
 	
 	/**
@@ -34,9 +34,9 @@ public class LiPromo {
 	 * @return the available promotions
 	 * @throws LiErrorHandler 
 	 */
-	public static void RefreshPromotions() throws LiErrorHandler
+	public static void refreshPromotions() throws LiErrorHandler
 	{
-		LiPromotionManager.GetPromotions();
+		LiPromotionManager.getPromotions();
 	}
 	
 	

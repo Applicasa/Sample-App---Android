@@ -144,13 +144,13 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		initView();
 		
 		//Start session
-		LiSession.SessionStart(this,promoCallback);
+		LiSession.sessionStart(this,promoCallback);
 		
 		// Updates User Location
 		LiUserLocation.updateLocation();
 		
 		
-		List<Promotion> list = LiPromo.GetAvailablePromotions();
+		List<Promotion> list = LiPromo.getAvailablePromotions();
 		if (list.size()>0)
 			list.get(0).show(mActivity, null);
 		
@@ -309,11 +309,11 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	
 	protected void onStop() {
 		LiLogger.LogInfo("Session", "SessionEnd");
-		LiSession.SessionEnd(this);
+		LiSession.sessionEnd(this);
 		super.onStop();
 	}
 	protected void onResume() {
-		LiSession.SessionResume(context);
+		LiSession.sessionResume(context);
 		super.onResume();
 	}
 	

@@ -32,9 +32,14 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static boolean BuyVirtualGoods(VirtualGood virtualGood, int quantity,LiCurrency currency,LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest ) 
+	@Deprecated
+	public static boolean BuyVirtualGoods(VirtualGood virtualGood, int quantity,LiCurrency currency,LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest )
 	{
-		return  IAP.BuyVirtualGoods(virtualGood, quantity, currency, liCallbackVirtualGoodRequest);
+		return buyVirtualGoods(virtualGood, quantity, currency, liCallbackVirtualGoodRequest);
+	}
+	public static boolean buyVirtualGoods(VirtualGood virtualGood, int quantity,LiCurrency currency,LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest )
+	{
+		return  IAP.buyVirtualGoods(virtualGood, quantity, currency, liCallbackVirtualGoodRequest);
 	}
 	
 	/**
@@ -42,8 +47,12 @@ public class LiStore {
 	 * @param appStoreItem
 	 * @return
 	 */
+	@Deprecated
 	public static boolean BuyVirtualCurrency(Activity activity, VirtualCurrency virtualCurrency, LiCallbackIAPPurchase liCallbackIAPPurchase) {
-		return IAP.BuyVirtualCurrency(activity, virtualCurrency, liCallbackIAPPurchase);
+		return buyVirtualCurrency(activity, virtualCurrency, liCallbackIAPPurchase);
+	}
+	public static boolean buyVirtualCurrency(Activity activity, VirtualCurrency virtualCurrency, LiCallbackIAPPurchase liCallbackIAPPurchase) {
+		return IAP.buyVirtualCurrency(activity, virtualCurrency, liCallbackIAPPurchase);
 	}
 	
 	/**
@@ -52,9 +61,14 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static boolean GiveVirtualGoods(VirtualGood virtualGood, int quantity,LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest ) 
+	@Deprecated
+	public static boolean GiveVirtualGoods(VirtualGood virtualGood, int quantity,LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest )
 	{
-		return  IAP.GiveVirtualGoods(virtualGood, quantity, liCallbackVirtualGoodRequest);
+		return giveVirtualGoods(virtualGood, quantity, liCallbackVirtualGoodRequest);
+	}
+	public static boolean giveVirtualGoods(VirtualGood virtualGood, int quantity,LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest ) 
+	{
+		return  IAP.giveVirtualGoods(virtualGood, quantity, liCallbackVirtualGoodRequest);
 	}
 	
 	/**
@@ -62,9 +76,14 @@ public class LiStore {
 	 * @param coins
 	 * @return
 	 */
-	public static  boolean GiveVirtualCurrency(int amount, LiCurrency currency, LiCallbackVirtualCurrencyRequest LiCallbackVirtualCurrencyRequest) 
+	@Deprecated
+	public static boolean GiveVirtualCurrency(int amount, LiCurrency currency, LiCallbackVirtualCurrencyRequest LiCallbackVirtualCurrencyRequest)
 	{
-		return IAP.GiveVirtualCurrency(amount, currency,LiCallbackVirtualCurrencyRequest);
+		return giveVirtualCurrency(amount, currency, LiCallbackVirtualCurrencyRequest);
+	}
+	public static  boolean giveVirtualCurrency(int amount, LiCurrency currency, LiCallbackVirtualCurrencyRequest LiCallbackVirtualCurrencyRequest) 
+	{
+		return IAP.giveVirtualCurrency(amount, currency,LiCallbackVirtualCurrencyRequest);
 	}
 	
 	
@@ -74,9 +93,14 @@ public class LiStore {
 	 * @param quantity
 	 * @return
 	 */
-	public static boolean UseVirtualGoods(VirtualGood virtualGood, int quantity, LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest ) 
+	@Deprecated
+	public static boolean UseVirtualGoods(VirtualGood virtualGood, int quantity, LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest )
 	{
-		return IAP.UseVirtualGoods( virtualGood, quantity, liCallbackVirtualGoodRequest); 
+		return useVirtualGoods(virtualGood, quantity, liCallbackVirtualGoodRequest);
+	}
+	public static boolean useVirtualGoods(VirtualGood virtualGood, int quantity, LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest ) 
+	{
+		return IAP.useVirtualGoods( virtualGood, quantity, liCallbackVirtualGoodRequest); 
 	}
 	
 	/**
@@ -84,9 +108,14 @@ public class LiStore {
 	 * @param coins
 	 * @return
 	 */
-	public static boolean  UseVirtualCurrency(int amount, LiCurrency currency, LiCallbackVirtualCurrencyRequest LiCallbackVirtualCurrencyRequest) 
+	@Deprecated
+	public static boolean  UseVirtualCurrency(int amount, LiCurrency currency, LiCallbackVirtualCurrencyRequest LiCallbackVirtualCurrencyRequest)
 	{
-		return IAP.UseVirtualCurrency(amount, currency, LiCallbackVirtualCurrencyRequest);
+		return useVirtualCurrency(amount, currency, LiCallbackVirtualCurrencyRequest);
+	}
+	public static boolean  useVirtualCurrency(int amount, LiCurrency currency, LiCallbackVirtualCurrencyRequest LiCallbackVirtualCurrencyRequest) 
+	{
+		return IAP.useVirtualCurrency(amount, currency, LiCallbackVirtualCurrencyRequest);
 		
 	}
 
@@ -94,18 +123,27 @@ public class LiStore {
 	 * Get all Virtual Currency
 	 * @return list of virtual Currency
 	 */
-	public static List<VirtualCurrency> GetAllVirtualCurrency() 
+	@Deprecated
+	public static List<VirtualCurrency> GetAllVirtualCurrency(){
+		return getAllVirtualCurrency();
+	}
+	public static List<VirtualCurrency> getAllVirtualCurrency() 
 	{
-		return IAP.GetAllVirtualCurrency();
+		return IAP.getAllVirtualCurrency();
 	}
 	
 	/**
 	 * Get all Virtual Currency By currency kind
 	 * @return list of virtual Currency
 	 */
-	public static List<VirtualCurrency> GetAllVirtualCurrencyByKind(LiCurrency currency) 
+	@Deprecated
+	public static List<VirtualCurrency> GetAllVirtualCurrencyByKind(LiCurrency currency)
 	{
-		return IAP.GetAllVirtualCurrencyByKind(currency);
+		return getAllVirtualCurrencyByKind(currency);
+	}
+	public static List<VirtualCurrency> getAllVirtualCurrencyByKind(LiCurrency currency) 
+	{
+		return IAP.getAllVirtualCurrencyByKind(currency);
 	}
 
 	/**
@@ -116,19 +154,28 @@ public class LiStore {
 	 * @param getVirtualGoodKind
 	 * @return
 	 */
+	@Deprecated
 	public static  List<VirtualGood> GetAllVirtualGoods(GetVirtualGoodKind getVirtualGoodKind)
 	{
-		return IAP.GetAllVirtualGoods(getVirtualGoodKind);
-		
+		return getAllVirtualGoods(getVirtualGoodKind);
+	}
+	public static  List<VirtualGood> getAllVirtualGoods(GetVirtualGoodKind getVirtualGoodKind)
+	{
+		return IAP.getAllVirtualGoods(getVirtualGoodKind);
 	}
 	
 	/**
 	 * Get all virtual good Category
 	 * @return
 	 */
+	@Deprecated
 	public static  List<VirtualGoodCategory> GetAllVirtualGoodsCategory()
 	{
-		return IAP.GetAllVirtualGoodsCategory();
+		return getAllVirtualGoodsCategory();
+	}
+	public static  List<VirtualGoodCategory> getAllVirtualGoodsCategory()
+	{
+		return IAP.getAllVirtualGoodsCategory();
 	} 
 	
 	
@@ -140,9 +187,13 @@ public class LiStore {
 	 * @param getVirtualGoodKind
 	 * @return
 	 */
+	@Deprecated
 	public static List<VirtualGood> GetVirtualGoodByCategory(VirtualGoodCategory virtualGoodCategory, GetVirtualGoodKind getVirtualGoodKind) throws LiErrorHandler {
+		return getVirtualGoodByCategory(virtualGoodCategory, getVirtualGoodKind);
+	}
+	public static List<VirtualGood> getVirtualGoodByCategory(VirtualGoodCategory virtualGoodCategory, GetVirtualGoodKind getVirtualGoodKind) throws LiErrorHandler {
 		// TODO Auto-generated method stub
-	 	 return IAP.GetVirtualGoodByCategory(virtualGoodCategory, getVirtualGoodKind );
+	 	 return IAP.getVirtualGoodByCategory(virtualGoodCategory, getVirtualGoodKind );
 	}
 	
 	
@@ -196,9 +247,13 @@ public class LiStore {
 	 * @param id
 	 * @return
 	 */
+	@Deprecated
 	public static VirtualGood GetVirtualGoodById(String id) {
+		return getVirtualGoodById(id);
+	}
+	public static VirtualGood getVirtualGoodById(String id) {
 		// TODO Auto-generated method stub
-		return IAP.GetVirtualGoodById(id);
+		return IAP.getVirtualGoodById(id);
 	}
 	
 	/**
@@ -206,9 +261,13 @@ public class LiStore {
 	 * @param id
 	 * @return
 	 */
+	@Deprecated
 	public static VirtualCurrency GetVirtualCurrencyDealById(String id) {
+		return getVirtualCurrencyDealById(id);
+	}
+	public static VirtualCurrency getVirtualCurrencyDealById(String id) {
 		// TODO Auto-generated method stub
-		return IAP.GetVirtualCurrencyDealById(id);
+		return IAP.getVirtualCurrencyDealById(id);
 	}
 
 
@@ -217,9 +276,13 @@ public class LiStore {
 	 * @param id
 	 * @return
 	 */
+	@Deprecated
 	public static VirtualGood GetVirtualGoodDealById(String id) {
+		return getVirtualGoodDealById(id);
+	}
+	public static VirtualGood getVirtualGoodDealById(String id) {
 		// TODO Auto-generated method stub
-		return IAP.GetVirtualGoodDealById(id);
+		return IAP.getVirtualGoodDealById(id);
 	}
 	
 	/**

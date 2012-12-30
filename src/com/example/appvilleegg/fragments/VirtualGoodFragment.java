@@ -56,7 +56,7 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		activity = getActivity();
 		 if (activity != null) {
 	            // gets an instance of the custom adapter for the Virtual Product.
-			 	mProductAdapter = VirtualGoodAdapter.getInstance(activity, LiStore.GetAllVirtualGoods(GetVirtualGoodKind.ALL));
+			 	mProductAdapter = VirtualGoodAdapter.getInstance(activity, LiStore.getAllVirtualGoods(GetVirtualGoodKind.ALL));
 	            
 	            if (mGridView != null) {
 	                mGridView.setAdapter(mProductAdapter);
@@ -78,16 +78,11 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		LiLogger.LogWarning(Tag, "Clicked");
 		if (TabsFragmentActivity.clickEnabled)	
 		{
-			try {
-				VirtualGood vg = LiStore.GetAllVirtualGoods(GetVirtualGoodKind.ALL).get(position);
-				if (vg.VirtualGoodMainCurrency != 0)
-					vg.buyVirtualGoods(1, LiCurrency.MainCurrency);
-				else
-					vg.buyVirtualGoods(1, LiCurrency.SencondaryCurrency);
-				TabsFragmentActivity.refreshUI();
-			} catch (LiErrorHandler e) {
-				// TODO Auto-generated catch block
-			}
+			VirtualGood vg = LiStore.getAllVirtualGoods(GetVirtualGoodKind.ALL).get(position);
+			if (vg.VirtualGoodMainCurrency != 0)
+				vg.buyVirtualGoods(1, LiCurrency.MainCurrency,TabsFragmentActivity.virtualGoodRequest);
+			else
+				vg.buyVirtualGoods(1, LiCurrency.SencondaryCurrency, TabsFragmentActivity.virtualGoodRequest);
 		}
 	}
 

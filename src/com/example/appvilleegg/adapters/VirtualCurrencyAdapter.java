@@ -63,7 +63,7 @@ public class VirtualCurrencyAdapter extends BaseAdapter {
 					    @Override
 					    protected Boolean doInBackground(String ... params) {
 					    	final String url = params[0];
-					    	LiFileCacher.GetBitmapFromCache(url, new LiCallbackGetCachedFile() {
+					    	LiFileCacher.getBitmapFromCache(url, new LiCallbackGetCachedFile() {
 								
 								public void onSuccessfull(InputStream is) {
 									// TODO Auto-generated method stub

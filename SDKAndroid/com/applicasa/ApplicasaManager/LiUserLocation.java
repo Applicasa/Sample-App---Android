@@ -47,20 +47,20 @@ public class LiUserLocation {
 	
 	
 	
-	public static void EnableGps(){
-		Applicasa.EnableGps();
+	public static void enableGps(){
+		Applicasa.enableGps();
 	}
 	
-	public static void EnableNetwork(){
-		Applicasa.EnableNetwork();
+	public static void enableNetwork(){
+		Applicasa.enableNetwork();
 	}
 	
-	public static void DisableGps(){
-		Applicasa.DisableGps();
+	public static void disableGps(){
+		Applicasa.disableGps();
 	}
 	
-	public static void DisableNetwork(){
-		Applicasa.DisableNetwork();
+	public static void disableNetwork(){
+		Applicasa.disableNetwork();
 	}
 
 

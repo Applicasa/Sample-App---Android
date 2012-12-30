@@ -1,43 +1,29 @@
 package com.applicasa.VirtualGood;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.GregorianCalendar;
 
-import org.apache.http.ParseException;
-
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiUtility;
 
-import java.net.URL;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
-import applicasa.LiCore.communication.LiCallback;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
 import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import applicasa.LiCore.communication.LiFilters.Operation;
-import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
-
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
 
 import android.database.Cursor;
-import applicasa.LiCore.sqlDB.database.LiCoreDBBuilder;
 import applicasa.LiCore.sqlDB.database.LiDbObject;
+import applicasa.LiCore.communication.LiRequestConst.QueryKind;
+import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
+import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.communication.LiObjRequest;
+import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
+import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiFilters;
+import applicasa.LiCore.communication.LiQuery;
+import applicasa.LiCore.communication.LiFilters.Operation;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
@@ -47,6 +33,7 @@ import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.GetVirtualGoodKind;
 import applicasa.kit.IAP.IAP.LiCurrency;
+import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
 
 public class VirtualGood extends VirtualGoodData {
  /** End of Basic SDK **/
@@ -69,67 +56,61 @@ public class VirtualGood extends VirtualGoodData {
 	/**
 	 * Consume The Product with specific quantity
 	 * @param quantity
-	 * @return
-	 * @throws LiErrorHandler
+	 * @return	
 	 */
-	public boolean useVirtualGoods(int quantity) throws LiErrorHandler
+	public boolean useVirtualGoods(int quantity, LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest)
 	{
-		return IAP.UseVirtualGoods(this, quantity);
+		return IAP.useVirtualGoods(this, quantity,liCallbackVirtualGoodRequest);
 	}
 	
 	/**
 	 * Buys specific quantity of this product, credit balance will decrease quantity * credit
 	 * @param quantity
 	 * @return
-	 * @throws LiErrorHandler
 	 */
-	public boolean buyVirtualGoods(int quantity, LiCurrency licurrency) throws LiErrorHandler
+	public boolean buyVirtualGoods(int quantity, LiCurrency licurrency, LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest)
 	{
-		return IAP.BuyVirtualGoods(this, quantity, licurrency);
+		return IAP.buyVirtualGoods(this, quantity, licurrency,liCallbackVirtualGoodRequest);
 	}
 	
 	/**
 	 * Gives specific quantity of this product without any cost
 	 * @param quantity
-	 * @return
-	 * @throws LiErrorHandler
+	 * @return	
 	 */
-	public boolean giveVirtualGoods(int quantity) throws LiErrorHandler
+	public boolean giveVirtualGoods(int quantity, LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest)
 	{
-		return IAP.GiveVirtualGoods(this, quantity);
+		return IAP.giveVirtualGoods(this, quantity,liCallbackVirtualGoodRequest);
 	}
 	
 	/**
 	 * Consumes  1 quantity of The Product
 	 * @param quantity
 	 * @return
-	 * @throws LiErrorHandler
 	 */
-	public boolean useVirtualGoods() throws LiErrorHandler
+	public boolean useVirtualGoods(LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest)
 	{
-		return IAP.UseVirtualGoods(this, 1);
+		return IAP.useVirtualGoods(this, 1,liCallbackVirtualGoodRequest);
 	}
 	
 	/**
 	 * Buy 1 quantity  of this product, credit balance will decrease quantity * credit
 	 * @param quantity
 	 * @return
-	 * @throws LiErrorHandler
 	 */
-	public boolean buyVirtualGoods(LiCurrency licurrency) throws LiErrorHandler
+	public boolean buyVirtualGoods(LiCurrency licurrency, LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest)
 	{
-		return IAP.BuyVirtualGoods(this, 1, licurrency);
+		return IAP.buyVirtualGoods(this, 1, licurrency,liCallbackVirtualGoodRequest);
 	}
 	
 	/**
 	 * Gives 1 quantity of this product without any cost
 	 * @param quantity
 	 * @return
-	 * @throws LiErrorHandler
 	 */
-	public boolean giveVirtualGoods() throws LiErrorHandler
+	public boolean giveVirtualGoods(LiCallbackVirtualGoodRequest liCallbackVirtualGoodRequest)
 	{
-		 return IAP.GiveVirtualGoods(this, 1);
+		 return IAP.giveVirtualGoods(this, 1,liCallbackVirtualGoodRequest);
 	}
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -167,9 +148,14 @@ public class VirtualGood extends VirtualGoodData {
 		 * @param getVirtualGoodKind
 		 * @return
 		 */
-		public static  List<VirtualGood> GetAllVirtualGoods(GetVirtualGoodKind getVirtualGoodKind)
+	    @Deprecated
+	    public static  List<VirtualGood> GetAllVirtualGoods(GetVirtualGoodKind getVirtualGoodKind)
+	    {
+	    	return getAllVirtualGoods(getVirtualGoodKind);
+	    }
+		public static  List<VirtualGood> getAllVirtualGoods(GetVirtualGoodKind getVirtualGoodKind)
 		{
-			return IAP.GetAllVirtualGoods(getVirtualGoodKind);
+			return IAP.getAllVirtualGoods(getVirtualGoodKind);
 			
 		}
 		
@@ -181,9 +167,14 @@ public class VirtualGood extends VirtualGoodData {
 		 * @param getVirtualGoodKind
 		 * @return
 		 */
-		public static List<VirtualGood> GetVirtualGoodByCategory(VirtualGoodCategory virtualGoodCategory, GetVirtualGoodKind getVirtualGoodKind) throws LiErrorHandler 
+		 @Deprecated
+		 public static List<VirtualGood> GetVirtualGoodByCategory(VirtualGoodCategory virtualGoodCategory, GetVirtualGoodKind getVirtualGoodKind) throws LiErrorHandler
+		 {
+			 return getVirtualGoodByCategory(virtualGoodCategory, getVirtualGoodKind);
+		 }
+		public static List<VirtualGood> getVirtualGoodByCategory(VirtualGoodCategory virtualGoodCategory, GetVirtualGoodKind getVirtualGoodKind) throws LiErrorHandler 
 		{
-		 	 return IAP.GetVirtualGoodByCategory(virtualGoodCategory, getVirtualGoodKind );
+		 	 return IAP.getVirtualGoodByCategory(virtualGoodCategory, getVirtualGoodKind );
 		}
 	    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,7 +205,6 @@ public class VirtualGood extends VirtualGoodData {
 				request.setAction(RequestAction.UPDATE_ACTION);
 				request.setRecordID(VirtualGoodID);
 				request.setIncrementedFields(incrementedFields);
-				request.setReceivedObject(receivedFields);
 				resetIncrementedFields();
 			}
 			else
@@ -243,10 +233,6 @@ public class VirtualGood extends VirtualGoodData {
 			request.startASync();
 		}
 
-
-		
-   
-	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////														 /////////////////////////////////////
@@ -254,65 +240,65 @@ public class VirtualGood extends VirtualGoodData {
 //////////////////////////////////														 /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
 
-	
-		static RequestCallback callbackHandler = new RequestCallback() {
+
+
+	static RequestCallback callbackHandler = new RequestCallback() {
+
+		public void onCompleteGet(String requestID, Cursor cursor) {
+			// TODO Auto-generated method stub
+			List<VirtualGood> returnList = new ArrayList<VirtualGood>();
 			
-			public void onCompleteGet(String requestID, Cursor cursor) {
-				// TODO Auto-generated method stub
-				List<VirtualGood> returnList = new ArrayList<VirtualGood>();
-
-				returnList = BuildVirtualGoodFromCursor( cursor);
-
-				Object callback = virtualGoodCallbacks.get(requestID);
-				if (callback != null && callback instanceof LiVirtualGoodGetArrayCallback )
-				{
-					virtualGoodCallbacks.remove(requestID);
-					((LiVirtualGoodGetArrayCallback)callback).onGetVirtualGoodComplete(returnList);
-				}
-				if (callback != null && callback instanceof LiVirtualGoodGetByIDCallback )
-				{
-					virtualGoodCallbacks.remove(requestID);
-					((LiVirtualGoodGetByIDCallback)callback).onGetVirtualGoodComplete(returnList.get(0));
-				}
-				
-			}
+			returnList = BuildVirtualGoodFromCursor( cursor);
 			
-			public void LiException(String requestID,LiErrorHandler ex) {
-				// TODO Auto-generated method stub
-				Object callback = virtualGoodCallbacks.get(requestID);
-				if (callback != null && callback instanceof LiVirtualGoodGetArrayCallback )
-				{
-					virtualGoodCallbacks.remove(requestID);
-					((LiVirtualGoodGetArrayCallback)callback).onGetVirtualGoodFailure(ex);
-				}
-				else if (callback != null && callback instanceof LiVirtualGoodGetByIDCallback )
-				{
-					virtualGoodCallbacks.remove(requestID);
-					((LiVirtualGoodGetByIDCallback)callback).onGetVirtualGoodFailure(ex);
-				}
-				else if (callback != null && callback instanceof LiCallbackAction )
-				{
-					virtualGoodCallbacks.remove(requestID);
-					((LiCallbackAction)callback).onFailure(ex);
-				}
+			Object callback = virtualGoodCallbacks.get(requestID);
+			if (callback != null && callback instanceof LiVirtualGoodGetArrayCallback )
+			{
+				virtualGoodCallbacks.remove(requestID);
+				((LiVirtualGoodGetArrayCallback)callback).onGetVirtualGoodComplete(returnList);
 			}
-
+			if (callback != null && callback instanceof LiVirtualGoodGetByIDCallback )
+			{
+				virtualGoodCallbacks.remove(requestID);
+				((LiVirtualGoodGetByIDCallback)callback).onGetVirtualGoodComplete(returnList.get(0));
+			}
+	
+		}
+	
+		public void LiException(String requestID,LiErrorHandler ex) {
+			// TODO Auto-generated method stub
+			Object callback = virtualGoodCallbacks.get(requestID);
+			if (callback != null && callback instanceof LiVirtualGoodGetArrayCallback )
+			{
+				virtualGoodCallbacks.remove(requestID);
+				((LiVirtualGoodGetArrayCallback)callback).onGetVirtualGoodFailure(ex);
+			}
+			else if (callback != null && callback instanceof LiVirtualGoodGetByIDCallback )
+			{
+				virtualGoodCallbacks.remove(requestID);
+				((LiVirtualGoodGetByIDCallback)callback).onGetVirtualGoodFailure(ex);
+			}
+			else if (callback != null && callback instanceof LiCallbackAction )
+			{
+				virtualGoodCallbacks.remove(requestID);
+				((LiCallbackAction)callback).onFailure(ex);
+			}
+		}
+	
 			public void onCompleteAction(String requestID, LiObjResponse response) {
 				// TODO Auto-generated method stub
 			}
-		};
-	
-	 
-    public static List<VirtualGood> BuildVirtualGoodFromCursor(Cursor cursor)
+	};
+
+
+	public static List<VirtualGood> BuildVirtualGoodFromCursor(Cursor cursor)
 	{
 		List<VirtualGood> returnList = new ArrayList<VirtualGood>();
 		if (cursor.getCount() == 0 ) {}// nothing received
 		else
 		{
-			cursor.moveToFirst();
-			
+				cursor.moveToFirst();
+		
 			while (!cursor.isAfterLast())
 			{
 				returnList.add(new VirtualGood(cursor));
@@ -323,8 +309,8 @@ public class VirtualGood extends VirtualGoodData {
 	
 		return returnList;
 	}
-    
-	
+
+
 	private static void setGetCallback(LiVirtualGoodGetArrayCallback virtualGoodGetArrayCallback, String reqID) {
 		// TODO Auto-generated method stub
 		virtualGoodCallbacks.put(reqID, virtualGoodGetArrayCallback);
@@ -333,7 +319,8 @@ public class VirtualGood extends VirtualGoodData {
 		// TODO Auto-generated method stub
 		virtualGoodCallbacks.put(reqID, liCallbackAction);
 	}  
-	 
+		
+     
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -474,8 +461,6 @@ public class VirtualGood extends VirtualGoodData {
 				this.VirtualGoodMainCategory = new VirtualGoodCategory(cursor.getString(columnIndex));
 			}
 	
-		try{this.receivedFields = this.dictionaryRepresentation(false);}
-		catch (LiErrorHandler ex){}
 		return this;
 	}
 	
@@ -643,8 +628,6 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	private void resetIncrementedFields() {
 		// TODO Auto-generated method stub
 		incrementedFields = new LiJSONObject();
-		try {	receivedFields = dictionaryRepresentation(false);} 
-		catch (LiErrorHandler e) {}
 	}
 	
 

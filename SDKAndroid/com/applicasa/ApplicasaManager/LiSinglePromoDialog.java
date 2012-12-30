@@ -53,6 +53,11 @@ public class LiSinglePromoDialog extends Dialog   {
 	RelativeLayout.LayoutParams rl;
 	LiPromotionResultCallback mLiPromotionResultCallback;
 	
+	/**
+	 * Boolean parameter to prevent the display of two promotion on top of each other
+	 */
+	public static boolean isPromotionDisplayed = false;
+	
 	protected boolean isBackgroundAvailable = false;
 	protected boolean isButtonAvailable = false;
 	
@@ -60,7 +65,9 @@ public class LiSinglePromoDialog extends Dialog   {
         super(activity, android.R.style.Theme_Translucent_NoTitleBar);
         mActivity = activity;
         mSinglePromo = singlePromo;
+        singlePromo.changeWaitingToBeViewedToFalse();
         mLiPromotionResultCallback = liPromotionResultCallback;
+        isPromotionDisplayed = true;
         
     }
 
@@ -70,6 +77,7 @@ public class LiSinglePromoDialog extends Dialog   {
         
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		
 		/**
 		 * Call to create the layouts
@@ -180,7 +188,7 @@ public class LiSinglePromoDialog extends Dialog   {
             public void onClick(View v) {
 //        		// updates analytics that the Promo was only viewed
             	mSinglePromo.updateViewUseCount(1, 0);
-            	
+            	isPromotionDisplayed = false;
             	 if (mLiPromotionResultCallback != null)
                  	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Cancelled, LiPromotionResult.PromotionResultNothing, null);
             	 
@@ -199,7 +207,7 @@ public class LiSinglePromoDialog extends Dialog   {
 		LiLogger.LogDebug("**** PromoAvailable ****", "Promo Type "+mSinglePromo.PromotionAppEvent.toString()+" "+mSinglePromo.PromotionAppEvent.getId());
 		
 		// Load Materials
-		LiFileCacher.GetBitmapFromCache(mSinglePromo.PromotionImage, new LiCallbackGetCachedFile() {
+		LiFileCacher.getBitmapFromCache(mSinglePromo.PromotionImage, new LiCallbackGetCachedFile() {
 			
 			public void onSuccessfull(InputStream is) {
 				// TODO Auto-generated method stub
@@ -220,7 +228,7 @@ public class LiSinglePromoDialog extends Dialog   {
 				showPromo();
 			}
 		});
-		LiFileCacher.GetBitmapFromCache(mSinglePromo.PromotionButton, new LiCallbackGetCachedFile() {
+		LiFileCacher.getBitmapFromCache(mSinglePromo.PromotionButton, new LiCallbackGetCachedFile() {
 			
 			public void onSuccessfull(InputStream is) {
 				// TODO Auto-generated method stub
@@ -347,6 +355,7 @@ public class LiSinglePromoDialog extends Dialog   {
 					   
 					  break;
 				  }
+			  isPromotionDisplayed = false;
 			  dismiss();
 			  
 			} catch (LiJSONException e) {

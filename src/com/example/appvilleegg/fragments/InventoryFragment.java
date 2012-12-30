@@ -44,7 +44,7 @@ public class InventoryFragment extends ListFragment implements OnItemClickListen
 		 	View view = inflater.inflate(R.layout.inventory_list_holder, container, false);
 		 	
 		 	// Get all Virtual good with inventory
-		 	list = LiStore.GetAllVirtualGoods(GetVirtualGoodKind.HasInventory);
+		 	list = LiStore.getAllVirtualGoods(GetVirtualGoodKind.HasInventory);
 		 	mInventoryAdapter = new InventoryArrayAdapter(this.getActivity(),list );
 		 	setListAdapter(mInventoryAdapter);
 		 	

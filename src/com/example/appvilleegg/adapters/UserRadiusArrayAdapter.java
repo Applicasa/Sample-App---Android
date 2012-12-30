@@ -5,17 +5,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-
-
-import com.applicasa.User.User;
-
-import com.appvilleegg.R;
+import java.util.WeakHashMap;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +22,15 @@ import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 
+import com.applicasa.User.User;
+import com.appvilleegg.R;
+
 public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 	private static UserRadiusArrayAdapter adapter;
 	private Activity activity;
 	private List<User> friends = null;
+	
+	private WeakHashMap<String, Bitmap> imageMap= new WeakHashMap<String, Bitmap>();
 
 	private String TAG = "Matket Array Adapter";
 	static class ViewHolder {
@@ -40,8 +40,6 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 		public ProgressBar bar;
 
 	}
-	
-	private Map<String, Bitmap> imageMap = new HashMap<String, Bitmap>();
 		
 	/**
 	 * Constructor
@@ -54,48 +52,6 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 		this.activity = activity;
 		this.friends = friends;
 		adapter = this;
-		// get our thumbnail generation task ready to execute
-        
-				
-		Iterator<User> iter = friends.iterator();
-		while(iter.hasNext())
-		{
-			
-			new AsyncTask<String, Void, Boolean>() {
-	
-			    @Override
-			    protected Boolean doInBackground(String ... params) {
-			    	final String url = params[0];
-			    	LiFileCacher.GetBitmapFromCache(url, new LiCallbackGetCachedFile() {
-						
-						public void onSuccessfull(InputStream is) {
-							// TODO Auto-generated method stub
-						
-						}
-						
-						public void onFailure(LiErrorHandler error) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						public void onSuccessfullBitmap(Bitmap bitmap) {
-							// TODO Auto-generated method stub
-							imageMap.put(url, bitmap);
-							publishProgress();
-						}
-					});
-			    	return true;
-			    }
-			    /**
-			     * Updates the UI after receiving the Image
-			     */
-			    protected void onProgressUpdate(Void... progress) {
-			    	cacheUpdated();
-			     }
-	
-			}.execute(iter.next().UserImage);
-		}
-     		
 	}
 	
 	
@@ -121,20 +77,26 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 			// Get Branch item name and price and sets it in the list holder
 			holder.itemName.setText(friends.get(position).UserFirstName +" "+ friends.get(position).UserLastName);
 			
-			holder.distance.setText(String.valueOf((int)(friends.get(position).DistanceFromCurrent * 1000))+ "m");
+			holder.distance.setText(onlyTwoDecimalPlaces(friends.get(position).DistanceFromCurrent )+ "km");
 			
-			if (imageMap.containsKey(friends.get(position).UserImage))
+			String imageUrl = friends.get(position).UserImage;
+			if (imageMap.containsKey(imageUrl))
 			{
-				holder.pic.setImageBitmap(imageMap.get(friends.get(position).UserImage));
+				holder.pic.setImageBitmap(imageMap.get(imageUrl));
 				holder.pic.setMaxHeight( 30);
 				holder.pic.setMaxWidth(30);
 				holder.pic.setMinimumHeight( 30);
 				holder.pic.setMinimumWidth(30);
 				holder.bar.setVisibility(View.INVISIBLE);
 			}
-			else if (friends.get(position).UserImage.isEmpty()) 
+			else if (imageUrl.isEmpty() || imageUrl.equals("")) 
 			{
 				holder.bar.setVisibility(View.INVISIBLE);
+				holder.pic.setImageResource(R.drawable.profile_picture);
+			}
+			else
+			{
+				downloadThumbnail(imageUrl);
 			}
 		}
 		
@@ -159,5 +121,55 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 	private static void cacheUpdated() {
 		adapter.notifyDataSetChanged();
 	}
+	
+	private synchronized void downloadThumbnail(final String url)
+	{
+		new AsyncTask<String, Void, Boolean>() {
+			
+		    @Override
+		    protected Boolean doInBackground(String ... params) {
+		    	final String url = params[0];
+		    	LiFileCacher.getBitmapFromCache(url, new LiCallbackGetCachedFile() {
+					
+					public void onSuccessfull(InputStream is) {
+						// TODO Auto-generated method stub
+					
+					}
+					
+					public void onFailure(LiErrorHandler error) {
+						// TODO Auto-generated method stub
+						
+					}
 
+					public void onSuccessfullBitmap(Bitmap bitmap) {
+						// TODO Auto-generated method stub
+						imageMap.put(url, bitmap);
+						publishProgress();
+					}
+				});
+		    	return true;
+		    }
+		    /**
+		     * Updates the UI after receiving the Image
+		     */
+		    protected void onProgressUpdate(Void... progress) {
+		    	cacheUpdated();
+		     }
+
+		}.execute(url);
+	}
+
+	private  String onlyTwoDecimalPlaces(double number) {
+	    StringBuilder sbFloat = new StringBuilder(String.valueOf(number));
+	    int start = sbFloat.indexOf(".");
+	    if (start < 0) {
+	        return sbFloat.toString();
+	    }
+	    int end = start+3;
+	    if((end)>(sbFloat.length()-1)) end = sbFloat.length();
+
+	    String twoPlaces = sbFloat.substring(start, end);
+	    sbFloat.replace(start, sbFloat.length(), twoPlaces);
+	    return  sbFloat.toString();
+	}
 }

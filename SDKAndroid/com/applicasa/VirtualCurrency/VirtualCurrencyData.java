@@ -3,10 +3,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import applicasa.LiCore.communication.LiUtility;
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetByIDCallback;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetArrayCallback;
 import applicasa.LiCore.LiLocation;
 import applicasa.LiCore.LiField;
 import applicasa.LiJson.LiJSONObject;
@@ -17,7 +13,6 @@ public class VirtualCurrencyData {
 
 	protected static Map<String, LiFieldVirtualCurrency> stringMap = new HashMap<String, LiFieldVirtualCurrency>();
 	LiJSONObject incrementedFields = new LiJSONObject();
-	LiJSONObject receivedFields;
 	public static boolean EnableOffline = true;
 	public enum LiFieldVirtualCurrency implements LiField
 	{

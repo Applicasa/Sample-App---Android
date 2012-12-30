@@ -3,10 +3,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import applicasa.LiCore.communication.LiUtility;
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetByIDCallback;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetArrayCallback;
 import applicasa.LiCore.LiLocation;
 import applicasa.LiCore.LiField;
 import applicasa.LiJson.LiJSONObject;
@@ -16,7 +12,6 @@ public class UserData {
 
 	protected static Map<String, LiFieldUser> stringMap = new HashMap<String, LiFieldUser>();
 	LiJSONObject incrementedFields = new LiJSONObject();
-	LiJSONObject receivedFields;
 	public static boolean EnableOffline = true;
 	public enum LiFieldUser implements LiField
 	{
@@ -36,7 +31,7 @@ public class UserData {
 	, UserImage
 	, UserMainCurrencyBalance
 	, UserSecondaryCurrencyBalance
-	, UserTempDate
+	, UserExtraField
 
 	;
 
@@ -51,7 +46,7 @@ public class UserData {
 
 	protected static Map<String, Object > userCallbacks = new HashMap<String, Object>();
 	//Class Name 
-	public final static String kClassName  =  "User";
+	public final static String kClassName                =  "User";
 	
 	////
 	//// Class fields name - Static Fields
@@ -84,15 +79,15 @@ public class UserData {
 	
 		public GregorianCalendar UserLastUpdate;
 	
+		public String UserFacebookID;
+	
 		public String UserImage;
 	
 		public int UserMainCurrencyBalance;
 	
 		public int UserSecondaryCurrencyBalance;
 	
-		public String UserFacebookID;
-	
-		public GregorianCalendar UserTempDate;
+		public String UserExtraField;
 	
 		public double DistanceFromCurrent;
 	
@@ -200,6 +195,14 @@ public class UserData {
 			this.UserLastUpdate = UserLastUpdate;
 		}
 		
+		public String getUserFacebookID() {
+			return UserFacebookID;
+		}
+		
+		public void setUserFacebookID(String UserFacebookID) {
+			this.UserFacebookID = UserFacebookID;
+		}
+		
 		public String getUserImage() {
 			return UserImage;
 		}
@@ -224,20 +227,12 @@ public class UserData {
 			this.UserSecondaryCurrencyBalance = UserSecondaryCurrencyBalance;
 		}
 		
-		public String getUserFacebookID() {
-			return UserFacebookID;
+		public String getUserExtraField() {
+			return UserExtraField;
 		}
 		
-		public void setUserFacebookID(String UserFacebookID) {
-			this.UserFacebookID = UserFacebookID;
-		}
-		
-		public GregorianCalendar getUserTempDate() {
-			return UserTempDate;
-		}
-		
-		public void setUserTempDate(GregorianCalendar UserTempDate) {
-			this.UserTempDate = UserTempDate;
+		public void setUserExtraField(String UserExtraField) {
+			this.UserExtraField = UserExtraField;
 		}
 		
 		public static String getUserSortField(UserData.LiFieldUser field)
@@ -292,8 +287,8 @@ public class UserData {
 			case UserSecondaryCurrencyBalance:
 				return UserSecondaryCurrencyBalance;
 				
-			case UserTempDate:
-				return UserTempDate;
+			case UserExtraField:
+				return UserExtraField;
 				
 			default:
 				return "";
@@ -367,10 +362,10 @@ public class UserData {
 					UserSecondaryCurrencyBalance = (Integer)value;
 					break;
 					
-			case UserTempDate:
-					UserTempDate = (GregorianCalendar)value;
+			case UserExtraField:
+					UserExtraField = (String)value;
 					break;
-				
+					
 			default:
 				break;
 		}

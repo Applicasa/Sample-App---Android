@@ -44,7 +44,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 		mActivity = this;
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		
-		LiSession.SessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity,null);
 		refreshView();
 		
 		
@@ -55,7 +55,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 		// TODO Auto-generated method stub
 		bar.setVisibility(View.VISIBLE);
 		
-	 	Dynamic.getArrayWithQuery(null, QueryKind.LITE, new LiDynamicGetArrayCallback() {
+	 	Dynamic.getArrayWithQuery(null, QueryKind.LIGHT, new LiDynamicGetArrayCallback() {
 			
 			public void onGetDynamicFailure(LiErrorHandler error) {
 				// TODO Auto-generated method stub
@@ -196,12 +196,12 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.SessionEnd(mActivity);
+		LiSession.sessionEnd(mActivity);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.SessionResume(mActivity);
+		LiSession.sessionResume(mActivity);
 		super.onResume();
 	}
 }

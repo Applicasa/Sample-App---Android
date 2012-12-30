@@ -27,7 +27,7 @@ public class GameActivity extends Activity {
 	
 	protected void onResume(){
 		try {
-			LiSession.GameResume();
+			LiSession.gameResume();
 		} catch (LiErrorHandler e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,7 +38,7 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onPause() {
 		try {
-			LiSession.GamePause();
+			LiSession.gamePause();
 		} catch (LiErrorHandler e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,18 +70,18 @@ public class GameActivity extends Activity {
 			switch (id)
 			{
 				case R.id.btn_start:
-					LiSession.GameStart("new level",null);
+					LiSession.gameStart("new level",null);
 					break;
 				case R.id.btn_stop:
 			
-					LiSession.GameFinished(LiGameResult.LOSE, 5, 4, 3, 2, null);
+					LiSession.gameFinished(LiGameResult.LOSE, 5, 4, 3, 2, null);
 				
 					break;
 				case R.id.btn_Resume:
-					LiSession.GameResume();
+					LiSession.gameResume();
 					break;
 				case R.id.btn_pause:
-					LiSession.GamePause();
+					LiSession.gamePause();
 					break;
 			}
 		} catch (LiErrorHandler e) {

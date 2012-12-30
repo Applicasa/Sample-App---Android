@@ -85,7 +85,7 @@ public class LoginActivity extends Activity  {
 		progressBar = (ProgressBar)findViewById(R.id.progressBar);
 		textForgot.setClickable(true);
 		
-		LiSession.SessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity,null);
 	}
 
  
@@ -105,7 +105,7 @@ public class LoginActivity extends Activity  {
 				progressBar.setVisibility(View.VISIBLE);
 				userName = email.getText().toString();
 				pass = password.getText().toString();
-				 User.logInUserWithUserName(userName, pass, new LiCallbackUser () {
+				 User.loginUser(userName, pass, new LiCallbackUser () {
 					
 					public void onSuccessfull(RequestAction action) {
 						progressBar.setVisibility(View.INVISIBLE);
@@ -125,7 +125,7 @@ public class LoginActivity extends Activity  {
 			
 			case R.id.btn_log_in_fb:
 				btnLoginFB.setClickable(false);
-				User.LoginWithFacebookUser(this, new String[]{"publish_stream"}, new LiFacebookResponse() {
+				User.loginWithFacebookUser(this, new String[]{"publish_stream"}, new LiFacebookResponse() {
 						
 						public void onGetFriendsResponse(LiObjResponse requestResponse,
 								List<LiObjFacebookFriends> friendsList) {
@@ -223,12 +223,12 @@ public class LoginActivity extends Activity  {
 		
 		protected void onPause() {
 			// TODO Auto-generated method stub
-			LiSession.SessionEnd(mActivity);
+			LiSession.sessionEnd(mActivity);
 			super.onPause();
 		}
 		protected void onResume() {
 			// TODO Auto-generated method stub
-			LiSession.SessionResume(mActivity);
+			LiSession.sessionResume(mActivity);
 			super.onResume();
 		}
 }

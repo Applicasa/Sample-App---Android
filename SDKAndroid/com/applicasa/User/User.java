@@ -3,9 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.GregorianCalendar;
 
-
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiUtility;
 
 import applicasa.LiCore.LiLocation;
@@ -15,31 +12,36 @@ import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
 
-import android.content.Context;
 import android.database.Cursor;
 import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
+import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
-import applicasa.LiCore.Applicasa.LiSpendProfile;
-import applicasa.LiCore.Applicasa.LiUsageProfile;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.Push.LiCallbackPush;
-import applicasa.LiCore.Push.LiObjPushMessage;
+import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.communication.LiObjRequest;
 import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
 import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiFilters;
+import applicasa.LiCore.communication.LiQuery;
+import applicasa.LiCore.communication.LiFilters.Operation;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
 
 
-import applicasa.LiCore.Applicasa;
-import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
-import applicasa.LiCore.communication.LiFilters.Operation;
-import applicasa.kit.FaceBook.LiFBmanager;
-
 import com.facebook.android.LiFacebook;
+import android.content.Intent;
+import applicasa.LiCore.communication.LiCallback;
+import applicasa.LiCore.Applicasa;
+import applicasa.LiCore.LiLocationCallback;
+import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
+import applicasa.LiCore.Applicasa.LiSpendProfile;
+import applicasa.LiCore.Applicasa.LiUsageProfile;
+import applicasa.LiCore.LiLogger;
+import applicasa.kit.FaceBook.LiFBmanager;
+import com.facebook.android.LiAsyncFacebookRunner.LiRequestListener;
 import applicasa.kit.FaceBook.LiFacebookResponse;
 import applicasa.kit.FaceBook.LiObjFacebookRequest;
 import com.facebook.android.LiFacebook.LiDialogListener;
@@ -128,8 +130,7 @@ public class User extends UserData {
         	LiQuery query= new LiQuery();
         	
         	// Create a where statement expression of ObjectId = 'id';  
-	        LiFilters filter = new LiFilters(LiFieldUser.UserID, Operation.EQUAL, Id);
-	        // LiFiltereExpression filters= new LiFiltereExpression(b);
+	        LiFilters filter = new LiFilters(LiFieldUser.UserID, Operation.EQUAL, Id);	        
 	        query.setFilter(filter);
         	
 	    	LiObjRequest request = new LiObjRequest();
@@ -152,7 +153,7 @@ public class User extends UserData {
     * @return
     * @throws LiErrorHandler
     */
-    public static void getWithQuery(LiQuery query ,QueryKind queryKind, LiUserGetArrayCallback liUserGetArrayCallback) 
+    public static void getArrayWithQuery(LiQuery query ,QueryKind queryKind, LiUserGetArrayCallback liUserGetArrayCallback) 
     {
         LiObjRequest request = new LiObjRequest();
         request.setClassName(kClassName);
@@ -171,6 +172,29 @@ public class User extends UserData {
         setGetCallback(liUserGetArrayCallback,request.requestID);
         request.GetWithRawQuery(kClassName, whereClause, args);
     }
+	
+	 /** Synchronized Method to returns an object from server by filters
+	 * @param ID
+	 * @return the list of items or null in case on an error
+	 * @throws LiErrorHandler
+	 */
+	 public static List<User> getArrayWithQuery(LiQuery query ,QueryKind queryKind) throws LiErrorHandler 
+	 {
+		 LiObjRequest request = new LiObjRequest();
+		 request.setClassName(kClassName);
+		 request.setAction(RequestAction.GET_ARRAY);
+		 request.setGet(queryKind);
+		 request.setQueryToRequest(query);
+		 LiObjResponse response = request.startSync();
+		 
+		 if (response.LiRespType.equals(ApplicasaResponse.RESPONSE_SUCCESSFUL))
+		 {
+		  Cursor cursor = request.getCursor();
+		  return BuildUserFromCursor(request.requestID, cursor);
+		 }
+		 
+		 return null;
+	 }
    
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,10 +221,10 @@ public class User extends UserData {
 		request.setAction(RequestAction.UPLOAD_FILE);
 		request.setClassName(User.kClassName);
 		request.setRecordID(UserID);
-		request.setAddedObject(this);
+		
 		request.setFileFieldName(liFieldUser);
 		request.setFilePath(filePath);
-		
+		request.setAddedObject(this);
 		request.setCallback(callbackHandler);
 		setActionCallback(liCallbackAction,request.requestID);
 		
@@ -337,9 +361,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////                                                        //////////////////////////////////////
-//////////////////////////////////                     Facebook functions                 //////////////////////////////////////
-//////////////////////////////////                                                        //////////////////////////////////////
+//////////////////////////////////                                                        ////////////////////////////////////
+//////////////////////////////////                     Facebook functions                 ////////////////////////////////////
+//////////////////////////////////                                                        ////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -349,7 +373,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
      * @param permission - such as "publish_stream"
      * @param liFacebookResponse
      */
-    public static void LoginWithFacebookUser(Activity activity, String[] permission, LiFacebookResponse liFacebookResponse)
+    public static void loginWithFacebookUser(Activity activity, String[] permission, LiFacebookResponse liFacebookResponse)
     {
         LiObjFacebookRequest request = new LiObjFacebookRequest();
         
@@ -365,7 +389,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
      * @param activity - in case there's a need to prompt login web view
      * @param liFacebookResponse
      */
-    public static void GetFacebookFriendsWithUser(Activity activity,LiFacebookResponse liFacebookResponse)
+    public static void getFacebookFriendsWithUser(Activity activity,LiFacebookResponse liFacebookResponse)
     {
         LiObjFacebookRequest request = new LiObjFacebookRequest();
         
@@ -381,8 +405,8 @@ static RequestCallback callbackHandler = new RequestCallback() {
      * Post on User's wall
      * opens a facebook dialog
      */
-    public static void PostOnUserWall(Context context, LiDialogListener lidialogListener){
-        LiFBmanager.PostOnUserWall( context,  lidialogListener);
+    public static void postOnUserWall(Activity activity, LiDialogListener lidialogListener){
+        LiFBmanager.postOnUserWall( activity,  lidialogListener);
     }
     
     
@@ -397,9 +421,8 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	  *		parameters.putString("description", "AppVille invitation");
 	  *     parameters.putString("picture", image url);
 	  */
-    public static void PostOnUserWall(Context context,Bundle params, LiDialogListener lidialogListener){
-        LiFBmanager.PostOnUserWall( context, params,  lidialogListener);
-        
+    public static void postOnUserWall(Activity activity,Bundle params, LiDialogListener lidialogListener){
+        LiFBmanager.postOnUserWall( activity, params,  lidialogListener);        
     }
     
     
@@ -417,9 +440,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	  *		parameters.putString("description", "AppVille invitation");
 	  *     parameters.putString("picture", image url);
 	  */
-	   public static void PostOnFriendsWallWithDialog(Context context, String fbUserID, Bundle parameters, LiDialogListener lidialogListener )
+	   public static void postOnFriendsWallWithDialog(Activity activity, String fbUserID, Bundle parameters, LiDialogListener lidialogListener )
 	   {
-	    LiFBmanager.PostOnFriendsWallWithDialog(context, fbUserID, parameters, lidialogListener);
+			LiFBmanager.postOnFriendsWallWithDialog(activity, fbUserID, parameters, lidialogListener);
 	   }
 	   
 	 /**
@@ -434,20 +457,30 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	  *     params.putString("picture", image url);
 	  */
 	  
-	 public static void PostOnFriendsWall(Activity activity, String fbUserID, Bundle params, LiDialogListener lidialogListener){
-	  LiFBmanager.PostOnFriendsWall( activity,  fbUserID, params,  lidialogListener);
-	  
+	 public static void postOnFriendsWall(Activity activity, String fbUserID, Bundle params, LiDialogListener lidialogListener){
+		LiFBmanager.postOnFriendsWall( activity,  fbUserID, params,  lidialogListener);	  
 	 }
 	 
 	 /**
 	  * Return an instance of facebook Object class 
 	  * @return
 	  */
-	 public LiFacebook GetFacebook()
+	 public LiFacebook getFacebook()
 	 {
-		   return LiFBmanager.GetFacebook();
+		   return LiFBmanager.getFacebook();
 	 }
- 
+
+	/**
+   * method to Handle Fb activity result 
+   * @param requestCode
+   * @param resultCode
+   * @param data
+   */
+  public static void onActivityResult(int requestCode, int resultCode, Intent data)
+  {
+		Applicasa.onActivityResult(requestCode, resultCode, data);
+  }
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -458,13 +491,24 @@ static RequestCallback callbackHandler = new RequestCallback() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-    * Login with User Name and Password
-    * @param UserName
-    * @param UserPassword
-    * @return
-    * @throws LiErrorHandler
+    * Login user with User Name and Password
+    * Use method loginUser
     */
-    public static void logInUserWithUserName(String UserName, String UserPassword, LiCallbackUser liCallbackUser)  
+  	@Deprecated
+    public static void logInUserWithUserName(String UserName, String UserPassword, LiCallbackUser liCallbackUser)
+    {
+  		loginUser( UserName,  UserPassword,  liCallbackUser);
+    }
+    
+  	/**
+     * Login user with User Name and Password
+     * @param UserName
+     * @param UserPassword
+     * @return
+     * @throws LiErrorHandler
+     * Use method logInUser
+     */
+    public static void loginUser(String UserName, String UserPassword, LiCallbackUser liCallbackUser)  
     {
         if (UserName == null || UserName =="" || UserPassword == null ) 
         {
@@ -527,7 +571,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
     * @param newUserName
     * @return
     */
-    public static void updateUserName(String newUserName, String UserPassword, LiCallbackUser liCallbackUser) 
+    public static void updateUserame(String newUserName, String UserPassword, LiCallbackUser liCallbackUser) 
     {
         if (newUserName== null || newUserName =="" || UserPassword == null ) 
         {
@@ -599,7 +643,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
       
     }
     
-    /**
+	/**
      * Sends email to this user with a new password
      * @param username
      * @param liCallbackUser
@@ -610,7 +654,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
         request.setAction(RequestAction.FORGOT_PASSWORD);
         request.setClassName(kClassName);
         try {
-			request.addParametersArrayValue(LiFieldUser.UserName, username);
+				request.addParametersArrayValue(LiFieldUser.UserName, username);
 		} catch (LiErrorHandler error) {
 			// TODO Auto-generated catch block
 			if (liCallbackUser!= null)
@@ -619,49 +663,44 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				return;
 			}
 		}
-        request.setCallback(liCallbackUser);
+		request.setCallback(liCallbackUser);
         request.startASync();
     }
-
+	
 	/**
     * @return the current User
     */
     public static User getCurrentUser()
     {
 		return Applicasa.getCurrentUser();
-    } 
-    
-    /**
-     * Register User To GCM
-     */
+    }
+	
+	/**
+    * Register User To GCM
+    */
     public static void RegisterToGCM()
     {
-    	Applicasa.registerToGCM();
+		Applicasa.registerToGCM();
     }
     
     /**
-     * UnRegister User To GCM
-     */
+    * UnRegister User To GCM
+    */
     public static void UnRegisterFromGCM()
     {
-    	Applicasa.unRegisterFromGCM();
+		Applicasa.unRegisterFromGCM();
     }
-    
-    public static void SendPush(LiObjPushMessage liObjPushMessage, LiCallbackPush liCallbackPush)
-    {
-    	if (liObjPushMessage != null)
-    		liObjPushMessage.sendAsync(liCallbackPush);
-    }
-    
+	
 	public static LiSpendProfile getCurrentUserSpendProfile()
 	{
 		return Applicasa.getUserSpendProfile();
 	}
-	
+	 
 	public static LiUsageProfile getCurrentUserUsageProfile()
 	{
 		return Applicasa.getUserUsageProfile();
 	}
+ 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -685,11 +724,11 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		this.UserIsRegistered = false;
 		this.UserIsRegisteredFacebook = false;
 		(this.UserLastUpdate = new GregorianCalendar()).setTimeInMillis(0);
+		this.UserFacebookID = "";
 		this.UserImage = "";
 		this.UserMainCurrencyBalance = 0;
 		this.UserSecondaryCurrencyBalance = 0;
-		this.UserFacebookID = "";
-		(this.UserTempDate = new GregorianCalendar()).setTimeInMillis(0);
+		this.UserExtraField = "";
 	}
 
 	public User(Cursor cursor) 
@@ -798,6 +837,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			this.UserLastUpdate = gc;
 		}
 		
+		columnIndex = cursor.getColumnIndex(header + LiObjRequest.UserFacebookID);
+		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
+			this.UserFacebookID = cursor.getString(columnIndex);
 		columnIndex = cursor.getColumnIndex(header + LiFieldUser.UserImage.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.UserImage = cursor.getString(columnIndex);
@@ -810,23 +852,16 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.UserSecondaryCurrencyBalance = cursor.getInt(columnIndex);
 		
-		columnIndex = cursor.getColumnIndex(header + LiObjRequest.UserFacebookID);
+		columnIndex = cursor.getColumnIndex(header + LiFieldUser.UserExtraField.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
-			this.UserFacebookID = cursor.getString(columnIndex);
-		columnIndex = cursor.getColumnIndex(header + LiFieldUser.UserTempDate.toString());
-		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
-		{
-			long dateStr = cursor.getLong(columnIndex);
-			GregorianCalendar gc= new GregorianCalendar();
-			gc.setTimeInMillis(dateStr);
-			this.UserTempDate = gc;
-		}
+			this.UserExtraField = cursor.getString(columnIndex);
 		
 		
 		columnIndex = cursor.getColumnIndex(header + LiObjRequest.DistanceFromCurrent);
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.DistanceFromCurrent = LiUtility.convertPartialDistanceToKm(cursor.getDouble(columnIndex));
 		
+	
 		return this;
 	}
 	
@@ -850,11 +885,11 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		this.UserIsRegistered			= item.UserIsRegistered;
 		this.UserIsRegisteredFacebook			= item.UserIsRegisteredFacebook;
 		this.UserLastUpdate			= item.UserLastUpdate;
+		this.UserFacebookID			= item.UserFacebookID;
 		this.UserImage			= item.UserImage;
 		this.UserMainCurrencyBalance			= item.UserMainCurrencyBalance;
 		this.UserSecondaryCurrencyBalance			= item.UserSecondaryCurrencyBalance;
-		this.UserFacebookID			= item.UserFacebookID;
-		this.UserTempDate			= item.UserTempDate;
+		this.UserExtraField			= item.UserExtraField;
 	
 		return UserID;
 	}
@@ -898,14 +933,14 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	
 		dictionary.put(LiFieldUser.UserLastUpdate, LiUtility.convertDateToDictionaryRepresenataion(UserLastUpdate));
 	
+		dictionary.put(LiObjRequest.UserFacebookID, UserFacebookID);
 		dictionary.put(LiFieldUser.UserImage, UserImage);
 	
 		dictionary.put(LiFieldUser.UserMainCurrencyBalance, UserMainCurrencyBalance);
 	
 		dictionary.put(LiFieldUser.UserSecondaryCurrencyBalance, UserSecondaryCurrencyBalance);
 	
-		dictionary.put(LiObjRequest.UserFacebookID, UserFacebookID);
-		dictionary.put(LiFieldUser.UserTempDate, LiUtility.convertDateToDictionaryRepresenataion(UserTempDate));
+		dictionary.put(LiFieldUser.UserExtraField, UserExtraField);
 	
 		return dictionary;
 		}
@@ -930,11 +965,11 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		dbObject.put(LiFieldUser.UserIsRegistered, LiCoreDBmanager.BOOL,false);
 		dbObject.put(LiFieldUser.UserIsRegisteredFacebook, LiCoreDBmanager.BOOL,false);
 		dbObject.put(LiFieldUser.UserLastUpdate, LiCoreDBmanager.DATE,0);
+		dbObject.put(LiObjRequest.UserFacebookID, LiCoreDBmanager.TEXT);
 		dbObject.put(LiFieldUser.UserImage, LiCoreDBmanager.TEXT,"");
 		dbObject.put(LiFieldUser.UserMainCurrencyBalance, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldUser.UserSecondaryCurrencyBalance, LiCoreDBmanager.INTEGER,0);
-		dbObject.put(LiObjRequest.UserFacebookID, LiCoreDBmanager.TEXT);
-		dbObject.put(LiFieldUser.UserTempDate, LiCoreDBmanager.DATE,0);
+		dbObject.put(LiFieldUser.UserExtraField, LiCoreDBmanager.TEXT,"");
 	return dbObject;
 }
 	public void increment(LiFieldUser liFieldUser) throws LiErrorHandler
@@ -944,6 +979,11 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		 
 	public void increment(LiFieldUser liFieldUser, Object value) throws LiErrorHandler
 	{
+		if (liFieldUser.equals(LiFieldUser.UserMainCurrencyBalance) || liFieldUser.equals(LiFieldUser.UserSecondaryCurrencyBalance) )
+		{
+			LiLogger.LogWarning(kClassName, "Can't Increase User balance using Increment Method. please use LiStore class");
+			return;
+		}
 		String key = liFieldUser.toString();
 		float oldValueFloat = 0;
 		int oldValueInt = 0;
@@ -988,8 +1028,6 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		// TODO Auto-generated method stub
 		incrementedFields = new LiJSONObject();
 	}
-	
-	
 	
 
 }

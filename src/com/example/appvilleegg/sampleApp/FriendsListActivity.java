@@ -33,7 +33,7 @@ public class FriendsListActivity extends ListActivity {
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		bar.setVisibility(View.VISIBLE);
 		
-		LiSession.SessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity,null);
 		
 		
 		/**
@@ -41,7 +41,7 @@ public class FriendsListActivity extends ListActivity {
 		 */
 		if (Applicasa.getCurrentUser().UserIsRegisteredFacebook)
 		 {
-			 User.GetFacebookFriendsWithUser(this, new LiFacebookResponse() {
+			 User.getFacebookFriendsWithUser(this, new LiFacebookResponse() {
 				
 				public void onGetFriendsResponse(LiObjResponse requestResponse,
 						List<LiObjFacebookFriends> friendsList) {
@@ -74,12 +74,12 @@ public class FriendsListActivity extends ListActivity {
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.SessionEnd(mActivity);
+		LiSession.sessionEnd(mActivity);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.SessionResume(mActivity);
+		LiSession.sessionResume(mActivity);
 		super.onResume();
 	}
 }

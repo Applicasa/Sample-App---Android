@@ -86,7 +86,7 @@ public class ShareDialog extends Dialog   {
 	    		 parameters.putString("link", "www.applicasa.com");
 	    		 parameters.putString("description", "Richi rich");
 	    		 parameters.putString("picture", "https://s3.amazonaws.com/appsmaterials/705E89/1352354269-238956b2-9f72-43fb-9867-8173d5c8b09a.png");
-	    		 User.PostOnUserWall(mContext, parameters, new LiDialogListener() {
+	    		 User.postOnUserWall(getOwnerActivity(), parameters, new LiDialogListener() {
 	 				
 	 				public void onFacebookError(LiFacebookError arg0) {
 	 					// TODO Auto-generated method stub

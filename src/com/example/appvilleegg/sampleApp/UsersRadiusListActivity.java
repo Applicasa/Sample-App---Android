@@ -65,12 +65,12 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		bar.setVisibility(View.VISIBLE);
 		
-		LiUserLocation.EnableGps();
-		LiUserLocation.EnableNetwork();
+		LiUserLocation.enableGps();
+		LiUserLocation.enableNetwork();
 		
 		LiUserLocation.getLocation(this);
 		
-		LiSession.SessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity,null);
 		
 	}
 	
@@ -87,16 +87,10 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 		
 		LiQuery query = new LiQuery();
 		// Add Filter to receive only users with username or first name or last name
-		List<LiFilters> filtersList = new ArrayList<LiFilters>();
-		filtersList.add(new LiFilters(LiFieldUser.UserFirstName,Operation.EQUAL,"to benny"));
-		filtersList.add(new LiFilters(LiFieldUser.UserFirstName,Operation.NOT_EQUAL,""));
-		filtersList.add(new LiFilters(LiFieldUser.UserLastName,Operation.NOT_EQUAL,""));
-		filtersList.add(new LiFilters(LiFieldUser.UserName,Operation.NOT_EQUAL,""));
 		
-		query.Lifilters = new  LiFilters(filtersList, Condition.OR);
 		query.setGeoFilter(LiFieldUser.UserLocation, location, 10000000);
 		 
-		User.getWithQuery(query, QueryKind.LITE, new LiUserGetArrayCallback() {
+		User.getArrayWithQuery(query, QueryKind.LIGHT, new LiUserGetArrayCallback() {
 			
 			public void onGetUserFailure(LiErrorHandler error) {
 				// TODO Auto-generated method stub
@@ -136,14 +130,14 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 		
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.SessionEnd(mActivity);
-		LiUserLocation.DisableGps();
-		LiUserLocation.DisableNetwork();
+		LiSession.sessionEnd(mActivity);
+		LiUserLocation.disableGps();
+		LiUserLocation.disableNetwork();
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.SessionResume(mActivity);
+		LiSession.sessionResume(mActivity);
 		super.onResume();
 	}
 }

@@ -1,7 +1,6 @@
 package com.example.appvilleegg.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -50,7 +49,7 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 	            // is stored in the Application sub-class for this app. This data would normally come
 	            // from a database or a web service.
 			 if (mStoreAdapter == null)
-			 	mStoreAdapter = VirtualCurrencyAdapter.getInstance(activity, LiStore.GetAllVirtualCurrency());
+			 	mStoreAdapter = VirtualCurrencyAdapter.getInstance(activity, LiStore.getAllVirtualCurrency());
 	            
 	            if (mGridView != null) {
 	                mGridView.setAdapter(mStoreAdapter);
@@ -70,8 +69,8 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 		LiLogger.LogWarning(Tag, "Clicked");
 		if (TabsFragmentActivity.clickEnabled)	
 		{
-			VirtualCurrency vc = LiStore.GetAllVirtualCurrency().get(position);
-			LiStore.BuyVirtualCurrency(activity, vc, TabsFragmentActivity.purchaseCallback);
+			VirtualCurrency vc = LiStore.getAllVirtualCurrency().get(position);
+			LiStore.buyVirtualCurrency(activity, vc, TabsFragmentActivity.purchaseCallback);
 		}
 	}
 	

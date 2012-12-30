@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
+import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
@@ -35,6 +36,7 @@ import applicasa.kit.IAP.IAP.LiCurrency;
 import applicasa.kit.IAP.IAP.LiIapAction;
 import applicasa.kit.IAP.Callbacks.LiCallbackIAPBalanceChanged;
 import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
+import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
 
 import com.applicasa.ApplicasaManager.LiPromo;
 import com.applicasa.ApplicasaManager.LiSession;
@@ -156,7 +158,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		/*
 		 * Start session
 		 */
-		LiSession.SessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity,null);
 		
 		/*
 		 * If User is register then show logout button, else login
@@ -303,7 +305,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 				
 				public void onSuccessfull(RequestAction action) {
 					// TODO Auto-generated method stub
-					LiSession.SessionStart(mActivity,null);
+					LiSession.sessionStart(mActivity,null);
 					Intent i = new Intent(mActivity, MainActivity.class);
 					startActivity(i);
 					mProgressBar.setVisibility(View.INVISIBLE);
@@ -335,14 +337,14 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		/*
 		 * End session 
 		 */
-		LiSession.SessionEnd(mActivity);
+		LiSession.sessionEnd(mActivity);
 		super.onPause();
 	}
 	protected void onResume() {
 		/*
 		 * Resume session 
 		 */
-		LiSession.SessionResume(mActivity);
+		LiSession.sessionResume(mActivity);
 		super.onResume();
 	}
 
@@ -447,13 +449,29 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 			switch (currency)
 			{
 				case MainCurrency:
-					mActivity.mBalanceMain.setText(balance);
+					mActivity.mBalanceMain.setText(String.valueOf(balance));
 					break;
 					
 				case SencondaryCurrency:
-					mActivity.mBalanceSecondary.setText(balance);
+					mActivity.mBalanceSecondary.setText(String.valueOf(balance));
 					break;
 			}
+		}
+	};
+	
+	public static LiCallbackVirtualGoodRequest virtualGoodRequest = new LiCallbackVirtualGoodRequest() {
+		
+		@Override
+		public void onActionFinisedSuccessfully(LiIapAction arg0, VirtualGood arg1) {
+			// TODO Auto-generated method stub
+			TabsFragmentActivity.refreshUI();
+		}
+		
+		@Override
+		public void onActionFailed(LiIapAction arg0, VirtualGood arg1,
+				LiErrorHandler arg2) {
+			// TODO Auto-generated method stub
+			LiLogger.LogWarning(TAG, arg2.ErrorMessage);
 		}
 	};
 	

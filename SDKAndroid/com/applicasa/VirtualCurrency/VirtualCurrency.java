@@ -1,20 +1,39 @@
 package com.applicasa.VirtualCurrency;
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.GregorianCalendar;
 
-import android.app.Activity;
+import applicasa.LiCore.communication.LiUtility;
+
+
+import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
+import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetByIDCallback;
+import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetArrayCallback;
+import com.applicasa.ApplicasaManager.LiManager.LiObject;
+
 import android.database.Cursor;
+import applicasa.LiCore.sqlDB.database.LiDbObject;
+import applicasa.LiCore.communication.LiRequestConst.QueryKind;
+import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.communication.LiUtility;
+import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiCore.communication.LiObjRequest;
+import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
+import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiFilters;
+import applicasa.LiCore.communication.LiQuery;
+import applicasa.LiCore.communication.LiFilters.Operation;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
-import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
+
+
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
 import applicasa.kit.IAP.Callbacks.LiCallbackVirtualCurrencyRequest;
+import android.app.Activity;
 
 public class VirtualCurrency extends VirtualCurrencyData {
  /** End of Basic SDK **/
@@ -31,9 +50,9 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 * Purchase from Google Store the Virtual Currency
 	 * @return
 	 */
-	public boolean buyVirtualCurrency(Activity activity, LiCallbackIAPPurchase liCallbackIAPPurchase) 
+	public boolean buyVirtualCurrency(Activity activity, LiCallbackIAPPurchase liCallbackIAPPurchase)
 	{
-		return IAP.BuyVirtualCurrency(activity, this, liCallbackIAPPurchase);
+		return IAP.buyVirtualCurrency(activity, this, liCallbackIAPPurchase);
 	}
 	
 	/**
@@ -41,38 +60,59 @@ public class VirtualCurrency extends VirtualCurrencyData {
 	 * @param coins
 	 * @return
 	 */
+	@Deprecated
 	public static boolean  GiveVirtualCurrency(int coins, LiCurrency licurrency, LiCallbackVirtualCurrencyRequest liCallbackVirtualCurrencyRequest )
 	{
-		return IAP.GiveVirtualCurrency(coins, licurrency, liCallbackVirtualCurrencyRequest);
+		return giveVirtualCurrency(coins, licurrency, liCallbackVirtualCurrencyRequest);
+	}
+	public static boolean  giveVirtualCurrency(int coins, LiCurrency licurrency, LiCallbackVirtualCurrencyRequest liCallbackVirtualCurrencyRequest )
+	{
+		return IAP.giveVirtualCurrency(coins, licurrency, liCallbackVirtualCurrencyRequest);
 	}
 	
 	/**
 	 * Use the Virtual Currency (e.g. decrease User's credit balance)
 	 * @return
 	 */
-	public static boolean  UseVirtualCurrency(int coins, LiCurrency licurrency, LiCallbackVirtualCurrencyRequest liCallbackVirtualCurrencyRequest) 
+	@Deprecated
+	public static boolean  UseVirtualCurrency(int coins, LiCurrency licurrency, LiCallbackVirtualCurrencyRequest liCallbackVirtualCurrencyRequest)
 	{
-		return IAP.UseVirtualCurrency(coins,licurrency,liCallbackVirtualCurrencyRequest);
+		return useVirtualCurrency(coins, licurrency, liCallbackVirtualCurrencyRequest);
+	}
+	public static boolean  useVirtualCurrency(int coins, LiCurrency licurrency, LiCallbackVirtualCurrencyRequest liCallbackVirtualCurrencyRequest)
+	{
+		return IAP.useVirtualCurrency(coins,licurrency,liCallbackVirtualCurrencyRequest);
 	}
 	
 	/**
 	 * Get all Virtual Currency
 	 * @return list of virtual Currency
 	 */
-	public static List<VirtualCurrency> GetAllVirtualCurrency() 
+	@Deprecated
+	public static List<VirtualCurrency> GetAllVirtualCurrency()
 	{
-		 return IAP.GetAllVirtualCurrency();
+		return getAllVirtualCurrency();
+	}
+	public static List<VirtualCurrency> getAllVirtualCurrency() 
+	{
+		 return IAP.getAllVirtualCurrency();
 	}
 	
 	/**
 	* Get all Virtual Currency by currency kind
 	* @return list of virtual Currency
 	*/
-	public static List<VirtualCurrency> GetAllVirtualCurrencyByKind(LiCurrency lilicurrency) 
+	@Deprecated
+	public static List<VirtualCurrency> GetAllVirtualCurrencyByKind(LiCurrency lilicurrency)
 	{
-		return IAP.GetAllVirtualCurrencyByKind(lilicurrency);
+		return getAllVirtualCurrencyByKind(lilicurrency);
 	}
-  
+	public static List<VirtualCurrency> getAllVirtualCurrencyByKind(LiCurrency lilicurrency) 
+	{
+		return IAP.getAllVirtualCurrencyByKind(lilicurrency);
+	} 
+
+	 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,25 +221,19 @@ public class VirtualCurrency extends VirtualCurrencyData {
 		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualCurrency.VirtualCurrencyIsDeal.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 		{
-			String strBool = cursor.getString(columnIndex);
-			if (strBool != null && strBool != "-1")
-				this.VirtualCurrencyIsDeal = Boolean.valueOf(strBool);
+			this.VirtualCurrencyIsDeal = cursor.getInt(columnIndex)==1?true:false;
 		}
 		
 		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualCurrency.VirtualCurrencyInAppleStore.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 		{
-			String strBool = cursor.getString(columnIndex);
-			if (strBool != null && strBool != "-1")
-				this.VirtualCurrencyInAppleStore = Boolean.valueOf(strBool);
+			this.VirtualCurrencyInAppleStore = cursor.getInt(columnIndex)==1?true:false;
 		}
 		
 		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualCurrency.VirtualCurrencyInGoogleStore.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 		{
-			String strBool = cursor.getString(columnIndex);
-			if (strBool != null && strBool != "-1")
-				this.VirtualCurrencyInGoogleStore = Boolean.valueOf(strBool);
+			this.VirtualCurrencyInGoogleStore = cursor.getInt(columnIndex)==1?true:false;
 		}
 		
 		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualCurrency.VirtualCurrencyLastUpdate.toString());
@@ -212,8 +246,6 @@ public class VirtualCurrency extends VirtualCurrencyData {
 		}
 		
 	
-		try{this.receivedFields = this.dictionaryRepresentation(false);}
-		catch (LiErrorHandler ex){}
 		return this;
 	}
 	
@@ -369,8 +401,6 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	private void resetIncrementedFields() {
 		// TODO Auto-generated method stub
 		incrementedFields = new LiJSONObject();
-		try {	receivedFields = dictionaryRepresentation(false);} 
-		catch (LiErrorHandler e) {}
 	}
 	
 

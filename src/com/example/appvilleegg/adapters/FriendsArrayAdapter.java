@@ -78,7 +78,7 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 			    @Override
 			    protected Boolean doInBackground(String ... params) {
 			    	final String url = params[0];
-			    	LiFileCacher.GetBitmapFromCache(url, new LiCallbackGetCachedFile() {
+			    	LiFileCacher.getBitmapFromCache(url, new LiCallbackGetCachedFile() {
 						
 						public void onSuccessfull(InputStream is) {
 							// TODO Auto-generated method stub
@@ -146,7 +146,7 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 						     params.putString("link", "https://play.google.com/store/apps/details?id=com.appvilleegg");
 						     params.putString("description", "AppVille invitation");
 						     params.putString("picture", "https://lh6.ggpht.com/C_at3-AXnhBCMTVIvdn7aZghbE_cO3Rkwv9DwxRuk85mOHIlx-4nIF2LrByGL6pmO3RK=w124");
-							 User.PostOnFriendsWall(activity,friends.get(position).mFacebookID ,params, new LiDialogListener() {
+							 User.postOnFriendsWall(activity,friends.get(position).mFacebookID ,params, new LiDialogListener() {
 								
 								public void onFacebookError(LiFacebookError e) {
 									// TODO Auto-generated method stub

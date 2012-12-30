@@ -1,7 +1,9 @@
 package com.example.appvilleegg.adapters;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.WeakHashMap;
 
 
 import com.applicasa.VirtualGood.VirtualGood;
@@ -25,6 +27,10 @@ public class InventoryArrayAdapter extends ArrayAdapter<VirtualGood> {
 	private Activity activity;
 	private List<VirtualGood> inAppObjectList = null;
 	InventoryArrayAdapter mAdapter;
+	
+	private static WeakHashMap< String, Bitmap> mImages = new WeakHashMap<String, Bitmap>();
+	
+	
 	private String TAG = "Matket Array Adapter";
 	static class ViewHolder {
 		public TextView itemName;
@@ -69,8 +75,13 @@ public class InventoryArrayAdapter extends ArrayAdapter<VirtualGood> {
 			String name = ((VirtualGood)inAppObjectList.get(position)).VirtualGoodTitle;
 			holder.itemName.setText(name);
 			holder.quantity.setText(String.valueOf(((VirtualGood)inAppObjectList.get(position)).VirtualGoodUserInventory));
-			VirtualGood item = inAppObjectList.get(position);
-			LiFileCacher.GetBitmapFromCache(item.VirtualGoodImageA, new LiCallbackGetCachedFile() {
+			final VirtualGood item = inAppObjectList.get(position);
+			if (mImages.containsKey(item.VirtualGoodImageA))
+			{
+				holder.img.setImageBitmap(mImages.get(item.VirtualGoodImageA));
+				return rowView;
+			}
+			LiFileCacher.getBitmapFromCache(item.VirtualGoodImageA, new LiCallbackGetCachedFile() {
 				
 				public void onSuccessfull(InputStream is) {
 					// TODO Auto-generated method stub
@@ -83,7 +94,8 @@ public class InventoryArrayAdapter extends ArrayAdapter<VirtualGood> {
 
 				public void onSuccessfullBitmap(Bitmap bitmap) {
 					// TODO Auto-generated method stub
-					holder.img.setImageDrawable(new BitmapDrawable(bitmap));
+					holder.img.setImageBitmap(bitmap);
+					mImages.put(item.VirtualGoodImageA,bitmap);
 				}
 			});
 			
