@@ -1,16 +1,11 @@
 package com.example.appvilleegg.adapters;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.WeakHashMap;
 
-import com.applicasa.VirtualCurrency.VirtualCurrency;
-
-import com.appvilleegg.R;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -24,6 +19,9 @@ import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 
+import com.applicasa.VirtualCurrency.VirtualCurrency;
+import com.appvilleegg.R;
+
 public class VirtualCurrencyAdapter extends BaseAdapter {
 
 	private static VirtualCurrencyAdapter adapter;
@@ -31,7 +29,7 @@ public class VirtualCurrencyAdapter extends BaseAdapter {
 	private List<VirtualCurrency> mVirtualCurrencyList;
     private LayoutInflater  mInflater;
 	
-    private HashMap<String, Bitmap> imageMap;
+    private static WeakHashMap<String, Bitmap> imageMap= new WeakHashMap<String, Bitmap>() ;
 
 	static class ViewHolder {
 		public TextView itemName;
@@ -47,16 +45,13 @@ public class VirtualCurrencyAdapter extends BaseAdapter {
 		 {
 			 adapter.mVirtualCurrencyList = list;
 		 }
-		 adapter.downloadMaterial();
+//		 adapter.downloadMaterial();
 		 return adapter;
 	 }
 	 
-	 private void downloadMaterial()
+	 private void downloadMaterial(String url)
 	 {
-		 Iterator<VirtualCurrency> iter = mVirtualCurrencyList.iterator();
-			while(iter.hasNext())
 			{
-				String url = iter.next().VirtualCurrencyImageA;
 				if (!imageMap.containsKey(url))
 				{
 					new AsyncTask<String, Void, Boolean>() {
@@ -100,7 +95,6 @@ public class VirtualCurrencyAdapter extends BaseAdapter {
     	mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = context;
         mVirtualCurrencyList = list;
-        imageMap = new HashMap<String, Bitmap>();
     }
         
     
@@ -150,6 +144,10 @@ public class VirtualCurrencyAdapter extends BaseAdapter {
 					viewHolder.img.setImageDrawable(new BitmapDrawable(imageMap.get(item.VirtualCurrencyImageA)));
 					viewHolder.img.setScaleType(ImageView.ScaleType.FIT_CENTER);
 				}
+				else
+				{
+					downloadMaterial(item.VirtualCurrencyImageA);
+				}
 			}
 		return view;
 	}
@@ -168,7 +166,6 @@ public class VirtualCurrencyAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return 0;
 	}
-
 	
 	
 	/**

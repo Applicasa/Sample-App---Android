@@ -1,17 +1,6 @@
 package com.example.appvilleegg.fragments;
 
 
-import java.util.List;
-
-import com.applicasa.ApplicasaManager.LiPromo;
-import com.applicasa.ApplicasaManager.LiStore;
-import com.applicasa.Promotion.Promotion;
-import com.applicasa.VirtualGood.VirtualGood;
-
-import com.appvilleegg.R;
-import com.example.appvilleegg.adapters.VirtualGoodAdapter;
-import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,13 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.Toast;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiLogger;
-import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
 import applicasa.kit.IAP.IAP.GetVirtualGoodKind;
 import applicasa.kit.IAP.IAP.LiCurrency;
+import applicasa.kit.IAP.IAP.LiIapAction;
+import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
+
+import com.applicasa.ApplicasaManager.LiStore;
+import com.applicasa.VirtualGood.VirtualGood;
+import com.appvilleegg.R;
+import com.example.appvilleegg.adapters.VirtualGoodAdapter;
+import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
 
 
 public class VirtualGoodFragment extends Fragment implements GridView.OnItemClickListener{
@@ -61,7 +55,6 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 	            if (mGridView != null) {
 	                mGridView.setAdapter(mProductAdapter);
 	            }
-	            
 	            mGridView.setOnItemClickListener(this);
 	 	
 		 }
@@ -75,27 +68,41 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 	
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		// TODO Auto-generated method stub
-		LiLogger.LogWarning(Tag, "Clicked");
+		LiLogger.logWarning(Tag, "Clicked");
 		if (TabsFragmentActivity.clickEnabled)	
 		{
-			VirtualGood vg = LiStore.getAllVirtualGoods(GetVirtualGoodKind.ALL).get(position);
-			if (vg.VirtualGoodMainCurrency != 0)
-				vg.buyVirtualGoods(1, LiCurrency.MainCurrency,TabsFragmentActivity.virtualGoodRequest);
-			else
-				vg.buyVirtualGoods(1, LiCurrency.SencondaryCurrency, TabsFragmentActivity.virtualGoodRequest);
+				(LiStore.getAllVirtualGoods(GetVirtualGoodKind.ALL)).get(position).buyVirtualGoods(1,LiCurrency.MainCurrency, new LiCallbackVirtualGoodRequest() {
+					
+					@Override
+					public void onActionFinisedSuccessfully(LiIapAction liIapAction,
+							VirtualGood item) {
+						// TODO Auto-generated method stub
+						TabsFragmentActivity.refreshUI();
+					}
+					
+					@Override
+					public void onActionFailed(LiIapAction liIapAction, VirtualGood item,
+							LiErrorHandler errors) {
+					}
+				});
 		}
 	}
 
 
 	public static void OnInitCompleted() {
-		// TODO Auto-generated method stub
 		mProductAdapter.notifyDataSetChanged();
 	}
-
+	
 	@Override
-	public void onPause() {
-		
-	    super.onPause();
+	public void onPause(){
+		super.onPause();
+		LiLogger.logInfo("TABS Virtual" , "on pause");
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		LiLogger.logInfo("TABS Virtual" , "on resume");
+		activity = getActivity();
+	}
 }

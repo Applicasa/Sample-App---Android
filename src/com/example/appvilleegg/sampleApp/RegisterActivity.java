@@ -1,16 +1,6 @@
 package com.example.appvilleegg.sampleApp;
  
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-
-import com.appvilleegg.R;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,9 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -32,24 +20,24 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import applicasa.LiCore.Applicasa;
-import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
+import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
-import applicasa.LiCore.communication.LiObjRequest;
-import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.kit.IAP.IAP;
-import applicasa.kit.IAP.IAP.LiCurrency;
 
-import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
+import com.applicasa.ApplicasaManager.LiSession;
+import com.applicasa.Dynamic.Dynamic;
+import com.applicasa.Dynamic.DynamicData.LiFieldDynamic;
 import com.applicasa.User.User;
 import com.applicasa.User.UserData.LiFieldUser;
- 
+import com.appvilleegg.R;
+
 public class RegisterActivity extends Activity  {
  
 	
@@ -93,7 +81,7 @@ public class RegisterActivity extends Activity  {
 		title_register = (ImageView)findViewById(R.id.title_register);
 		progressBarBig = (ProgressBar)findViewById(R.id.progressBarBig);
 		
-		LiSession.sessionStart(mActivity,null);
+		LiSession.SessionStart(mActivity,null);
 		
 		view = (ImageView)findViewById(R.id.img_picture);
 		
@@ -136,7 +124,7 @@ public class RegisterActivity extends Activity  {
 
 	private void getUserImage(User currnetUser) {
 		// TODO Auto-generated method stub
-		if (!currnetUser.UserImage.equals(""))
+		if (!currnetUser.UserImage.equals("") && currnetUser.UserImage.startsWith("http"))
 		{
 			LiFileCacher.getBitmapFromCache(currnetUser.UserImage, new LiCallbackGetCachedFile() {
 			
@@ -146,7 +134,7 @@ public class RegisterActivity extends Activity  {
 			
 			public void onFailure(LiErrorHandler error) {
 				// TODO Auto-generated method stub
-				LiLogger.LogWarning("Register", "getFile");
+				LiLogger.logWarning("Register", "getFile");
 			}
 
 			public void onSuccessfullBitmap(Bitmap bm) {
@@ -167,8 +155,6 @@ public class RegisterActivity extends Activity  {
 				view.setMinimumHeight( h/4);
 				view.setMinimumWidth(w/3);
 				view.invalidate();
-				bar.setVisibility(View.INVISIBLE);
-		        bar.invalidate();
 			}
 		});
 		}
@@ -234,25 +220,28 @@ public class RegisterActivity extends Activity  {
 								
 								public void onFailure(LiErrorHandler error) {
 									// TODO Auto-generated method stub
-									LiFileCacher.GetFileFromCache(Applicasa.getCurrentUser().UserImage, new LiCallbackGetCachedFile() {
-										
-										public void onSuccessfull(InputStream in) {
-											// TODO Auto-generated method stub
-											Log.w("TAG", "Success");
-											btnRegister.setClickable(true);
-										}
-										
-										public void onFailure(LiErrorHandler error) {
-											// TODO Auto-generated method stub
-											Log.w("TAG", error.ErrorMessage);
-										}
-
-										public void onSuccessfullBitmap(
-												Bitmap bitmap) {
-											// TODO Auto-generated method stub
+									if (!Applicasa.getCurrentUser().UserImage.equals("") && Applicasa.getCurrentUser().UserImage.startsWith("http"))
+									{
+										LiFileCacher.getBitmapFromCache(Applicasa.getCurrentUser().UserImage, new LiCallbackGetCachedFile() {
 											
-										}
-									}); 
+											public void onSuccessfull(InputStream in) {
+												// TODO Auto-generated method stub
+												Log.w("TAG", "Success");
+												btnRegister.setClickable(true);
+											}
+											
+											public void onFailure(LiErrorHandler error) {
+												// TODO Auto-generated method stub
+												Log.w("TAG", error.errorMessage);
+											}
+	
+											public void onSuccessfullBitmap(
+													Bitmap bitmap) {
+												// TODO Auto-generated method stub
+												
+											}
+										});
+									}
 									
 								}
 								
@@ -260,7 +249,7 @@ public class RegisterActivity extends Activity  {
 										RequestAction action, String itemID, LiObject liobject) {
 									// TODO Auto-generated method stub
 									progressBarBig.setVisibility(View.INVISIBLE);
-									LiLogger.LogInfo("UserImage", Applicasa.getCurrentUser().UserImage);
+									LiLogger.logInfo("UserImage", Applicasa.getCurrentUser().UserImage);
 									Toast.makeText(mActivity, "Image loaded successfully", Toast.LENGTH_LONG).show();
 								}
 							}); 
@@ -322,6 +311,24 @@ public class RegisterActivity extends Activity  {
     		opts.inSampleSize = 1;
            
 	        filePath = getRealPathFromURI(selectedImage);
+	        
+	        final Dynamic d = new Dynamic();
+	        d.DynamicReal = 1.1f;
+	        d.save(new LiCallbackAction() {
+				
+				public void onFailure(LiErrorHandler error) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				public void onComplete(ApplicasaResponse response, String msg,
+						RequestAction action, String itemID, LiObject liobject) {
+					// TODO Auto-generated method stub
+					Dynamic d1 = d;
+					d1.DynamicID = itemID;
+					d1.updloadFile(LiFieldDynamic.DynamicText, filePath, null);
+				}
+			});
 	
 	        image = BitmapFactory.decodeFile(filePath,opts);
 	        imageChanged = true;
@@ -388,12 +395,12 @@ public class RegisterActivity extends Activity  {
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.sessionEnd(mActivity);
+		LiSession.SessionEnd(mActivity);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.sessionResume(mActivity);
+		LiSession.SessionResume(mActivity);
 		super.onResume();
 	}
 	

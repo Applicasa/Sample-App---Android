@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical" >
+
+    <TextView
+	        android:layout_margin="5dp" 
+	        android:id="@+id/title_dynamic"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/title_dnamic_content"
+	        android:paddingTop="10dp"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_centerHorizontal="true"
+	        />
+    
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:layout_below="@+id/title_dynamic">
+        
+        
+        
+		<ScrollView
+		    android:id="@+id/scrollContainer"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_above="@+id/txt_pushMSG"
+		    android:layout_alignParentLeft="false"
+		    android:layout_below="@+id/title_dynamic" >
+
+		        <LinearLayout
+		                android:id="@+id/linearLyaout_msgHolder"
+		                android:orientation="vertical"
+		                android:layout_width="fill_parent"
+		                android:layout_height="fill_parent">
+		        </LinearLayout>
+    	</ScrollView>		 
+        
+			  	 <ProgressBar
+	        android:id="@+id/progressBar"
+	        style="?android:attr/progressBarStyleLarge"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:visibility="invisible"/>
+		      	  	 
+	
+    	  	 <EditText
+      	    android:id="@+id/txt_pushMSG"
+      	    android:layout_width="match_parent"
+      	    android:layout_height="wrap_content"
+      	    android:layout_alignParentBottom="true"
+      	    android:layout_alignParentLeft="true"
+      	    android:hint="enter your message"
+      	    android:layout_toLeftOf="@+id/btn_sendPush" >
+          </EditText>
+
+          <Button
+              android:id="@+id/btn_sendPush"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:layout_alignParentRight="true"
+              android:text="Send" />
+	 </RelativeLayout>
+</RelativeLayout>
+  

@@ -3,7 +3,6 @@ package com.example.appvilleegg.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +65,7 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 	
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		// TODO Auto-generated method stub
-		LiLogger.LogWarning(Tag, "Clicked");
+		LiLogger.logWarning(Tag, "Clicked");
 		if (TabsFragmentActivity.clickEnabled)	
 		{
 			VirtualCurrency vc = LiStore.getAllVirtualCurrency().get(position);
@@ -75,13 +74,17 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 	}
 	
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+		LiLogger.logInfo("TABS Virtual" , "on pause");
+	}
 
 
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
-		LiLogger.LogInfo("TABS Virtual" , "on resume");
+		LiLogger.logInfo("TABS Virtual" , "on resume");
 		activity = getActivity();
 	}
 }

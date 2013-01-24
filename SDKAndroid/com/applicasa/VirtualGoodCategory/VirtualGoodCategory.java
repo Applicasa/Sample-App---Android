@@ -1,34 +1,17 @@
 package com.applicasa.VirtualGoodCategory;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.GregorianCalendar;
 
-import org.apache.http.ParseException;
-
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiUtility;
 
-import java.net.URL;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
-import applicasa.LiCore.communication.LiCallback;
 import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import applicasa.LiCore.communication.LiFilters.Operation;
-
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodCategoryGetByIDCallback;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodCategoryGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
 
 import android.database.Cursor;
-import applicasa.LiCore.sqlDB.database.LiCoreDBBuilder;
 import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiUtility;
@@ -38,11 +21,13 @@ import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.communication.LiObjRequest;
 import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
 import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiFilters;
+import applicasa.LiCore.communication.LiQuery;
+import applicasa.LiCore.communication.LiFilters.Operation;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
 
-import applicasa.LiCore.communication.LiUtility.LiStringEscapeUtils;
 
 
 public class VirtualGoodCategory extends VirtualGoodCategoryData {
@@ -69,12 +54,11 @@ public class VirtualGoodCategory extends VirtualGoodCategoryData {
 		LiObjRequest request = new LiObjRequest();
 		
 		// If Id is of hex representation and not 0, then the itemId is Mongo id
-		if (VirtualGoodCategoryID!= "0" && LiUtility.isHex(VirtualGoodCategoryID))
+		if (VirtualGoodCategoryID!= "0" && (LiUtility.isHex(VirtualGoodCategoryID)|| VirtualGoodCategoryID.startsWith("temp_") ))
 		{
 			request.setAction(RequestAction.UPDATE_ACTION);
 			request.setRecordID(VirtualGoodCategoryID);
-			request.setIncrementedFields(incrementedFields);
-			request.setReceivedObject(receivedFields);
+			request.setIncrementedFields(incrementedFields);			
 		}
 		else
 		{
@@ -153,8 +137,7 @@ public class VirtualGoodCategory extends VirtualGoodCategoryData {
 	        	LiQuery query= new LiQuery();
 	        	
 	        	// Create a where statement expression of ObjectId = 'id';  
-		        LiFilters filter = new LiFilters(LiFieldVirtualGoodCategory.VirtualGoodCategoryID, Operation.EQUAL, Id);
-		        // LiFiltereExpression filters= new LiFiltereExpression(b);
+		        LiFilters filter = new LiFilters(LiFieldVirtualGoodCategory.VirtualGoodCategoryID, Operation.EQUAL, Id);		        
 		        query.setFilter(filter);
 	        	
 		    	LiObjRequest request = new LiObjRequest();
@@ -197,6 +180,28 @@ public class VirtualGoodCategory extends VirtualGoodCategoryData {
 	        request.GetWithRawQuery(kClassName, whereClause, args);
 	    }
 	
+		 /** Synchronized Method to returns an object from server by filters
+		 * @param ID
+		 * @return the list of items or null in case on an error
+		 * @throws LiErrorHandler
+		 */
+		 public static List<VirtualGoodCategory> getArrayWithQuery(LiQuery query ,QueryKind queryKind) throws LiErrorHandler 
+		 {
+			 LiObjRequest request = new LiObjRequest();
+			 request.setClassName(kClassName);
+			 request.setAction(RequestAction.GET_ARRAY);
+			 request.setGet(queryKind);
+			 request.setQueryToRequest(query);
+			 LiObjResponse response = request.startSync();
+			 
+			 if (response.LiRespType.equals(ApplicasaResponse.RESPONSE_SUCCESSFUL))
+			 {
+			  Cursor cursor = request.getCursor();
+			  return buildVirtualGoodCategoryFromCursor(request.requestID, cursor);
+			 }
+			 
+			 return null;
+		 }
 
 	
 	
@@ -227,7 +232,7 @@ public class VirtualGoodCategory extends VirtualGoodCategoryData {
 		
 		request.setFileFieldName(liFieldVirtualGoodCategory);
 		request.setFilePath(filePath);
-		
+		request.setAddedObject(this);
 		request.setCallback(callbackHandler);
 		setActionCallback(liCallbackAction,request.requestID);
 		
@@ -251,7 +256,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		// TODO Auto-generated method stub
 		List<VirtualGoodCategory> returnList = new ArrayList<VirtualGoodCategory>();
 
-		returnList = BuildVirtualGoodCategoryFromCursor(requestID ,cursor);
+		returnList = buildVirtualGoodCategoryFromCursor(requestID ,cursor);
 
 		Object callback = virtualGoodCategoryCallbacks.get(requestID);
 		if (callback != null && callback instanceof LiVirtualGoodCategoryGetArrayCallback)
@@ -303,7 +308,26 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		}
 	};
 	
-	public static List<VirtualGoodCategory> BuildVirtualGoodCategoryFromCursor(String requestID ,Cursor cursor)
+	/**
+	 * 
+	 * @param requestID
+	 * @param cursor
+	 * @deprecated use buildVirtualGoodCategoryFromCursor
+	 * @return
+	 */
+	@Deprecated
+	public static List<VirtualGoodCategory> BuildVirtualGoodCategoryFromCursor(String requestID, Cursor cursor)
+	{
+		return buildVirtualGoodCategoryFromCursor(requestID, cursor);
+	}
+
+	/**
+	 * 
+	 * @param requestID
+	 * @param cursor
+	 * @return
+	 */
+	public static List<VirtualGoodCategory> buildVirtualGoodCategoryFromCursor(String requestID ,Cursor cursor)
 	{
 		List<VirtualGoodCategory> returnList = new ArrayList<VirtualGoodCategory>();
 		if (cursor == null || cursor.getCount() == 0 ) {}// nothing received
@@ -422,8 +446,6 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		}
 		
 	
-		try{this.receivedFields = this.dictionaryRepresentation(false);}
-		catch (LiErrorHandler ex){}
 		return this;
 	}
 	
@@ -528,8 +550,6 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	private void resetIncrementedFields() {
 		// TODO Auto-generated method stub
 		incrementedFields = new LiJSONObject();
-		try {	receivedFields = dictionaryRepresentation(false);} 
-		catch (LiErrorHandler e) {}
 	}
 	
 

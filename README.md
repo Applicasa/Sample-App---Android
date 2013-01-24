@@ -10,6 +10,12 @@ Applicasa is a Mobile Game Management Platform that provides developers a series
 
 Egg is an imagined game that shows common scenarios and code samples that developers can learn from and emulate in their own applications.
 
+### What New (24.1.2013):
+1. Implementation of new Facebook version
+2. Bug fixes
+3. Chat messages after finding users by radius
+ 
+
 ### What New:
 1. Implementation of Android's New In app Billing (ver 3)
 

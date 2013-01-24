@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -18,13 +19,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
+import applicasa.LiCore.communication.LiObjRequest;
 import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 
-import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
+import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.Dynamic.Dynamic;
 import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.DynamicArrayAdapter;
@@ -44,7 +46,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 		mActivity = this;
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		
-		LiSession.sessionStart(mActivity,null);
+		LiSession.sessionStart(this,null);
 		refreshView();
 		
 		
@@ -55,7 +57,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 		// TODO Auto-generated method stub
 		bar.setVisibility(View.VISIBLE);
 		
-	 	Dynamic.getArrayWithQuery(null, QueryKind.LIGHT, new LiDynamicGetArrayCallback() {
+	 	Dynamic.getArrayWithQuery(null, QueryKind.FULL, new LiDynamicGetArrayCallback() {
 			
 			public void onGetDynamicFailure(LiErrorHandler error) {
 				// TODO Auto-generated method stub
@@ -151,6 +153,10 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 									RequestAction arg2, String arg3, LiObject arg4) {
 								// TODO Auto-generated method stub
 								Toast.makeText(mActivity, "Item Saved", Toast.LENGTH_LONG).show();
+								
+								Cursor cursor = LiObjRequest.GetRawSQL("Select * from tbl_Dynamic where DynamicID =?", new String[]{arg3});
+								Toast.makeText(mActivity, String.valueOf(cursor.getCount()), Toast.LENGTH_LONG).show();
+								
 								refreshView();
 								dialog.dismiss();
 							}
@@ -196,12 +202,12 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.sessionEnd(mActivity);
+		LiSession.SessionEnd(mActivity);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.sessionResume(mActivity);
+		LiSession.SessionResume(mActivity);
 		super.onResume();
 	}
 }

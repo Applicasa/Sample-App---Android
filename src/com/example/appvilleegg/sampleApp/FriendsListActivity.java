@@ -2,14 +2,8 @@ package com.example.appvilleegg.sampleApp;
 
 import java.util.List;
 
-import com.applicasa.ApplicasaManager.LiSession;
-import com.applicasa.User.User;
-import com.appvilleegg.R;
-import com.example.appvilleegg.adapters.FriendsArrayAdapter;
-
 import android.app.Activity;
 import android.app.ListActivity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -17,8 +11,14 @@ import android.widget.Toast;
 import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
-import applicasa.kit.FaceBook.LiFacebookResponse;
-import applicasa.kit.FaceBook.LiObjFacebookFriends;
+import applicasa.kit.facebook.LiFacebookResponse;
+import applicasa.kit.facebook.LiFacebookResponse.LiFacebookResponseGetFriends;
+import applicasa.kit.facebook.LiObjFacebookFriends;
+
+import com.applicasa.ApplicasaManager.LiSession;
+import com.applicasa.User.User;
+import com.appvilleegg.R;
+import com.example.appvilleegg.adapters.FriendsArrayAdapter;
 
 public class FriendsListActivity extends ListActivity {
 
@@ -37,11 +37,11 @@ public class FriendsListActivity extends ListActivity {
 		
 		
 		/**
-		 * see if the user is register to facebook, if so retreives his friends. If not, show an error Via toast message
+		 * see if the user is register to facebook, if so retrieves his friends. If not, show an error Via toast message
 		 */
-		if (Applicasa.getCurrentUser().UserIsRegisteredFacebook)
+		if (User.getCurrentUser().UserIsRegisteredFacebook)
 		 {
-			 User.getFacebookFriendsWithUser(this, new LiFacebookResponse() {
+			 User.getFacebookFriendsWithUser(this,new LiFacebookResponseGetFriends() {
 				
 				public void onGetFriendsResponse(LiObjResponse requestResponse,
 						List<LiObjFacebookFriends> friendsList) {
@@ -49,12 +49,6 @@ public class FriendsListActivity extends ListActivity {
 					adpater = new FriendsArrayAdapter(mActivity, friendsList);
 					setListAdapter(adpater);
 					bar.setVisibility(View.INVISIBLE);
-					
-				}
-				
-				public void onFBLoginResponse(User currentUser) {
-					// TODO Auto-generated method stub
-					
 				}
 				
 				public void onFBError(LiErrorHandler error) {

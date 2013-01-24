@@ -2,15 +2,15 @@ package com.example.appvilleegg.adapters;
 
 import java.util.List;
 
-import com.applicasa.Dynamic.Dynamic;
-import com.appvilleegg.R;
-
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.applicasa.Dynamic.Dynamic;
+import com.appvilleegg.R;
 
 public class DynamicArrayAdapter extends ArrayAdapter<Dynamic> {
 	private Activity activity;

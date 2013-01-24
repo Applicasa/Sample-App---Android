@@ -112,8 +112,7 @@ public class VirtualCurrency extends VirtualCurrencyData {
 		return IAP.getAllVirtualCurrencyByKind(lilicurrency);
 	} 
 
-	 
-
+	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////                                                   ////////////////////////////////////////
@@ -291,17 +290,11 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	try{
 		LiJSONObject dictionary = new LiJSONObject();
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyID, VirtualCurrencyID);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyTitle, VirtualCurrencyTitle);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyAppleIdentifier, VirtualCurrencyAppleIdentifier);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyGoogleIdentifier, VirtualCurrencyGoogleIdentifier);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyDescription, VirtualCurrencyDescription);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyPrice, VirtualCurrencyPrice);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyCredit, VirtualCurrencyCredit);
 	
 		if (VirtualCurrencyKind != null)
@@ -310,17 +303,12 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 			dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyKind, 1);
 	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyImageA, VirtualCurrencyImageA);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyImageB, VirtualCurrencyImageB);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyImageC, VirtualCurrencyImageC);
 	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyIsDeal, VirtualCurrencyIsDeal);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyInAppleStore, VirtualCurrencyInAppleStore);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyInGoogleStore, VirtualCurrencyInGoogleStore);
-	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyLastUpdate, LiUtility.convertDateToDictionaryRepresenataion(VirtualCurrencyLastUpdate));
 	
 		return dictionary;

@@ -25,13 +25,13 @@ public class UserData {
 	, UserLastLogin
 	, UserRegisterDate
 	, UserLocation
-	, UserIsRegistered
 	, UserIsRegisteredFacebook
+	, UserIsRegistered
 	, UserLastUpdate
 	, UserImage
 	, UserMainCurrencyBalance
 	, UserSecondaryCurrencyBalance
-	, UserExtraField
+	, UserTempDate
 
 	;
 
@@ -73,9 +73,9 @@ public class UserData {
 	
 		public LiLocation UserLocation;
 	
-		public Boolean UserIsRegistered;
-	
 		public Boolean UserIsRegisteredFacebook;
+	
+		public Boolean UserIsRegistered;
 	
 		public GregorianCalendar UserLastUpdate;
 	
@@ -87,7 +87,7 @@ public class UserData {
 	
 		public int UserSecondaryCurrencyBalance;
 	
-		public String UserExtraField;
+		public GregorianCalendar UserTempDate;
 	
 		public double DistanceFromCurrent;
 	
@@ -171,20 +171,20 @@ public class UserData {
 			this.UserLocation = UserLocation;
 		}
 		
-		public Boolean getUserIsRegistered() {
-			return UserIsRegistered;
-		}
-		
-		public void setUserIsRegistered(Boolean UserIsRegistered) {
-			this.UserIsRegistered = UserIsRegistered;
-		}
-		
 		public Boolean getUserIsRegisteredFacebook() {
 			return UserIsRegisteredFacebook;
 		}
 		
 		public void setUserIsRegisteredFacebook(Boolean UserIsRegisteredFacebook) {
 			this.UserIsRegisteredFacebook = UserIsRegisteredFacebook;
+		}
+		
+		public Boolean getUserIsRegistered() {
+			return UserIsRegistered;
+		}
+		
+		public void setUserIsRegistered(Boolean UserIsRegistered) {
+			this.UserIsRegistered = UserIsRegistered;
 		}
 		
 		public GregorianCalendar getUserLastUpdate() {
@@ -227,12 +227,12 @@ public class UserData {
 			this.UserSecondaryCurrencyBalance = UserSecondaryCurrencyBalance;
 		}
 		
-		public String getUserExtraField() {
-			return UserExtraField;
+		public GregorianCalendar getUserTempDate() {
+			return UserTempDate;
 		}
 		
-		public void setUserExtraField(String UserExtraField) {
-			this.UserExtraField = UserExtraField;
+		public void setUserTempDate(GregorianCalendar UserTempDate) {
+			this.UserTempDate = UserTempDate;
 		}
 		
 		public static String getUserSortField(UserData.LiFieldUser field)
@@ -269,11 +269,11 @@ public class UserData {
 			case UserRegisterDate:
 				return UserRegisterDate;
 				
-			case UserIsRegistered:
-					return UserIsRegistered;
-					
 			case UserIsRegisteredFacebook:
 					return UserIsRegisteredFacebook;
+					
+			case UserIsRegistered:
+					return UserIsRegistered;
 					
 			case UserLastUpdate:
 				return UserLastUpdate;
@@ -287,8 +287,8 @@ public class UserData {
 			case UserSecondaryCurrencyBalance:
 				return UserSecondaryCurrencyBalance;
 				
-			case UserExtraField:
-				return UserExtraField;
+			case UserTempDate:
+				return UserTempDate;
 				
 			default:
 				return "";
@@ -338,12 +338,12 @@ public class UserData {
 					UserLocation = (LiLocation)value;
 					break;
 					
-			case UserIsRegistered:
-					UserIsRegistered = (Boolean)value;
-					break;
-					
 			case UserIsRegisteredFacebook:
 					UserIsRegisteredFacebook = (Boolean)value;
+					break;
+					
+			case UserIsRegistered:
+					UserIsRegistered = (Boolean)value;
 					break;
 					
 			case UserLastUpdate:
@@ -362,10 +362,10 @@ public class UserData {
 					UserSecondaryCurrencyBalance = (Integer)value;
 					break;
 					
-			case UserExtraField:
-					UserExtraField = (String)value;
+			case UserTempDate:
+					UserTempDate = (GregorianCalendar)value;
 					break;
-					
+				
 			default:
 				break;
 		}

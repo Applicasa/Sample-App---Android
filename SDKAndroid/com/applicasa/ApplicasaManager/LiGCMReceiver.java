@@ -1,7 +1,6 @@
 package com.applicasa.ApplicasaManager;
 
 import com.appvilleegg.R;
-import com.example.appvilleegg.main.MainActivity;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

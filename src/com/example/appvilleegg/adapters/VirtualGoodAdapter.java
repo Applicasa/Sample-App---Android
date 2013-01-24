@@ -5,13 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-
-import com.applicasa.VirtualGood.VirtualGood;
-
-import com.appvilleegg.R;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -24,13 +19,16 @@ import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 
+import com.applicasa.VirtualGood.VirtualGood;
+import com.appvilleegg.R;
+
 public class VirtualGoodAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private List<VirtualGood> mVirtualGoods;
 	private LayoutInflater  mInflater;
 	private static VirtualGoodAdapter adapter;
-	private HashMap<String, Bitmap> imageMap;
+	private static HashMap<String, Bitmap> imageMap = new HashMap<String, Bitmap>();;
     
 	static class ViewHolder {
 		public TextView itemName;
@@ -47,6 +45,7 @@ public class VirtualGoodAdapter extends BaseAdapter {
 		 {
 			 adapter.mVirtualGoods = list;
 		 }
+		 
 		 adapter.downloadMaterial();
 		 return adapter;
 	 }

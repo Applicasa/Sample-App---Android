@@ -96,4 +96,11 @@ public class LiUserLocation {
 	public static void setMinimumTime(long minTime){
 		Applicasa.setMinimumTime(minTime);
 	}
+	 /**
+	 * Unregister from All location services GPS, Network...
+	 */
+	 public static void unregisterFromLocationUpdates()
+	 {
+		Applicasa.unregisterFromLocationUpdates();
+	 }
 }

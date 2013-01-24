@@ -1,56 +1,32 @@
 package com.example.appvilleegg.sampleApp;
 
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 
-import com.appvilleegg.R;
-import com.example.appvilleegg.Global.Global;
-import com.example.appvilleegg.adapters.FriendsArrayAdapter;
-import com.example.appvilleegg.adapters.UserRadiusArrayAdapter;
-
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetArrayCallback;
-import com.applicasa.ApplicasaManager.LiManager.LiObject;
-import com.applicasa.ApplicasaManager.LiGCMPushMessage;
-import com.applicasa.ApplicasaManager.LiSession;
-import com.applicasa.ApplicasaManager.LiUserLocation;
-import com.applicasa.Dynamic.Dynamic;
-import com.applicasa.User.User;
-import com.applicasa.User.UserData.LiFieldUser;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiLocation;
 import applicasa.LiCore.LiLocationCallback;
 import applicasa.LiCore.LiLogger;
-import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.Push.LiCallbackPush;
-import applicasa.LiCore.Push.LiObjPushMessage;
 import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiQuery;
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiFilters.Condition;
 import applicasa.LiCore.communication.LiFilters.Operation;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.LiJson.LiJSONException;
-import applicasa.kit.FaceBook.LiFacebookResponse;
-import applicasa.kit.FaceBook.LiObjFacebookFriends;
+
+import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetArrayCallback;
+import com.applicasa.ApplicasaManager.LiSession;
+import com.applicasa.ApplicasaManager.LiUserLocation;
+import com.applicasa.User.User;
+import com.applicasa.User.UserData.LiFieldUser;
+import com.appvilleegg.R;
+import com.example.appvilleegg.adapters.UserRadiusArrayAdapter;
 
 public class UsersRadiusListActivity extends ListActivity implements LiLocationCallback{
 
@@ -67,7 +43,6 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 		
 		LiUserLocation.enableGps();
 		LiUserLocation.enableNetwork();
-		
 		LiUserLocation.getLocation(this);
 		
 		LiSession.sessionStart(mActivity,null);
@@ -78,16 +53,21 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 	public void getLastBestUpdatedLocation(LiLocation location,
 			boolean updatedSuccesful) {
 		// TODO Auto-generated method stub
-		LiLogger.LogInfo("Location", "getLastBestUpdatedLocation");
+		LiLogger.logInfo("Location", "getLastBestUpdatedLocation");
 	}
 
 	public void getLastBestLocation(LiLocation location) {
 		// TODO Auto-generated method stub
-		LiLogger.LogInfo("Location", "getLastBestLocation");
+		LiLogger.logInfo("Location", "getLastBestLocation");
 		
 		LiQuery query = new LiQuery();
 		// Add Filter to receive only users with username or first name or last name
+		List<LiFilters> filtersList = new ArrayList<LiFilters>();
+		filtersList.add(new LiFilters(LiFieldUser.UserFirstName,Operation.NOT_EQUAL,""));
+		filtersList.add(new LiFilters(LiFieldUser.UserLastName,Operation.NOT_EQUAL,""));
+		filtersList.add(new LiFilters(LiFieldUser.UserName,Operation.NOT_EQUAL,""));
 		
+		query.Lifilters = new  LiFilters(filtersList, Condition.OR);
 		query.setGeoFilter(LiFieldUser.UserLocation, location, 10000000);
 		 
 		User.getArrayWithQuery(query, QueryKind.LIGHT, new LiUserGetArrayCallback() {
@@ -109,24 +89,19 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 
 	public void onFailure(LiErrorHandler Error) {
 		// TODO Auto-generated method stub
-		LiLogger.LogInfo("Location", Error.getMessage());
+		LiLogger.logInfo("Location", Error.getMessage());
 	}
 	
 	 @Override
      protected void onListItemClick(ListView l, View v, int position, long id) {
-		 LiLogger.LogInfo("position", String.valueOf(position));
-		 createDialog(users.get(position));
+		 LiLogger.logInfo("position", String.valueOf(position));
+		
+		 Intent i = new Intent(this, ChatActivity.class);
+		 i.putExtra("id",users.get(position).UserID);
+		 startActivity(i); 
 	    }
 	
 	 
-
-		/**
-		 * Create alert dialog to update \ add dynamic item
-		 */
-		private void createDialog(final User user) {
-			// TODO Auto-generated method stub
-				 Global.createDialog(user, null, mActivity);
-		}
 		
 	protected void onPause() {
 		// TODO Auto-generated method stub

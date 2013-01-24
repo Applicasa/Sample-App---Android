@@ -2,60 +2,35 @@ package com.example.appvilleegg.sampleApp;
  
 import java.util.List;
 
-
-import com.applicasa.ApplicasaManager.LiManager;
-import com.applicasa.ApplicasaManager.LiManager.LiObject;
-import com.applicasa.ApplicasaManager.LiSession;
-import com.applicasa.User.User;
-import com.facebook.android.LiFacebook;
-
-import com.appvilleegg.R;
-import com.example.appvilleegg.main.MainActivity;
-
-import android.R.bool;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
-import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiLogger;
-import applicasa.LiCore.LiSharedPrefrences;
-import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import applicasa.LiCore.communication.LiFilters.Condition;
+import applicasa.LiCore.communication.LiFilters;
 import applicasa.LiCore.communication.LiFilters.Operation;
-import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
+import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.kit.FaceBook.LiFBmanager;
-import applicasa.kit.FaceBook.LiFacebookResponse;
-import applicasa.kit.FaceBook.LiObjFacebookFriends;
-import applicasa.kit.IAP.IAP;
+import applicasa.kit.facebook.LiFBmanager;
+import applicasa.kit.facebook.LiFacebookResponse.LiFacebookResponseLogin;
+import applicasa.kit.facebook.LiObjFacebookFriends;
+
+import com.applicasa.ApplicasaManager.LiSession;
+import com.applicasa.User.User;
+import com.applicasa.User.UserData.LiFieldUser;
+import com.appvilleegg.R;
  
 public class LoginActivity extends Activity  {
  
@@ -85,6 +60,7 @@ public class LoginActivity extends Activity  {
 		progressBar = (ProgressBar)findViewById(R.id.progressBar);
 		textForgot.setClickable(true);
 		
+		Log.w("Session", "start Login Activity");
 		LiSession.sessionStart(mActivity,null);
 	}
 
@@ -97,7 +73,7 @@ public class LoginActivity extends Activity  {
 		switch (v.getId())
 		{
 			case R.id.btn_log_in_later:
-				finish();
+				
 			break;
 			
 			case R.id.btn_log_in:
@@ -105,6 +81,7 @@ public class LoginActivity extends Activity  {
 				progressBar.setVisibility(View.VISIBLE);
 				userName = email.getText().toString();
 				pass = password.getText().toString();
+				
 				 User.loginUser(userName, pass, new LiCallbackUser () {
 					
 					public void onSuccessfull(RequestAction action) {
@@ -125,26 +102,21 @@ public class LoginActivity extends Activity  {
 			
 			case R.id.btn_log_in_fb:
 				btnLoginFB.setClickable(false);
-				User.loginWithFacebookUser(this, new String[]{"publish_stream"}, new LiFacebookResponse() {
-						
-						public void onGetFriendsResponse(LiObjResponse requestResponse,
-								List<LiObjFacebookFriends> friendsList) {
-							// TODO Auto-generated method stub
-						}
-						
-						public void onFBLoginResponse(User currentUser) {
-							// TODO Auto-generated method stub
-							btnLoginFB.setClickable(true);
-							finish();
-						}
-						
-						public void onFBError(LiErrorHandler error) {
-							// TODO Auto-generated method stub
-							btnLoginFB.setClickable(true);
-							LiLogger.LogError("LoginActivity", error.getMessage());
-						}
-					});
-				
+				LiLogger.logInfo("Login ", "user with fb");
+				User.loginWithFacebookUserFromActivity(LoginActivity.this, new LiFacebookResponseLogin() {
+					
+					public void onFBLoginResponse(User currentUser) {
+						// TODO Auto-generated method stub
+						btnLoginFB.setClickable(true);
+						finish();
+					}
+					
+					public void onFBError(LiErrorHandler error) {
+						// TODO Auto-generated method stub
+						btnLoginFB.setClickable(true);
+						LiLogger.logError("LoginActivity", error.getMessage());
+					}
+				});
 			break;
 			
 			case R.id.btn_register:
@@ -167,9 +139,7 @@ public class LoginActivity extends Activity  {
 		 * Handles result from fb login
 		 */
 		protected void onActivityResult(int requestCode, int resultCode, Intent data){
-			
-			LiFBmanager.onActivityResult(requestCode, resultCode, data);
-			finish();
+			User.onActivityResult(this,requestCode, resultCode, data);
 		}
 		
 		
@@ -223,11 +193,13 @@ public class LoginActivity extends Activity  {
 		
 		protected void onPause() {
 			// TODO Auto-generated method stub
+			Log.w("Session", "End Login Activity");
 			LiSession.sessionEnd(mActivity);
 			super.onPause();
 		}
 		protected void onResume() {
 			// TODO Auto-generated method stub
+			Log.w("Session", "Resume Login Activity");
 			LiSession.sessionResume(mActivity);
 			super.onResume();
 		}

@@ -1,20 +1,27 @@
 package com.applicasa.ApplicasaManager;
 
+import java.util.List;
+import java.util.ArrayList;
+import org.apache.http.NameValuePair;
 import java.util.HashMap;
 import java.util.Map;
-
-import android.content.Context;
+	/** Applicasa imports **/
+import com.applicasa.User.User;
+import com.applicasa.VirtualCurrency.VirtualCurrency;
+import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
+import com.applicasa.Dynamic.Dynamic;
+import com.applicasa.Places.Places;
+import com.applicasa.Tips.Tips;
+import com.applicasa.Chat.Chat;
+import com.applicasa.VirtualGood.VirtualGood;
 import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
+import android.content.Context;
+import applicasa.LiCore.Push.LiPushManager;
 import applicasa.LiJson.LiJSONArray;
 import applicasa.LiJson.LiJSONException;
 import applicasa.kit.IAP.Callbacks.LiCallbackIAPInitialize;
-import com.applicasa.Dynamic.Dynamic;
-import com.applicasa.User.User;
-import com.applicasa.VirtualCurrency.VirtualCurrency;
-import com.applicasa.VirtualGood.VirtualGood;
-import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
 
 public class LiManager {
 	
@@ -23,26 +30,24 @@ public class LiManager {
 	* @param context
 	* @param callback a callback to indicate when the initialize operation has Finished.
 	* if initialize is Successful
-	* @throws LiErrorHandler
 	*/
 	public static void initialize(Context context,LiCallbackInitialize liCallbackInitialize)
 	{		
 		Applicasa.initializeApplicasa(context,LiConfig.getApplicationKey(),liCallbackInitialize);	
 	}
 	
-	
 	/**
-	 * Initialize applicasa's Framework Using application context and application Key
-	 * @param context
-	 * @param liCallbackInitialize
-	 * a callback to indicate when the initialize operation has Finished.
-	 * if initialize is Successful
-	 * @param liCallbackIAPInitialize
-	 *   a callback to indicate when the In App billing initialize operation has Finished.
-	 * if initialize is Successful
-	 */
+	* Initialize applicasa's Framework Using application context and application Key
+	* @param context
+	* @param liCallbackInitialize
+	* a callback to indicate when the initialize operation has Finished.
+	* if initialize is Successful
+	* @param liCallbackIAPInitialize
+	* a callback to indicate when the In App billing initialize operation has Finished.
+	* if initialize is Successful
+	*/
 	public static void initialize(Context context,LiCallbackInitialize liCallbackInitialize, LiCallbackIAPInitialize liCallbackIAPInitialize) 
-	{		
+	{
 		Applicasa.initializeApplicasa(context,LiConfig.getApplicationKey(),liCallbackInitialize, liCallbackIAPInitialize);	
 	}
 	
@@ -79,8 +84,11 @@ public class LiManager {
 		array.put(User.createDB());
 		array.put(VirtualCurrency.createDB());
 		array.put(VirtualGoodCategory.createDB());
-		array.put(VirtualGood.createDB());
 		array.put(Dynamic.createDB());
+		array.put(Places.createDB());
+		array.put(Tips.createDB());
+		array.put(Chat.createDB());
+		array.put(VirtualGood.createDB());
 		
 		return array;
 	}
@@ -89,6 +97,10 @@ public class LiManager {
 		User,
 		VirtualCurrency,
 		VirtualGoodCategory,
+		Dynamic,
+		Places,
+		Tips,
+		Chat,
 		VirtualGood;
 			private LiObject() {
 				stringMap.put(this.toString(), this);
@@ -97,5 +109,13 @@ public class LiManager {
 			return stringMap.get(key);
 		}
 	};
+	/**
+	* 
+	* @return true if Applicasa service is initialized, else false
+	*/
+	public static boolean isInitialized()
+	{
+		return Applicasa.isInitialized();
+	}
 }
 

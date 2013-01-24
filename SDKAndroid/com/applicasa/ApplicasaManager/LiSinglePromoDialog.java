@@ -3,9 +3,6 @@ package com.applicasa.ApplicasaManager;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.applicasa.Promotion.Promotion;
-import com.applicasa.VirtualCurrency.VirtualCurrency;
-import com.applicasa.VirtualGood.VirtualGood;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -19,6 +16,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -36,6 +35,10 @@ import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResult
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResultCallback;
 import applicasa.LiJson.LiJSONException;
 import applicasa.kit.IAP.IAP.LiCurrency;
+
+import com.applicasa.Promotion.Promotion;
+import com.applicasa.VirtualCurrency.VirtualCurrency;
+import com.applicasa.VirtualGood.VirtualGood;
 
 
 
@@ -105,11 +108,6 @@ public class LiSinglePromoDialog extends Dialog   {
 		LoadPromo();
 	}
     
-    
-    
-    
-    
-    
     /**
      * Generate the Promotion layouts
      */
@@ -147,7 +145,6 @@ public class LiSinglePromoDialog extends Dialog   {
      * Generate the Action Button and adds to View
      */
 	private void createActionButton() {
-		// TODO Auto-generated method stub
     	mImageButton = new ImageButton(getContext());
 		mImageButton.setAdjustViewBounds(true);
 		RelativeLayout.LayoutParams btn_rl = new RelativeLayout.LayoutParams(
@@ -164,7 +161,7 @@ public class LiSinglePromoDialog extends Dialog   {
 	}
 
 	/**
-	 * Genereat the Exit Button and adds to View
+	 * Generate the Exit Button and adds to View
 	 */
 	private void createExitImage() {
 		mExitButton = new ImageView(getContext());
@@ -179,43 +176,39 @@ public class LiSinglePromoDialog extends Dialog   {
             
             
 		} catch ( IOException e) {
-			LiLogger.LogError(LiSinglePromoDialog.class.getSimpleName(), "Failed Creating x_btn.png " +e.getMessage());
+			LiLogger.logError(LiSinglePromoDialog.class.getSimpleName(), "Failed Creating x_btn.png " +e.getMessage());
 		}
 		
 		 mRelativeLayout.addView(mExitButton);
 		 
 		 mExitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-//        		// updates analytics that the Promo was only viewed
-            	mSinglePromo.updateViewUseCount(1, 0);
-            	isPromotionDisplayed = false;
-            	 if (mLiPromotionResultCallback != null)
-                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Cancelled, LiPromotionResult.PromotionResultNothing, null);
-            	 
-                LiSinglePromoDialog.this.dismiss();
+        		// updates analytics that the Promo was only viewed
+            	handleExit();
+            	
                
             }
         });
        
     }
 	
+	
+
 	/**
 	 * Loads material asynchronously
 	 */
     private void LoadPromo() {
     	
-		LiLogger.LogDebug("**** PromoAvailable ****", "Promo Type "+mSinglePromo.PromotionAppEvent.toString()+" "+mSinglePromo.PromotionAppEvent.getId());
+		LiLogger.logDebug("**** PromoAvailable ****", "Promo Type "+mSinglePromo.PromotionAppEvent.toString()+" "+mSinglePromo.PromotionAppEvent.getId());
 		
 		// Load Materials
 		LiFileCacher.getBitmapFromCache(mSinglePromo.PromotionImage, new LiCallbackGetCachedFile() {
 			
 			public void onSuccessfull(InputStream is) {
-				// TODO Auto-generated method stub
 			}
 			
 			public void onFailure(LiErrorHandler error) {
-				// TODO Auto-generated method stub
-				LiLogger.LogError("Promo Adapter", "Source not found");
+				LiLogger.logError("Promo Adapter", "Source not found");
 				dismiss();
 			}
 
@@ -231,18 +224,15 @@ public class LiSinglePromoDialog extends Dialog   {
 		LiFileCacher.getBitmapFromCache(mSinglePromo.PromotionButton, new LiCallbackGetCachedFile() {
 			
 			public void onSuccessfull(InputStream is) {
-				// TODO Auto-generated method stub
 			}
 			
 			public void onFailure(LiErrorHandler error) {
-				// TODO Auto-generated method stub
-				LiLogger.LogError("Promo Adapter", "Source not found");
+				LiLogger.logError("Promo Adapter", "Source not found");
 				dismiss();
 			}
 
 			public void onSuccessfullBitmap(Bitmap bitmap) {
-				// TODO Auto-generated method stub
-				LiLogger.LogInfo("Promo Adapter", "Source found");
+				LiLogger.logInfo("Promo Adapter", "Source found");
 				mImageButton.setImageBitmap(bitmap);
 				mImageButton.setVisibility(View.VISIBLE);
 				mImageButton.setClickable(true);
@@ -254,12 +244,6 @@ public class LiSinglePromoDialog extends Dialog   {
 		});
 	}
 
-    
-    private int pxFromDp(float dp)
-    {
-        return (int) (dp * this.getContext().getResources().getDisplayMetrics().density);
-    }
-    
     /**
      * When material are available 
      * removes the spinner and add the promotion View
@@ -290,24 +274,50 @@ public class LiSinglePromoDialog extends Dialog   {
 					  
 					  break;
 				  case LINK:
-					  if (mSinglePromo.PromotionActionData.has("link"))
+					  String link = null;
+					  if (mSinglePromo.PromotionActionData.has("link_Android"))
+					  {   // Open android link
+						  link = mSinglePromo.PromotionActionData.getString("link_Android");
+					  }
+					  else if (mSinglePromo.PromotionActionData.has("link_iOS"))
+					  {	  // case no Android link return iOS link 
+						  link = mSinglePromo.PromotionActionData.getString("link_iOS");
+					  }
+					  else if (mSinglePromo.PromotionActionData.has("link"))
+					  {	  // old promotion structure
+						  link = mSinglePromo.PromotionActionData.getString("link");
+					  }
+						
+					  if (link != null)
 					  {
-						  String link = mSinglePromo.PromotionActionData.getString("link");
 						  if (!link.startsWith("http://") && !link.startsWith("https://") )
-							  link = "http://"+link; 
+							  	link = "http://"+link;
+						  
 						  Intent webIntent  = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
 						  
 						  mActivity.startActivity(webIntent);
+					  }
 						 
 						  if (mLiPromotionResultCallback != null)
 			                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultLinkOpened, link);
 						  
 						 dismiss();
-					  }
 					  break;
 				  case STRING:
-					  // The promotion text is retreived 
-					  String text = mSinglePromo.PromotionActionData.getString("string");
+					  // The promotion text is retrieved 
+					  String text = null;
+					  if (mSinglePromo.PromotionActionData.has("string_Android"))
+					  {   // return Android String
+						  text = mSinglePromo.PromotionActionData.getString("string_Android");
+					  }
+					  else if (mSinglePromo.PromotionActionData.has("string_iOS"))
+					  {	  // case no Android String return iOS String as default
+						  text = mSinglePromo.PromotionActionData.getString("string_iOS");
+					  }
+					  else if (mSinglePromo.PromotionActionData.has("string"))
+					  {	  // Old structure
+						  text = mSinglePromo.PromotionActionData.getString("string");
+					  }
 
 					  if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultStringInfo, text);
@@ -316,7 +326,7 @@ public class LiSinglePromoDialog extends Dialog   {
 				  case GIVE_VC:
 					  int amount = mSinglePromo.PromotionActionData.getInt("amount");
 					  int vcKind = mSinglePromo.PromotionActionData.getInt("virtualCurrencyKind");
-					  LiStore.GiveVirtualCurrency(amount, LiCurrency.values()[vcKind], null);
+					  LiStore.giveVirtualCurrency(amount, LiCurrency.values()[vcKind], null);
 					  /**
 					   * Notifies IAP Obeserver
 					   */
@@ -327,8 +337,8 @@ public class LiSinglePromoDialog extends Dialog   {
 					  break;
 				  case GIVE_VG:
 					  String id= mSinglePromo.PromotionActionData.getString("_id");
-					  VirtualGood item = LiStore.GetVirtualGoodById(id);
-					  LiStore.GiveVirtualGoods(item, 1 ,null );
+					  VirtualGood item = LiStore.getVirtualGoodById(id);
+					  LiStore.giveVirtualGoods(item, 1 ,null );
 					 
 					  if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultGiveVirtualGood, item);
@@ -336,8 +346,8 @@ public class LiSinglePromoDialog extends Dialog   {
 					  break;
 				  case DEAL_VC:
 					   id= mSinglePromo.PromotionActionData.getString("_id");
-					   VirtualCurrency itemVC = LiStore.GetVirtualCurrencyDealById(id);
-					   result = LiStore.BuyVirtualCurrency(mActivity, itemVC, null );
+					   VirtualCurrency itemVC = LiStore.getVirtualCurrencyDealById(id);
+					   result = LiStore.buyVirtualCurrency(mActivity, itemVC, null );
 					   
 					   if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(result?LiPromotionAction.Succeded:LiPromotionAction.Failed, (itemVC.VirtualCurrencyKind==LiCurrency.MainCurrency)?LiPromotionResult.PromotionResultDealMainVirtualCurrency:
@@ -345,9 +355,9 @@ public class LiSinglePromoDialog extends Dialog   {
 					  break;
 				  case DEAL_VG:
 					   id= mSinglePromo.PromotionActionData.getString("_id");
-					   item = LiStore.GetVirtualGoodDealById(id);
+					   item = LiStore.getVirtualGoodDealById(id);
 					   
-					   result = LiStore.BuyVirtualGoods(item, 1, (item.VirtualGoodMainCurrency!=0) ? LiCurrency.MainCurrency:LiCurrency.SencondaryCurrency, null );
+					   result = LiStore.buyVirtualGoods(item, 1, (item.VirtualGoodMainCurrency!=0) ? LiCurrency.MainCurrency:LiCurrency.SencondaryCurrency, null );
 					   
 					   if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(result?LiPromotionAction.Succeded:LiPromotionAction.Failed, LiPromotionResult.PromotionResultGiveVirtualGood, item);
@@ -359,10 +369,46 @@ public class LiSinglePromoDialog extends Dialog   {
 			  dismiss();
 			  
 			} catch (LiJSONException e) {
-				// TODO Auto-generated catch block
-				LiLogger.LogError(LiSinglePromoDialog.class.getSimpleName(), "Failed generating Promotion action "+e.getMessage());
+				LiLogger.logError(LiSinglePromoDialog.class.getSimpleName(), "Failed generating Promotion action "+e.getMessage());
 			}
 		  
 		}
 	};
+	
+	/**
+	 * Handles Back key event 
+	 * Closes the dialog and update View analytics
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	        Log.d(this.getClass().getName(), "back button pressed");
+	        handleExit();
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
+	/**
+	 * Handles Exist
+	 * whether when pressing back button or the exit button
+	 */
+	protected void handleExit() {
+		mSinglePromo.updateViewUseCount(1, 0);
+    	isPromotionDisplayed = false;
+    	 if (mLiPromotionResultCallback != null)
+         	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Cancelled, LiPromotionResult.PromotionResultNothing, null);
+    	 
+        LiSinglePromoDialog.this.dismiss();
+	}
+	
+
+	/**
+	 * Convert from dp to pixel
+	 * @param dp
+	 * @return
+	 */
+    private int pxFromDp(float dp)
+    {
+        return (int) (dp * this.getContext().getResources().getDisplayMetrics().density);
+    }
 }

@@ -1,12 +1,12 @@
 package com.example.appvilleegg.main;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,9 +19,14 @@ import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.LiLogger;
+import applicasa.LiCore.communication.LiFilters;
+import applicasa.LiCore.communication.LiFilters.Operation;
+import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
 import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
+import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiCore.communication.LiRequestConst.SortType;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
 import applicasa.kit.IAP.billing.Utils.LiIabHelper;
 import applicasa.kit.IAP.billing.Utils.LiIabResult;
@@ -36,6 +41,7 @@ import com.applicasa.ApplicasaManager.LiUserLocation;
 import com.applicasa.Dynamic.Dynamic;
 import com.applicasa.Promotion.Promotion;
 import com.applicasa.User.User;
+import com.applicasa.User.UserData.LiFieldUser;
 import com.appvilleegg.R;
 import com.example.appvilleegg.sampleApp.DynamicListActivity;
 import com.example.appvilleegg.sampleApp.FriendsListActivity;
@@ -43,10 +49,12 @@ import com.example.appvilleegg.sampleApp.LoginActivity;
 import com.example.appvilleegg.sampleApp.RegisterActivity;
 import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
 import com.example.appvilleegg.sampleApp.UsersRadiusListActivity;
+import com.facebook.Session;
 
 public class MainActivity extends Activity implements LiCallbackInitialize {
 	
 	
+	Context cont;
 	List<Dynamic> arrDynamic;
 	ListView lvMain;
 	Context context;
@@ -73,9 +81,15 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			// TODO Auto-generated method stub
 			promotions.get(0).show(mActivity, new LiPromotionResultCallback() {
 				
-				public void onPromotionResultCallback(LiPromotionAction arg0,
-						LiPromotionResult arg1, Object arg2) {
-					// TODO Auto-generated method stub
+				public void onPromotionResultCallback(LiPromotionAction promoAction,
+						LiPromotionResult result, Object object) {
+					
+					Log.i("MainActivity", "Promo result = "+result.toString() + " promoAction = " + promoAction.toString());
+					
+					if (object instanceof String)
+					{
+						Log.i("MainActivity Promotion object", "Promo string = " +(String)object);
+					}
 					
 				}
 			});
@@ -87,6 +101,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity_egg);
+        cont = this;
         mActivity = this;
         btn_login = (ImageButton)findViewById(R.id.btn_login_main);
         btn_play = (ImageButton)findViewById(R.id.btn_play);
@@ -111,20 +126,18 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
         btn_dynamicContent.setClickable(false);
         
         context = this;
-        addShortcut(context);
       	LiPromo.setPromoCallback(promoCallback);
       	
 		LiManager.initialize(this, this);
-		
-		
 		
     }
     
     public void initView()
     {
+    	
     	// enable all buttons before init is completed
     	  btn_login.setClickable(true);
-	      btn_play.setClickable(true);
+    	  btn_play.setClickable(true);
 	      btn_Store.setClickable(true);
 	      btn_Radius_Friends.setClickable(true);
 	      btn_myProfile.setClickable(true);
@@ -144,6 +157,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		initView();
 		
 		//Start session
+		Log.w("Session", "Start Main Activity");
 		LiSession.sessionStart(this,promoCallback);
 		
 		// Updates User Location
@@ -161,7 +175,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	{
 		if ( spProfile != null && usProfile != null)
 		{
-			switch(User.getCurrentUserSpendProfile())
+			switch(User.getCurrentUserSpendingProfile())
 			{
 				case None:
 					break;
@@ -191,7 +205,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 				case Private:
 					usProfile.setImageResource(R.drawable.us_private);
 					break;
-				case Serganet:
+				case Sergeant:
 					usProfile.setImageResource(R.drawable.sergeantx);
 					break;
 			}
@@ -209,6 +223,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			if (Applicasa.isCurrentUserRegistered())
 			{
 			    btn_login.setClickable(false);
+			    bar.setVisibility(View.VISIBLE);
 				User.logoutUser(new LiCallbackUser() {
 					
 					public void onSuccessfull(RequestAction action) {
@@ -217,7 +232,6 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 						 btn_login.setClickable(true);
 						 btn_login.setImageResource(R.drawable.btn_nav_login);
 						 btn_login.invalidate();
-
 					}
 					
 					public void onFailure(RequestAction action, LiErrorHandler error) {
@@ -235,7 +249,8 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			break;
 			
 		case R.id.btn_play:
-			
+			 i = new Intent(this, GameActivity.class);
+				startActivity(i);
 			break;
 			
 		case R.id.btn_store:
@@ -274,57 +289,34 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		Log.w("Applicasa", "failed init");
 	}
 	
-	
-	
-	// Add Shotcut
-	public void addShortcut(Context context) {
-		SharedPreferences settings = context.getSharedPreferences("AppVille", 0);
-		SharedPreferences.Editor editor = settings.edit();
-		
-		if (!settings.getBoolean("ShortcutAdded", false))
-		{
-			Intent shortcutIntent = new Intent();
-			shortcutIntent.setClassName(getPackageName(),this.getLocalClassName());
-			shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			shortcutIntent.setAction(Intent.ACTION_MAIN);
-			
-			Intent intent = new Intent();
-			intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-			intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "AppVill 2.0");
-			intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_launcher));
-			intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-			context.sendBroadcast(intent);
-			
-			editor.putBoolean("ShortcutAdded", true);
-			editor.commit();
-		}
-    }
-	
-		
 	protected void onPause()
 	{
 		super.onPause();
+		Log.w("Session", "End Main Activity");
+		LiSession.sessionEnd(this);
 	}
 	
 	protected void onStop() {
-		LiLogger.LogInfo("Session", "SessionEnd");
-		LiSession.sessionEnd(this);
 		super.onStop();
+		LiUserLocation.unregisterFromLocationUpdates();
+		
+		
 	}
 	protected void onResume() {
-		LiSession.sessionResume(context);
 		super.onResume();
+		LiSession.sessionResume(context);
+		
+		if (Applicasa.isInitialized())
+			initView();
 	}
 	
 	protected void onRestart() {
 		super.onRestart();
-		initView();
 	}
 	protected void onDestroy() {
 		// dispose the IAB services 
 		LiStore.dispose();
-		LiFileCacher.ClearMemory();
+		LiFileCacher.clearMemory();
 		super.onDestroy();
 	}
 	

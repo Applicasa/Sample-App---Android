@@ -12,7 +12,6 @@ public class DynamicData {
 
 	protected static Map<String, LiFieldDynamic> stringMap = new HashMap<String, LiFieldDynamic>();
 	LiJSONObject incrementedFields = new LiJSONObject();
-	LiJSONObject receivedFields;
 	public static boolean EnableOffline = true;
 	public enum LiFieldDynamic implements LiField
 	{

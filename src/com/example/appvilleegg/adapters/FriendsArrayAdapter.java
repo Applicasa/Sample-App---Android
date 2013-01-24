@@ -1,22 +1,17 @@
 package com.example.appvilleegg.adapters;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-
-
-import com.applicasa.User.User;
-import com.facebook.android.LiDialogError;
-import com.facebook.android.LiFacebook.LiDialogListener;
-import com.facebook.android.LiFacebookError;
-
-import com.appvilleegg.R;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,8 +28,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
+import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
-import applicasa.kit.FaceBook.LiObjFacebookFriends;
+import applicasa.kit.facebook.LiObjFacebookFriends;
+
+import com.appvilleegg.R;
+import com.facebook.FacebookException;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.Session.OpenRequest;
 
 public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 	private static FriendsArrayAdapter adapter;
@@ -42,7 +47,7 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 	private List<LiObjFacebookFriends> friends = null;
 	private HashMap<String, Bitmap> imageMap;
 	
-	private String TAG = "Matket Array Adapter";
+	private String TAG = "Friends Array Adapter";
 	static class ViewHolder {
 		public TextView itemName;
 		public ImageView pic = null;
@@ -129,8 +134,9 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 		if (friends != null && friends.size() > position )
 		{
 			// Get Branch item name and price and sets it in the list holder
-			holder.itemName.setText(friends.get(position).mFacebookName);
-			if (friends.get(position).user == null || friends.get(position).user.UserID == "0")
+			final LiObjFacebookFriends friend = friends.get(position);
+			holder.itemName.setText(friend.mFacebookName);
+			if (friend.user == null || friend.user.UserID == "0")
 			{
 				holder.btnFriend.setClickable(true);
 				holder.btnFriend.setImageResource(R.drawable.added);
@@ -140,35 +146,60 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						
+							 Session session = Session.getActiveSession();
+							 
+							 if (session == null)
+							 {
+								 LiLogger.logInfo(TAG, "Facebook session is null");
+								 return;
+							 }
+							 
+							 // Check for publish permissions    
+							 List<String> permissions = session.getPermissions();
+						     if (!isSubsetOf(PERMISSIONS, permissions)) {
+						    	 pendingPublishReauthorization = true;
+						    	 session.close();
+//						         Session.NewPermissionsRequest newPermissionsRequest = new Session
+//						                    .NewPermissionsRequest(this, PERMISSIONS);
+						        session = new Session(activity);
+						        
+						        session.openForPublish(new OpenRequest(activity).setPermissions(PERMISSIONS));
+					            return;
+					        }
+						        
 						     Bundle params = new Bundle();
 						     params.putString("message", "Download AppVille");
 						     params.putString("name", "AppVille");
 						     params.putString("link", "https://play.google.com/store/apps/details?id=com.appvilleegg");
 						     params.putString("description", "AppVille invitation");
 						     params.putString("picture", "https://lh6.ggpht.com/C_at3-AXnhBCMTVIvdn7aZghbE_cO3Rkwv9DwxRuk85mOHIlx-4nIF2LrByGL6pmO3RK=w124");
-							 User.postOnFriendsWall(activity,friends.get(position).mFacebookID ,params, new LiDialogListener() {
-								
-								public void onFacebookError(LiFacebookError e) {
-									// TODO Auto-generated method stub
-									Log.e("fb", e.getMessage());
-								}
-								
-								public void onError(LiDialogError e) {
-									// TODO Auto-generated method stub
-									Log.e("fb", e.getMessage());
-								}
-								
-								public void onComplete(Bundle values) {
-									// TODO Auto-generated method stub
-									Log.e("completed", "succes");
-									Toast.makeText(activity, "Invitation sent", Toast.LENGTH_SHORT).show();
-								}
-								
-								public void onCancel() {
-									// TODO Auto-generated method stub
-									
-								}
-							});
+						     
+						     Request.Callback callback= new Request.Callback() {
+						            public void onCompleted(Response response) {
+						                JSONObject graphResponse = response
+						                                           .getGraphObject()
+						                                           .getInnerJSONObject();
+						                String postId = null;
+						                try {
+						                    postId = graphResponse.getString("id");
+						                } catch (JSONException e) {
+						                    Log.i(TAG, "JSON error "+ e.getMessage());
+						                }
+						                FacebookException error = response.getError();
+						                if (error != null) {
+						                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+						                    } else {
+						                        Toast.makeText(getContext(), "Invitation sent", Toast.LENGTH_LONG).show();
+						                }
+						            }
+						        };
+
+						        
+						        Request request = new Request(session, friend.mFacebookID+"/feed", params, 
+						                              HttpMethod.POST, callback);
+
+						        RequestAsyncTask task = new RequestAsyncTask(request);
+						        task.execute();
 					}
 				});
 			}
@@ -216,5 +247,22 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 		adapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * Facebook permissons
+	 * 
+	 */
+	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
+	private boolean pendingPublishReauthorization = false;
+	
+	private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
+	    for (String string : subset) {
+	        if (!superset.contains(string)) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	
 
 }

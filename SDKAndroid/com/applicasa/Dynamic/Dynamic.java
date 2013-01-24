@@ -54,12 +54,11 @@ public class Dynamic extends DynamicData {
 		LiObjRequest request = new LiObjRequest();
 		
 		// If Id is of hex representation and not 0, then the itemId is Mongo id
-		if (DynamicID!= "0" && LiUtility.isHex(DynamicID))
+		if (DynamicID!= "0" && (LiUtility.isHex(DynamicID)|| DynamicID.startsWith("temp_") ))
 		{
 			request.setAction(RequestAction.UPDATE_ACTION);
 			request.setRecordID(DynamicID);
-			request.setIncrementedFields(incrementedFields);
-			request.setReceivedObject(receivedFields);
+			request.setIncrementedFields(incrementedFields);			
 		}
 		else
 		{
@@ -138,8 +137,7 @@ public class Dynamic extends DynamicData {
 	        	LiQuery query= new LiQuery();
 	        	
 	        	// Create a where statement expression of ObjectId = 'id';  
-		        LiFilters filter = new LiFilters(LiFieldDynamic.DynamicID, Operation.EQUAL, Id);
-		        // LiFiltereExpression filters= new LiFiltereExpression(b);
+		        LiFilters filter = new LiFilters(LiFieldDynamic.DynamicID, Operation.EQUAL, Id);		        
 		        query.setFilter(filter);
 	        	
 		    	LiObjRequest request = new LiObjRequest();
@@ -182,6 +180,28 @@ public class Dynamic extends DynamicData {
 	        request.GetWithRawQuery(kClassName, whereClause, args);
 	    }
 	
+		 /** Synchronized Method to returns an object from server by filters
+		 * @param ID
+		 * @return the list of items or null in case on an error
+		 * @throws LiErrorHandler
+		 */
+		 public static List<Dynamic> getArrayWithQuery(LiQuery query ,QueryKind queryKind) throws LiErrorHandler 
+		 {
+			 LiObjRequest request = new LiObjRequest();
+			 request.setClassName(kClassName);
+			 request.setAction(RequestAction.GET_ARRAY);
+			 request.setGet(queryKind);
+			 request.setQueryToRequest(query);
+			 LiObjResponse response = request.startSync();
+			 
+			 if (response.LiRespType.equals(ApplicasaResponse.RESPONSE_SUCCESSFUL))
+			 {
+			  Cursor cursor = request.getCursor();
+			  return buildDynamicFromCursor(request.requestID, cursor);
+			 }
+			 
+			 return null;
+		 }
 
 	
 	
@@ -212,7 +232,7 @@ public class Dynamic extends DynamicData {
 		
 		request.setFileFieldName(liFieldDynamic);
 		request.setFilePath(filePath);
-		
+		request.setAddedObject(this);
 		request.setCallback(callbackHandler);
 		setActionCallback(liCallbackAction,request.requestID);
 		
@@ -236,7 +256,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		// TODO Auto-generated method stub
 		List<Dynamic> returnList = new ArrayList<Dynamic>();
 
-		returnList = BuildDynamicFromCursor(requestID ,cursor);
+		returnList = buildDynamicFromCursor(requestID ,cursor);
 
 		Object callback = dynamicCallbacks.get(requestID);
 		if (callback != null && callback instanceof LiDynamicGetArrayCallback)
@@ -288,7 +308,26 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		}
 	};
 	
-	public static List<Dynamic> BuildDynamicFromCursor(String requestID ,Cursor cursor)
+	/**
+	 * 
+	 * @param requestID
+	 * @param cursor
+	 * @deprecated use buildDynamicFromCursor
+	 * @return
+	 */
+	@Deprecated
+	public static List<Dynamic> BuildDynamicFromCursor(String requestID, Cursor cursor)
+	{
+		return buildDynamicFromCursor(requestID, cursor);
+	}
+
+	/**
+	 * 
+	 * @param requestID
+	 * @param cursor
+	 * @return
+	 */
+	public static List<Dynamic> buildDynamicFromCursor(String requestID ,Cursor cursor)
 	{
 		List<Dynamic> returnList = new ArrayList<Dynamic>();
 		if (cursor == null || cursor.getCount() == 0 ) {}// nothing received
@@ -439,8 +478,6 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			this.DynamicHtml = cursor.getString(columnIndex);
 		
 	
-		try{this.receivedFields = this.dictionaryRepresentation(false);}
-		catch (LiErrorHandler ex){}
 		return this;
 	}
 	
@@ -565,8 +602,6 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	private void resetIncrementedFields() {
 		// TODO Auto-generated method stub
 		incrementedFields = new LiJSONObject();
-		try {	receivedFields = dictionaryRepresentation(false);} 
-		catch (LiErrorHandler e) {}
 	}
 	
 

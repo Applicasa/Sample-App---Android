@@ -5,12 +5,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +27,6 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 	private static UserRadiusArrayAdapter adapter;
 	private Activity activity;
 	private List<User> friends = null;
-	
-	private WeakHashMap<String, Bitmap> imageMap= new WeakHashMap<String, Bitmap>();
 
 	private String TAG = "Matket Array Adapter";
 	static class ViewHolder {
@@ -40,6 +36,8 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 		public ProgressBar bar;
 
 	}
+	
+	private Map<String, Bitmap> imageMap = new HashMap<String, Bitmap>();
 		
 	/**
 	 * Constructor
@@ -52,6 +50,48 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 		this.activity = activity;
 		this.friends = friends;
 		adapter = this;
+		// get our thumbnail generation task ready to execute
+        
+				
+		Iterator<User> iter = friends.iterator();
+		while(iter.hasNext())
+		{
+			
+			new AsyncTask<String, Void, Boolean>() {
+	
+			    @Override
+			    protected Boolean doInBackground(String ... params) {
+			    	final String url = params[0];
+			    	LiFileCacher.getBitmapFromCache(url, new LiCallbackGetCachedFile() {
+						
+						public void onSuccessfull(InputStream is) {
+							// TODO Auto-generated method stub
+						
+						}
+						
+						public void onFailure(LiErrorHandler error) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						public void onSuccessfullBitmap(Bitmap bitmap) {
+							// TODO Auto-generated method stub
+							imageMap.put(url, bitmap);
+							publishProgress();
+						}
+					});
+			    	return true;
+			    }
+			    /**
+			     * Updates the UI after receiving the Image
+			     */
+			    protected void onProgressUpdate(Void... progress) {
+			    	cacheUpdated();
+			     }
+	
+			}.execute(iter.next().UserImage);
+		}
+     		
 	}
 	
 	
@@ -75,28 +115,24 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 		if (friends != null && friends.size() > position )
 		{
 			// Get Branch item name and price and sets it in the list holder
-			holder.itemName.setText(friends.get(position).UserFirstName +" "+ friends.get(position).UserLastName);
+			User user = friends.get(position);
+			String name = (!user.UserName.equals(""))?user.UserName:user.UserFirstName +" "+user.UserLastName;
+			holder.itemName.setText(name);
 			
-			holder.distance.setText(onlyTwoDecimalPlaces(friends.get(position).DistanceFromCurrent )+ "km");
+			holder.distance.setText(String.valueOf(String.valueOf((int)(user.DistanceFromCurrent * 1000)))+ "m");
 			
-			String imageUrl = friends.get(position).UserImage;
-			if (imageMap.containsKey(imageUrl))
+			if (imageMap.containsKey(user.UserImage))
 			{
-				holder.pic.setImageBitmap(imageMap.get(imageUrl));
+				holder.pic.setImageBitmap(imageMap.get(user.UserImage));
 				holder.pic.setMaxHeight( 30);
 				holder.pic.setMaxWidth(30);
 				holder.pic.setMinimumHeight( 30);
 				holder.pic.setMinimumWidth(30);
 				holder.bar.setVisibility(View.INVISIBLE);
 			}
-			else if (imageUrl.isEmpty() || imageUrl.equals("")) 
+			else if (user.UserImage.isEmpty()) 
 			{
 				holder.bar.setVisibility(View.INVISIBLE);
-				holder.pic.setImageResource(R.drawable.profile_picture);
-			}
-			else
-			{
-				downloadThumbnail(imageUrl);
 			}
 		}
 		
@@ -120,56 +156,5 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 	 */
 	private static void cacheUpdated() {
 		adapter.notifyDataSetChanged();
-	}
-	
-	private synchronized void downloadThumbnail(final String url)
-	{
-		new AsyncTask<String, Void, Boolean>() {
-			
-		    @Override
-		    protected Boolean doInBackground(String ... params) {
-		    	final String url = params[0];
-		    	LiFileCacher.getBitmapFromCache(url, new LiCallbackGetCachedFile() {
-					
-					public void onSuccessfull(InputStream is) {
-						// TODO Auto-generated method stub
-					
-					}
-					
-					public void onFailure(LiErrorHandler error) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					public void onSuccessfullBitmap(Bitmap bitmap) {
-						// TODO Auto-generated method stub
-						imageMap.put(url, bitmap);
-						publishProgress();
-					}
-				});
-		    	return true;
-		    }
-		    /**
-		     * Updates the UI after receiving the Image
-		     */
-		    protected void onProgressUpdate(Void... progress) {
-		    	cacheUpdated();
-		     }
-
-		}.execute(url);
-	}
-
-	private  String onlyTwoDecimalPlaces(double number) {
-	    StringBuilder sbFloat = new StringBuilder(String.valueOf(number));
-	    int start = sbFloat.indexOf(".");
-	    if (start < 0) {
-	        return sbFloat.toString();
-	    }
-	    int end = start+3;
-	    if((end)>(sbFloat.length()-1)) end = sbFloat.length();
-
-	    String twoPlaces = sbFloat.substring(start, end);
-	    sbFloat.replace(start, sbFloat.length(), twoPlaces);
-	    return  sbFloat.toString();
 	}
 }

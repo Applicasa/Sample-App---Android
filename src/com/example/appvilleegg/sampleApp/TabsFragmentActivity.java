@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
-import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
@@ -34,9 +33,7 @@ import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResult
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 import applicasa.kit.IAP.IAP.LiIapAction;
-import applicasa.kit.IAP.Callbacks.LiCallbackIAPBalanceChanged;
 import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
-import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
 
 import com.applicasa.ApplicasaManager.LiPromo;
 import com.applicasa.ApplicasaManager.LiSession;
@@ -54,7 +51,7 @@ import com.example.appvilleegg.main.MainActivity;
 
 
 /**
- * @author mwho
+ * @author 
  *
  */
 public class TabsFragmentActivity extends FragmentActivity implements TabHost.OnTabChangeListener, LiPromotionResultCallback{
@@ -129,6 +126,10 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		setContentView(R.layout.tab_host);
 		mActivity = this;
 		
+		
+		
+		LiSession.sessionStart(mActivity,null);
+		
 		initialiseTabHost();
 		
 		if (args != null) {
@@ -153,16 +154,6 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		
 	
 		logout 	=  (ImageButton) findViewById(R.id.btn_Logout);
-		
-
-		/*
-		 * Start session
-		 */
-		LiSession.sessionStart(mActivity,null);
-		
-		/*
-		 * If User is register then show logout button, else login
-		 */
 		if (Applicasa.isCurrentUserRegistered())
 			logout.setVisibility(View.VISIBLE);
 		else
@@ -171,19 +162,13 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		
 		refreshUI();
 		
-		
-		/*
-		 * Sets call back to handle balance changed events
-		 */
-		LiStore.setLiCallbackIAPBalanceChanged(balanceChangedCallback);
-		
 		// ReRegister for promotion callback 
 	    LiPromo.setPromoCallback(new LiPromotionCallback() {
 			
 				@Override
 				public void onHasPromotionToDisplay(List<Promotion> promotions) {
 					// TODO Auto-generated method stub
-					promotions.get(0).show(mActivity,mActivity);
+					promotions.get(0).show(TabsFragmentActivity.this,TabsFragmentActivity.this);
 				}
 		});
 		
@@ -334,23 +319,16 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 	}
 	
 	protected void onPause() {
-		/*
-		 * End session 
-		 */
+		// TODO Auto-generated method stub
 		LiSession.sessionEnd(mActivity);
 		super.onPause();
 	}
 	protected void onResume() {
-		/*
-		 * Resume session 
-		 */
+		// TODO Auto-generated method stub
 		LiSession.sessionResume(mActivity);
 		super.onResume();
 	}
 
-	/**
-	 * example of implementation of Promotion callback
-	 */
 	public void onPromotionResultCallback(LiPromotionAction action,
 			LiPromotionResult result, Object info) {
 		// TODO Auto-generated method stub
@@ -370,41 +348,36 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 				Log.i("Promotion", "Deal of "+((VirtualCurrency)info).VirtualCurrencyCredit +"received" );
 				refreshUI();
 				break;
-				
 			case PromotionResultDealSeconedaryVirtualCurrency:
 				Log.i("Promotion", "Deal of "+((VirtualCurrency)info).VirtualCurrencyCredit +"received" );
 				refreshUI();
 				break;
-				
 			case PromotionResultDealVirtualGood:
 				Log.i("Promotion", ((VirtualGood)info).VirtualGoodTitle +" Deal was received");
 				refreshUI();
 				LiStore.reloadVirtualGoodInventory();
 				break;
-				
 			case PromotionResultGiveMainCurrencyVirtualCurrency:
 				Log.i("Promotion", String.valueOf((Integer)info)+" Main Currency received");
 				refreshUI();
 				break;
-				
 			case PromotionResultGiveSeconedaryCurrencyVirtualCurrency:
 				Log.i("Promotion", String.valueOf((Integer)info)+" Secondary Currency received");
 				refreshUI();
 				break;
-				
 			case PromotionResultGiveVirtualGood:
 				Log.i("Promotion", ((VirtualGood)info).VirtualGoodTitle +" was received");
 				LiStore.reloadVirtualGoodInventory();
+				
 				break;
 			case PromotionResultLinkOpened:
 				Log.i("Promotion", "Link "+(String)info+" Opened");
 				break;
-				
 			case PromotionResultNothing:
 				break;
 			case PromotionResultStringInfo:
 				break;
-			
+				
 		}
 	}
 	
@@ -440,40 +413,6 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
-	LiCallbackIAPBalanceChanged balanceChangedCallback = new LiCallbackIAPBalanceChanged() {
-
-		@Override
-		public void onBalanceChanged(LiCurrency currency, int balance) {
-			// TODO Auto-generated method stub
-			switch (currency)
-			{
-				case MainCurrency:
-					mActivity.mBalanceMain.setText(String.valueOf(balance));
-					break;
-					
-				case SencondaryCurrency:
-					mActivity.mBalanceSecondary.setText(String.valueOf(balance));
-					break;
-			}
-		}
-	};
-	
-	public static LiCallbackVirtualGoodRequest virtualGoodRequest = new LiCallbackVirtualGoodRequest() {
-		
-		@Override
-		public void onActionFinisedSuccessfully(LiIapAction arg0, VirtualGood arg1) {
-			// TODO Auto-generated method stub
-			TabsFragmentActivity.refreshUI();
-		}
-		
-		@Override
-		public void onActionFailed(LiIapAction arg0, VirtualGood arg1,
-				LiErrorHandler arg2) {
-			// TODO Auto-generated method stub
-			LiLogger.LogWarning(TAG, arg2.ErrorMessage);
-		}
-	};
 	
 	
 }
