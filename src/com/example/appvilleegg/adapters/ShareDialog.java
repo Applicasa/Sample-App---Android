@@ -17,6 +17,7 @@ import applicasa.LiCore.LiLogger;
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 
+import com.applicasa.ApplicasaManager.LiConfig;
 import com.applicasa.ApplicasaManager.LiStore;
 import com.appvilleegg.R;
 import com.facebook.FacebookException;
@@ -69,6 +70,15 @@ public class ShareDialog extends Dialog   {
 				 if (session == null)
 				 {
 					 LiLogger.logInfo(TAG , "Facebook session is null");
+					 if (LiConfig.getFbApplicationKey().startsWith("<FB_APPLICATION_KEY>"))
+		        	 {	// fb id was added as meta data
+						 session = Session.openActiveSession(mActivity);	        		
+		        	 }
+		        	else
+		        	{
+		        		session = new Session.Builder(mActivity).setApplicationId(LiConfig.getFbApplicationKey()).build();
+		        		Session.setActiveSession(session);
+		        	}
 				 }
 				 
 				 Bundle parameters = new Bundle();
