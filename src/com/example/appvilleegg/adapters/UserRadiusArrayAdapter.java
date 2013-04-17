@@ -2,7 +2,6 @@ package com.example.appvilleegg.adapters;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -51,49 +50,46 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 		this.friends = friends;
 		adapter = this;
 		// get our thumbnail generation task ready to execute
-        
-				
-		Iterator<User> iter = friends.iterator();
-		while(iter.hasNext())
-		{
-			
-			new AsyncTask<String, Void, Boolean>() {
-	
-			    @Override
-			    protected Boolean doInBackground(String ... params) {
-			    	final String url = params[0];
-			    	LiFileCacher.getBitmapFromCache(url, new LiCallbackGetCachedFile() {
-						
-						public void onSuccessfull(InputStream is) {
-							// TODO Auto-generated method stub
-						
-						}
-						
-						public void onFailure(LiErrorHandler error) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						public void onSuccessfullBitmap(Bitmap bitmap) {
-							// TODO Auto-generated method stub
-							imageMap.put(url, bitmap);
-							publishProgress();
-						}
-					});
-			    	return true;
-			    }
-			    /**
-			     * Updates the UI after receiving the Image
-			     */
-			    protected void onProgressUpdate(Void... progress) {
-			    	cacheUpdated();
-			     }
-	
-			}.execute(iter.next().UserImage);
-		}
-     		
 	}
 	
+	private void downloadMaterial(String url)
+	 {
+			if (!imageMap.containsKey(url))
+			{
+				new AsyncTask<String, Void, Boolean>() {
+				    @Override
+				    protected Boolean doInBackground(String ... params) {
+				    	final String url = params[0];
+				    	LiFileCacher.getBitmapFromCache(url, new LiCallbackGetCachedFile() {
+							
+							public void onSuccessfull(InputStream is) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+							public void onFailure(LiErrorHandler error) {
+								// TODO Auto-generated method stub
+								
+							}
+
+							public void onSuccessfullBitmap(Bitmap bitmap) {
+								// TODO Auto-generated method stub
+								imageMap.put(url, bitmap);
+								publishProgress();
+							}
+						});
+				    	return true;
+				    }
+				    /**
+				     * Updates the UI after receiving the Image
+				     */
+				    protected void onProgressUpdate(Void... progress) {
+				    	cacheUpdated();
+				     }
+		
+				}.execute(url);
+			}
+		}
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
@@ -130,7 +126,11 @@ public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 				holder.pic.setMinimumWidth(30);
 				holder.bar.setVisibility(View.INVISIBLE);
 			}
-			else if (user.UserImage.isEmpty()) 
+			else if (!user.UserImage.isEmpty()) 
+			{
+				downloadMaterial(user.UserImage);
+			}
+			else 
 			{
 				holder.bar.setVisibility(View.INVISIBLE);
 			}

@@ -3,7 +3,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import applicasa.LiCore.LiLocation;
 import applicasa.LiCore.LiField;
 import applicasa.LiJson.LiJSONObject;
 

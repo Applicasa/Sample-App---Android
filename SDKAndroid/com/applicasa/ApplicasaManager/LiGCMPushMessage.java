@@ -2,12 +2,12 @@ package com.applicasa.ApplicasaManager;
 
 import java.util.List;
 
-import com.applicasa.User.User;
-
 import applicasa.LiCore.Push.LiCallbackPush;
 import applicasa.LiCore.Push.LiObjPushMessage;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
+
+import com.applicasa.User.User;
 
 public class LiGCMPushMessage {
 

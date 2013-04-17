@@ -21,6 +21,7 @@ import com.applicasa.ApplicasaManager.LiConfig;
 import com.applicasa.ApplicasaManager.LiStore;
 import com.appvilleegg.R;
 import com.facebook.FacebookException;
+import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
@@ -72,7 +73,7 @@ public class ShareDialog extends Dialog   {
 					 LiLogger.logInfo(TAG , "Facebook session is null");
 					 if (LiConfig.getFbApplicationKey().startsWith("<FB_APPLICATION_KEY>"))
 		        	 {	// fb id was added as meta data
-						 session = Session.openActiveSession(mActivity);	        		
+						 session = Session.openActiveSession(mActivity,true,null);		
 		        	 }
 		        	else
 		        	{
@@ -101,9 +102,9 @@ public class ShareDialog extends Dialog   {
 			                    Log.i(TAG,
 			                        "JSON error "+ e.getMessage());
 			                }
-			                FacebookException error = response.getError();
+			                FacebookRequestError error = response.getError();
 			                if (error != null) {
-			                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+			                    Toast.makeText(getContext(), error.getErrorMessage(), Toast.LENGTH_SHORT).show();
 			                    } else {
 			                        Toast.makeText(getContext(), 
 			                             postId,

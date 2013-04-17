@@ -1,39 +1,31 @@
 package com.applicasa.VirtualGood;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.GregorianCalendar;
-
-import applicasa.LiCore.communication.LiUtility;
-
-
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetByIDCallback;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetArrayCallback;
-import com.applicasa.ApplicasaManager.LiManager.LiObject;
+import java.util.List;
 
 import android.database.Cursor;
-import applicasa.LiCore.sqlDB.database.LiDbObject;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiObjRequest;
-import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
-import applicasa.LiCore.communication.LiFilters;
 import applicasa.LiCore.communication.LiQuery;
-import applicasa.LiCore.communication.LiFilters.Operation;
+import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiRequestConst.QueryKind;
+import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
+import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
+import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
-
-
-import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.GetVirtualGoodKind;
 import applicasa.kit.IAP.IAP.LiCurrency;
 import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
+
+import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetArrayCallback;
+import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualGoodGetByIDCallback;
+import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
 
 public class VirtualGood extends VirtualGoodData {
  /** End of Basic SDK **/
@@ -337,6 +329,7 @@ public class VirtualGood extends VirtualGoodData {
 		this.VirtualGoodMainCurrency = 0;
 		this.VirtualGoodSecondaryCurrency = 0;
 		this.VirtualGoodRelatedVirtualGood = "";
+		this.VirtualGoodPos = 1;
 		this.VirtualGoodQuantity = 0;
 		this.VirtualGoodMaxForUser = 0;
 		this.VirtualGoodUserInventory = 0;
@@ -406,6 +399,10 @@ public class VirtualGood extends VirtualGoodData {
 		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualGood.VirtualGoodRelatedVirtualGood.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.VirtualGoodRelatedVirtualGood = cursor.getString(columnIndex);
+		
+		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualGood.VirtualGoodPos.toString());
+		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
+			this.VirtualGoodPos = cursor.getInt(columnIndex);
 		
 		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualGood.VirtualGoodQuantity.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
@@ -477,6 +474,7 @@ public class VirtualGood extends VirtualGoodData {
 		this.VirtualGoodMainCurrency			= item.VirtualGoodMainCurrency;
 		this.VirtualGoodSecondaryCurrency			= item.VirtualGoodSecondaryCurrency;
 		this.VirtualGoodRelatedVirtualGood			= item.VirtualGoodRelatedVirtualGood;
+		this.VirtualGoodPos			= item.VirtualGoodPos;
 		this.VirtualGoodQuantity			= item.VirtualGoodQuantity;
 		this.VirtualGoodMaxForUser			= item.VirtualGoodMaxForUser;
 		this.VirtualGoodUserInventory			= item.VirtualGoodUserInventory;
@@ -527,6 +525,8 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	
 		dictionary.put(LiFieldVirtualGood.VirtualGoodRelatedVirtualGood, VirtualGoodRelatedVirtualGood);
 	
+		dictionary.put(LiFieldVirtualGood.VirtualGoodPos, VirtualGoodPos);
+	
 		dictionary.put(LiFieldVirtualGood.VirtualGoodQuantity, VirtualGoodQuantity);
 	
 		dictionary.put(LiFieldVirtualGood.VirtualGoodMaxForUser, VirtualGoodMaxForUser);
@@ -566,6 +566,7 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		dbObject.put(LiFieldVirtualGood.VirtualGoodMainCurrency, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodSecondaryCurrency, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodRelatedVirtualGood, LiCoreDBmanager.TEXT,"");
+		dbObject.put(LiFieldVirtualGood.VirtualGoodPos, LiCoreDBmanager.INTEGER,1);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodQuantity, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodMaxForUser, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodUserInventory, LiCoreDBmanager.INTEGER,0);

@@ -5,12 +5,9 @@ import java.util.WeakHashMap;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,29 +20,24 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import applicasa.LiCore.LiErrorHandler;
-import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.Push.LiCallbackPush;
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 import applicasa.LiCore.communication.LiFilters;
 import applicasa.LiCore.communication.LiFilters.Condition;
 import applicasa.LiCore.communication.LiFilters.Operation;
 import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.communication.LiRequestConst.SortType;
 import applicasa.LiJson.LiJSONException;
 
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiChatGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiGCMPushMessage;
-import com.applicasa.ApplicasaManager.LiManager.LiObject;
 import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.Chat.Chat;
 import com.applicasa.Chat.ChatData.LiFieldChat;
 import com.applicasa.User.User;
 import com.appvilleegg.R;
-import com.example.appvilleegg.main.MainActivity;
 
 public class ChatActivity extends Activity implements OnClickListener {
 

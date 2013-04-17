@@ -3,9 +3,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import applicasa.LiCore.LiLocation;
 import applicasa.LiCore.LiField;
 import applicasa.LiJson.LiJSONObject;
+
 import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
 
 public class VirtualGoodData {
@@ -23,6 +23,7 @@ public class VirtualGoodData {
 	, VirtualGoodMainCurrency
 	, VirtualGoodSecondaryCurrency
 	, VirtualGoodRelatedVirtualGood
+	, VirtualGoodPos
 	, VirtualGoodQuantity
 	, VirtualGoodMaxForUser
 	, VirtualGoodUserInventory
@@ -65,6 +66,8 @@ public class VirtualGoodData {
 		public int VirtualGoodSecondaryCurrency;
 	
 		public String VirtualGoodRelatedVirtualGood;
+	
+		public int VirtualGoodPos;
 	
 		public int VirtualGoodQuantity;
 	
@@ -132,6 +135,14 @@ public class VirtualGoodData {
 		
 		public void setVirtualGoodRelatedVirtualGood(String VirtualGoodRelatedVirtualGood) {
 			this.VirtualGoodRelatedVirtualGood = VirtualGoodRelatedVirtualGood;
+		}
+		
+		public int getVirtualGoodPos() {
+			return VirtualGoodPos;
+		}
+		
+		public void setVirtualGoodPos(int VirtualGoodPos) {
+			this.VirtualGoodPos = VirtualGoodPos;
 		}
 		
 		public int getVirtualGoodQuantity() {
@@ -242,6 +253,9 @@ public class VirtualGoodData {
 			case VirtualGoodRelatedVirtualGood:
 				return VirtualGoodRelatedVirtualGood;
 				
+			case VirtualGoodPos:
+				return VirtualGoodPos;
+				
 			case VirtualGoodQuantity:
 				return VirtualGoodQuantity;
 				
@@ -306,6 +320,10 @@ public class VirtualGoodData {
 					
 			case VirtualGoodRelatedVirtualGood:
 					VirtualGoodRelatedVirtualGood = (String)value;
+					break;
+					
+			case VirtualGoodPos:
+					VirtualGoodPos = (Integer)value;
 					break;
 					
 			case VirtualGoodQuantity:

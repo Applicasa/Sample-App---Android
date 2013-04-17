@@ -126,9 +126,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		setContentView(R.layout.tab_host);
 		mActivity = this;
 		
-		
-		
-		LiSession.sessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity);
 		
 		initialiseTabHost();
 		
@@ -163,14 +161,14 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		refreshUI();
 		
 		// ReRegister for promotion callback 
-	    LiPromo.setPromoCallback(new LiPromotionCallback() {
+	    LiPromo.setPromoCallbackAndCheckForAvailablePromotions(new LiPromotionCallback() {
 			
 				@Override
 				public void onHasPromotionToDisplay(List<Promotion> promotions) {
 					// TODO Auto-generated method stub
 					promotions.get(0).show(TabsFragmentActivity.this,TabsFragmentActivity.this);
 				}
-		});
+		}, true);
 		
 	}
 

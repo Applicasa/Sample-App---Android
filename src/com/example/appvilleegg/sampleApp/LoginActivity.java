@@ -1,7 +1,5 @@
 package com.example.appvilleegg.sampleApp;
  
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,19 +15,11 @@ import android.widget.Toast;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiFilters.Operation;
-import applicasa.LiCore.communication.LiQuery;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.kit.facebook.LiFBmanager;
 import applicasa.kit.facebook.LiFacebookResponse.LiFacebookResponseLogin;
-import applicasa.kit.facebook.LiObjFacebookFriends;
 
 import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.User.User;
-import com.applicasa.User.UserData.LiFieldUser;
 import com.appvilleegg.R;
  
 public class LoginActivity extends Activity  {

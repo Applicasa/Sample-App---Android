@@ -1,5 +1,5 @@
 # cache for current jar dependecy. DO NOT EDIT.
 # format is <lastModified> <length> <SHA-1> <path>
 # Encoding is UTF-8
-1359022827517 385685 48c94ae70fa65718b382098237806a5909bb096e C:\Android\repositories\REPOSITORY\Appville-Android-public\libs\android-support-v4.jar
-1358769352217 385685 48c94ae70fa65718b382098237806a5909bb096e C:\Android\repositories\REPOSITORY\facebook\libs\android-support-v4.jar
+1363100700725 393154 307c1cc532eabbf1d135b43e5c983c9da700449d C:\Android\repositories\REPOSITORY\Appville-Android-public\libs\android-support-v4.jar
+1362920558677 393154 307c1cc532eabbf1d135b43e5c983c9da700449d C:\Android\repositories\REPOSITORY\FacebookSDK\libs\android-support-v4.jar

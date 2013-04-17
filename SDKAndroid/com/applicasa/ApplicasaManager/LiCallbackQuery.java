@@ -1,16 +1,17 @@
 package com.applicasa.ApplicasaManager;
 
 import java.util.List;
+
 import applicasa.LiCore.LiErrorHandler;
-import org.apache.http.NameValuePair;
+
+import com.applicasa.Chat.Chat;
+import com.applicasa.Dynamic.Dynamic;
+import com.applicasa.Places.Places;
+import com.applicasa.Tips.Tips;
 import com.applicasa.User.User;
 import com.applicasa.VirtualCurrency.VirtualCurrency;
 import com.applicasa.VirtualGood.VirtualGood;
 import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
-import com.applicasa.Dynamic.Dynamic;
-import com.applicasa.Places.Places;
-import com.applicasa.Tips.Tips;
-import com.applicasa.Chat.Chat;
 public class LiCallbackQuery {
 	// User Get By Id Callback
 	public static interface LiUserGetByIDCallback {

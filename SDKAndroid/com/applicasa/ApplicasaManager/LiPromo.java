@@ -21,6 +21,16 @@ public class LiPromo {
 	}
 	
 	/**
+	 * Sets the promotion callback
+	 * @param liPromotionCallback
+	 * @param shouldCheck - indicate whether after setting the callback to check for pending promotions
+	 */
+	public static void setPromoCallbackAndCheckForAvailablePromotions(LiPromotionCallback liPromotionCallback, boolean shouldCheck)
+	{
+		LiEventManager.setPromoCallbackAndCheckForAvailablePromotions(liPromotionCallback,shouldCheck);
+	}
+	
+	/**
 	 * 
 	 * @return the available promotions
 	 */

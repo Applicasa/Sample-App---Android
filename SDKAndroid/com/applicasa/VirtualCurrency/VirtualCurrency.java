@@ -1,39 +1,20 @@
 package com.applicasa.VirtualCurrency;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-import applicasa.LiCore.communication.LiUtility;
-
-
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetByIDCallback;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiVirtualCurrencyGetArrayCallback;
-import com.applicasa.ApplicasaManager.LiManager.LiObject;
-
+import android.app.Activity;
 import android.database.Cursor;
-import applicasa.LiCore.sqlDB.database.LiDbObject;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.LiCore.communication.LiObjRequest;
-import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiQuery;
-import applicasa.LiCore.communication.LiFilters.Operation;
+import applicasa.LiCore.communication.LiUtility;
 import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
+import applicasa.LiCore.sqlDB.database.LiDbObject;
 import applicasa.LiJson.LiJSONException;
 import applicasa.LiJson.LiJSONObject;
-
-
 import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
 import applicasa.kit.IAP.Callbacks.LiCallbackVirtualCurrencyRequest;
-import android.app.Activity;
 
 public class VirtualCurrency extends VirtualCurrencyData {
  /** End of Basic SDK **/
@@ -112,7 +93,8 @@ public class VirtualCurrency extends VirtualCurrencyData {
 		return IAP.getAllVirtualCurrencyByKind(lilicurrency);
 	} 
 
-	
+	 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////                                                   ////////////////////////////////////////
@@ -128,6 +110,7 @@ public class VirtualCurrency extends VirtualCurrencyData {
 		this.VirtualCurrencyGoogleIdentifier = "";
 		this.VirtualCurrencyDescription = "";
 		this.VirtualCurrencyPrice = 0f;
+		this.VirtualCurrencyPos = 1;
 		this.VirtualCurrencyCredit = 0;
 		this.VirtualCurrencyKind = null;
 		this.VirtualCurrencyImageA = "";
@@ -197,6 +180,10 @@ public class VirtualCurrency extends VirtualCurrencyData {
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.VirtualCurrencyPrice = cursor.getFloat(columnIndex);
 		
+		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualCurrency.VirtualCurrencyPos.toString());
+		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
+			this.VirtualCurrencyPos = cursor.getInt(columnIndex);
+		
 		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualCurrency.VirtualCurrencyCredit.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.VirtualCurrencyCredit = cursor.getInt(columnIndex);
@@ -261,6 +248,7 @@ public class VirtualCurrency extends VirtualCurrencyData {
 		this.VirtualCurrencyGoogleIdentifier			= item.VirtualCurrencyGoogleIdentifier;
 		this.VirtualCurrencyDescription			= item.VirtualCurrencyDescription;
 		this.VirtualCurrencyPrice			= item.VirtualCurrencyPrice;
+		this.VirtualCurrencyPos			= item.VirtualCurrencyPos;
 		this.VirtualCurrencyCredit			= item.VirtualCurrencyCredit;
 		this.VirtualCurrencyKind			= item.VirtualCurrencyKind;
 		this.VirtualCurrencyImageA			= item.VirtualCurrencyImageA;
@@ -290,11 +278,19 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	try{
 		LiJSONObject dictionary = new LiJSONObject();
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyID, VirtualCurrencyID);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyTitle, VirtualCurrencyTitle);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyAppleIdentifier, VirtualCurrencyAppleIdentifier);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyGoogleIdentifier, VirtualCurrencyGoogleIdentifier);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyDescription, VirtualCurrencyDescription);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyPrice, VirtualCurrencyPrice);
+	
+		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyPos, VirtualCurrencyPos);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyCredit, VirtualCurrencyCredit);
 	
 		if (VirtualCurrencyKind != null)
@@ -303,12 +299,17 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 			dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyKind, 1);
 	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyImageA, VirtualCurrencyImageA);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyImageB, VirtualCurrencyImageB);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyImageC, VirtualCurrencyImageC);
 	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyIsDeal, VirtualCurrencyIsDeal);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyInAppleStore, VirtualCurrencyInAppleStore);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyInGoogleStore, VirtualCurrencyInGoogleStore);
+	
 		dictionary.put(LiFieldVirtualCurrency.VirtualCurrencyLastUpdate, LiUtility.convertDateToDictionaryRepresenataion(VirtualCurrencyLastUpdate));
 	
 		return dictionary;
@@ -328,6 +329,7 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		dbObject.put(LiFieldVirtualCurrency.VirtualCurrencyGoogleIdentifier, LiCoreDBmanager.TEXT,"");
 		dbObject.put(LiFieldVirtualCurrency.VirtualCurrencyDescription, LiCoreDBmanager.TEXT,"");
 		dbObject.put(LiFieldVirtualCurrency.VirtualCurrencyPrice, LiCoreDBmanager.REAL,0f);
+		dbObject.put(LiFieldVirtualCurrency.VirtualCurrencyPos, LiCoreDBmanager.INTEGER,1);
 		dbObject.put(LiFieldVirtualCurrency.VirtualCurrencyCredit, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldVirtualCurrency.VirtualCurrencyKind, LiCoreDBmanager.INTEGER,1);
 		dbObject.put(LiFieldVirtualCurrency.VirtualCurrencyImageA, LiCoreDBmanager.TEXT,"");

@@ -12,9 +12,9 @@ import applicasa.kit.IAP.Callbacks.LiCallbackIAPBalanceChanged;
 import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
 import applicasa.kit.IAP.Callbacks.LiCallbackVirtualCurrencyRequest;
 import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
-import applicasa.kit.IAP.billing.Utils.LiPurchase;
 import applicasa.kit.IAP.billing.Utils.LiIabHelper.OnConsumeFinishedListener;
 import applicasa.kit.IAP.billing.Utils.LiIabHelper.QueryInventoryFinishedListener;
+import applicasa.kit.IAP.billing.Utils.LiPurchase;
 
 import com.applicasa.VirtualCurrency.VirtualCurrency;
 import com.applicasa.VirtualGood.VirtualGood;

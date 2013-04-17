@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONException;
@@ -32,18 +31,19 @@ import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 import applicasa.kit.facebook.LiObjFacebookFriends;
 
+import com.applicasa.ApplicasaManager.LiConfig;
 import com.appvilleegg.R;
 import com.facebook.FacebookException;
+import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.Session.OpenRequest;
 
 public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 	private static FriendsArrayAdapter adapter;
-	private Activity activity;
+	private Activity mActivity;
 	private List<LiObjFacebookFriends> friends = null;
 	private HashMap<String, Bitmap> imageMap;
 	
@@ -64,62 +64,61 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 	public FriendsArrayAdapter(Activity activity, final List<LiObjFacebookFriends> friends) {
 		super(activity, R.layout.friends_list, friends);
 		
-		this.activity = activity;
+		this.mActivity = activity;
 		this.friends = friends;
 		adapter = this;
 		
 		
 		imageMap = new HashMap<String, Bitmap>();
 		// get our thumbnail generation task ready to execute
-		
-		// Using an AsyncTask to load the slow images in a background thread
-		
-		Iterator<LiObjFacebookFriends> iter = friends.iterator();
-		while(iter.hasNext())
-		{
-			
-			new AsyncTask<String, Void, Boolean>() {
-	
-			    @Override
-			    protected Boolean doInBackground(String ... params) {
-			    	final String url = params[0];
-			    	LiFileCacher.getBitmapFromCache(url, new LiCallbackGetCachedFile() {
-						
-						public void onSuccessfull(InputStream is) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						public void onFailure(LiErrorHandler error) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						public void onSuccessfullBitmap(Bitmap bitmap) {
-							// TODO Auto-generated method stub
-							imageMap.put(url, bitmap);
-							publishProgress();
-						}
-					});
-			    	return true;
-			    }
-			    /**
-			     * Updates the UI after receiving the Image
-			     */
-			    protected void onProgressUpdate(Void... progress) {
-			    	cacheUpdated();
-			     }
-	
-			}.execute(iter.next().mFacebookImage);
-		}
 	}
 	
+	private void downloadMaterial(String url)
+	 {
+			{
+				if (!imageMap.containsKey(url))
+				{
+					new AsyncTask<String, Void, Boolean>() {
+					    @Override
+					    protected Boolean doInBackground(String ... params) {
+					    	final String url = params[0];
+					    	LiFileCacher.getBitmapFromCache(url, new LiCallbackGetCachedFile() {
+								
+								public void onSuccessfull(InputStream is) {
+									// TODO Auto-generated method stub
+									
+								}
+								
+								public void onFailure(LiErrorHandler error) {
+									// TODO Auto-generated method stub
+									
+								}
+
+								public void onSuccessfullBitmap(Bitmap bitmap) {
+									// TODO Auto-generated method stub
+									imageMap.put(url, bitmap);
+									publishProgress();
+								}
+							});
+					    	return true;
+					    }
+					    /**
+					     * Updates the UI after receiving the Image
+					     */
+					    protected void onProgressUpdate(Void... progress) {
+					    	cacheUpdated();
+					     }
+			
+					}.execute(url);
+				}
+			}
+	 }
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
 		if (rowView == null) {
-			LayoutInflater inflater = activity.getLayoutInflater();
+			LayoutInflater inflater = mActivity.getLayoutInflater();
 			rowView = inflater.inflate(R.layout.friends_list, null);
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.itemName = (TextView) rowView.findViewById(R.id.friend_textName);
@@ -141,6 +140,7 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 				holder.btnFriend.setClickable(true);
 				holder.btnFriend.setImageResource(R.drawable.added);
 				holder.bar.setVisibility(View.INVISIBLE);
+				
 				holder.btnFriend.setOnClickListener(new OnClickListener() {
 					
 					public void onClick(View v) {
@@ -150,23 +150,18 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 							 
 							 if (session == null)
 							 {
-								 LiLogger.logInfo(TAG, "Facebook session is null");
-								 return;
+								 LiLogger.logInfo(TAG , "Facebook session is null");
+								 if (LiConfig.getFbApplicationKey().startsWith("<FB_APPLICATION_KEY>"))
+					        	 {	// fb id was added as meta data
+									 session = Session.openActiveSession(mActivity,true,null);	        		
+					        	 }
+					        	else
+					        	{
+					        		session = new Session.Builder(mActivity).setApplicationId(LiConfig.getFbApplicationKey()).build();
+					        		Session.setActiveSession(session);
+					        	}
 							 }
 							 
-							 // Check for publish permissions    
-							 List<String> permissions = session.getPermissions();
-						     if (!isSubsetOf(PERMISSIONS, permissions)) {
-						    	 pendingPublishReauthorization = true;
-						    	 session.close();
-//						         Session.NewPermissionsRequest newPermissionsRequest = new Session
-//						                    .NewPermissionsRequest(this, PERMISSIONS);
-						        session = new Session(activity);
-						        
-						        session.openForPublish(new OpenRequest(activity).setPermissions(PERMISSIONS));
-					            return;
-					        }
-						        
 						     Bundle params = new Bundle();
 						     params.putString("message", "Download AppVille");
 						     params.putString("name", "AppVille");
@@ -185,9 +180,9 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 						                } catch (JSONException e) {
 						                    Log.i(TAG, "JSON error "+ e.getMessage());
 						                }
-						                FacebookException error = response.getError();
+						                FacebookRequestError error = response.getError();
 						                if (error != null) {
-						                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+						                    Toast.makeText(getContext(), error.getErrorMessage(), Toast.LENGTH_SHORT).show();
 						                    } else {
 						                        Toast.makeText(getContext(), "Invitation sent", Toast.LENGTH_LONG).show();
 						                }
@@ -208,7 +203,6 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 				holder.btnFriend.setClickable(false);
 				holder.btnFriend.setImageResource(R.drawable.add);
 			}
-			
 			if (imageMap.containsKey(friends.get(position).mFacebookImage))
 			{
 					holder.pic.setImageDrawable(new BitmapDrawable(imageMap.get(friends.get(position).mFacebookImage)));
@@ -217,6 +211,10 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 					holder.pic.setMinimumHeight( 10);
 					holder.pic.setMinimumWidth(10);
 					holder.bar.setVisibility(View.INVISIBLE);
+			}
+			else
+			{
+				downloadMaterial(friends.get(position).mFacebookImage);
 			}
 					
 		}

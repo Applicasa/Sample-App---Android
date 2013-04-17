@@ -81,7 +81,7 @@ public class RegisterActivity extends Activity  {
 		title_register = (ImageView)findViewById(R.id.title_register);
 		progressBarBig = (ProgressBar)findViewById(R.id.progressBarBig);
 		
-		LiSession.SessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity);
 		
 		view = (ImageView)findViewById(R.id.img_picture);
 		
@@ -395,12 +395,12 @@ public class RegisterActivity extends Activity  {
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.SessionEnd(mActivity);
+		LiSession.sessionEnd(mActivity);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.SessionResume(mActivity);
+		LiSession.sessionResume(mActivity);
 		super.onResume();
 	}
 	

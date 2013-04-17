@@ -1,27 +1,23 @@
 package com.applicasa.ApplicasaManager;
 
-import java.util.List;
-import java.util.ArrayList;
-import org.apache.http.NameValuePair;
 import java.util.HashMap;
 import java.util.Map;
-	/** Applicasa imports **/
-import com.applicasa.User.User;
-import com.applicasa.VirtualCurrency.VirtualCurrency;
-import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
-import com.applicasa.Dynamic.Dynamic;
-import com.applicasa.Places.Places;
-import com.applicasa.Tips.Tips;
-import com.applicasa.Chat.Chat;
-import com.applicasa.VirtualGood.VirtualGood;
-import applicasa.LiCore.Applicasa;
-import applicasa.LiCore.LiErrorHandler;
-import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
+
 import android.content.Context;
-import applicasa.LiCore.Push.LiPushManager;
+import applicasa.LiCore.Applicasa;
+import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
 import applicasa.LiJson.LiJSONArray;
 import applicasa.LiJson.LiJSONException;
 import applicasa.kit.IAP.Callbacks.LiCallbackIAPInitialize;
+
+import com.applicasa.Chat.Chat;
+import com.applicasa.Dynamic.Dynamic;
+import com.applicasa.Places.Places;
+import com.applicasa.Tips.Tips;
+import com.applicasa.User.User;
+import com.applicasa.VirtualCurrency.VirtualCurrency;
+import com.applicasa.VirtualGood.VirtualGood;
+import com.applicasa.VirtualGoodCategory.VirtualGoodCategory;
 
 public class LiManager {
 	

@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
-import applicasa.kit.facebook.LiFacebookResponse;
 import applicasa.kit.facebook.LiFacebookResponse.LiFacebookResponseGetFriends;
 import applicasa.kit.facebook.LiObjFacebookFriends;
 

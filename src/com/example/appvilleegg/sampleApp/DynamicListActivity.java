@@ -19,8 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.communication.LiObjRequest;
 import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
+import applicasa.LiCore.communication.LiObjRequest;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 
@@ -46,7 +46,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 		mActivity = this;
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		
-		LiSession.sessionStart(this,null);
+		LiSession.sessionStart(this);
 		refreshView();
 		
 		
@@ -145,7 +145,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 								// TODO Auto-generated method stub
 								dialog.dismiss();
 								Log.e("Failed Saving Item", arg0.getMessage());
-								Toast.makeText(mActivity, "Failed Saving Item "+arg0.ErrorMessage, Toast.LENGTH_LONG).show();
+								Toast.makeText(mActivity, "Failed Saving Item "+arg0.errorMessage, Toast.LENGTH_LONG).show();
 								Log.e("Failed Saving Item", arg0.getMessage());
 							}
 							
@@ -182,7 +182,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 										// TODO Auto-generated method stub
 										dialog.dismiss();
 										Log.e("Failed deleteing Item", arg0.getMessage());
-										Toast.makeText(mActivity, "Failed deleteing Item "+arg0.ErrorMessage, Toast.LENGTH_LONG).show();
+										Toast.makeText(mActivity, "Failed deleteing Item "+arg0.errorMessage, Toast.LENGTH_LONG).show();
 										Log.e("Failed Saving Item", arg0.getMessage());
 									}
 									
@@ -202,12 +202,12 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.SessionEnd(mActivity);
+		LiSession.sessionEnd(mActivity);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.SessionResume(mActivity);
+		LiSession.sessionResume(mActivity);
 		super.onResume();
 	}
 }

@@ -11,24 +11,24 @@ public class LiSession {
 	/**
 	 * Method to indicate when the app session starts
 	 */
-	@Deprecated
-	public static void SessionStart(Context context,LiPromotionCallback promotionCallback)
+	public static void sessionStart(Context context)
 	{
-		sessionStart(context, promotionCallback);
+		LiSessionManager.sessionStart(context);
 	}
+	
+	/**
+	 * After Applicasa Initialize sessionStart is called Automatically
+	 * Don't Use this method, LiPromotionCallback won't be called
+	 */
+	@Deprecated
 	public static void sessionStart(Context context,LiPromotionCallback promotionCallback)
 	{
-		LiSessionManager.sessionStart(context, promotionCallback);
+		LiSessionManager.sessionStart(context,promotionCallback);
 	}
 	
 	/**
 	 * Method to indicate when the app session Resumes
 	 */
-	@Deprecated
-	public static void SessionResume(Context context)
-	{
-		sessionResume(context);
-	}
 	public static void sessionResume(Context context)
 	{
 		LiSessionManager.sessionResume(context);
@@ -38,11 +38,6 @@ public class LiSession {
 	 * Method to indicate when the app session Ends
 	 * @throws LiErrorHandler 
 	 */
-	@Deprecated
-	public static void SessionEnd(Context context) 
-	{
-		sessionEnd(context);
-	}
 	public static void sessionEnd(Context context) 
 	{
 		LiSessionManager.sessionEnd(context);

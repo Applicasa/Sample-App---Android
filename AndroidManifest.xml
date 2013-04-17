@@ -1,13 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.appvilleegg"
-    android:versionCode="3"
-    android:versionName="3.0" >
+    android:versionCode="5"
+    android:versionName="4.1" >
 
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="15" />
 
- <!-- Required permission to use in-app billing. -->
+    <!-- Required permission to use in-app billing. -->
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permiss.NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />

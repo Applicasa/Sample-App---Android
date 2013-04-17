@@ -1,49 +1,41 @@
 package com.applicasa.User;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-import applicasa.LiCore.communication.LiUtility;
-
-import applicasa.LiCore.LiLocation;
-
-import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetByIDCallback;
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetArrayCallback;
-import com.applicasa.ApplicasaManager.LiManager.LiObject;
-
-import android.database.Cursor;
-import applicasa.LiCore.sqlDB.database.LiDbObject;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiUtility;
-import applicasa.LiCore.LiErrorHandler;
-import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
-import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.LiCore.communication.LiObjRequest;
-import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
-import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiQuery;
-import applicasa.LiCore.communication.LiFilters.Operation;
-import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
-import applicasa.LiJson.LiJSONException;
-import applicasa.LiJson.LiJSONObject;
-
-
-import android.content.Intent;
-import applicasa.LiCore.communication.LiCallback;
-import applicasa.LiCore.Applicasa;
-import applicasa.LiCore.LiLocationCallback;
-import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
-import applicasa.LiCore.Applicasa.LiSpendingProfile;
-import applicasa.LiCore.Applicasa.LiUsageProfile;
-import applicasa.LiCore.LiLogger;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v4.app.Fragment;
+import applicasa.LiCore.Applicasa;
+import applicasa.LiCore.Applicasa.LiSpendingProfile;
+import applicasa.LiCore.Applicasa.LiUsageProfile;
+import applicasa.LiCore.LiErrorHandler;
+import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
+import applicasa.LiCore.LiLocation;
+import applicasa.LiCore.LiLogger;
+import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
+import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
+import applicasa.LiCore.communication.LiFilters;
+import applicasa.LiCore.communication.LiFilters.Operation;
+import applicasa.LiCore.communication.LiObjRequest;
+import applicasa.LiCore.communication.LiQuery;
+import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.LiCore.communication.LiRequestConst.QueryKind;
+import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiCore.communication.LiRequestConst.RequestCallback;
+import applicasa.LiCore.communication.LiUtility;
+import applicasa.LiCore.sqlDB.database.LiCoreDBmanager;
+import applicasa.LiCore.sqlDB.database.LiDbObject;
+import applicasa.LiJson.LiJSONException;
+import applicasa.LiJson.LiJSONObject;
 import applicasa.kit.facebook.LiFacebookResponse.LiFacebookResponseGetFriends;
 import applicasa.kit.facebook.LiFacebookResponse.LiFacebookResponseLogin;
 import applicasa.kit.facebook.LiObjFacebookRequest;
+
+import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetArrayCallback;
+import com.applicasa.ApplicasaManager.LiCallbackQuery.LiUserGetByIDCallback;
+import com.applicasa.ApplicasaManager.LiManager.LiObject;
 
 public class User extends UserData {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,19 +1,18 @@
 package com.applicasa.ApplicasaManager;
 
 public class LiConfig {
+			
+	/**
+	* Enter Application ID
+	*/
+	private final static String APPLICATION_ID = "705E89";
+	
+	/**
+	 * Enter Application Key
+	 */
+	private final static String APPLICATION_KEY = "179adc22b6213c63";
+	
 
-		
-		/**
-		* Enter Application ID
-		*/
-		private final static String APPLICATION_ID = "705E89";
-		
-		/**
-		 * Enter Application Key
-		 */
-		private final static String APPLICATION_KEY = "179adc22b6213c63";
-		
-		
 		/**
 		* Enter GCM SenderID (projectId or email)
 		*/
@@ -55,7 +54,7 @@ public class LiConfig {
 		/**
 		 * Enable Applicasa Debug 
 		 */
-		private final static boolean ENABLE_APPLICASA_DEBUG = false;
+		private final static boolean ENABLE_APPLICASA_DEBUG = true;
 
 		/**
 	     * Schema Generated Timestamp in sec
@@ -91,7 +90,9 @@ public class LiConfig {
 		/**
 		* Enter Google public key
 		*/
-		private final static String GOOGLE_PLAY_PUBLIC_KEY =  "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApGDOBXSVthJnYxJ7xcMGV7ixZ97Xw9CWN4KGtgItEG4Ltth1P261HCxAdplyK83X0XCFNSd/JXin2yD37eX7eTyeEk7HFxvCu7Y0MqB8L8dOkCyUcit859a9WjTYJG5DrBjU23e2DZ0WrnlvghE/A0FWzMzBDrJg30gafK4Iy8gXHVSFLDn/qPfvQgKB0X0GwUjteImoNLZemaht8LE40v8BapkHHmeizs5QCj/Mz5lyY6W7XDjlCGdWN+D4PfwB7T3j3Jpp8cvUaOl7W1pM8QqWyDuOUxSo14dC+TLEcpmYUlazbAEs9FN0NL/rb6pjxNw85d/CNtEmv8XoIlAHrQIDAQAB";
+		private final static String GOOGLE_PLAY_PUBLIC_KEY =  "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApGDOBXSVthJnYxJ7xcMGV7ixZ97Xw9CWN4KGtgItEG4Ltth1P261HCxAdplyK83X0XCFNSd/" +
+				"JXin2yD37eX7eTyeEk7HFxvCu7Y0MqB8L8dOkCyUcit859a9WjTYJG5DrBjU23e2DZ0WrnlvghE/A0FWzMzBDrJg30gafK4Iy8gXHVSFLDn/qPfvQgKB0X0GwUjteImoNLZemaht8LE40v8BapkHHmeizs5QCj/" +
+				"Mz5lyY6W7XDjlCGdWN+D4PfwB7T3j3Jpp8cvUaOl7W1pM8QqWyDuOUxSo14dC+TLEcpmYUlazbAEs9FN0NL/rb6pjxNw85d/CNtEmv8XoIlAHrQIDAQAB";
 		
 		
 		/**
@@ -187,6 +188,31 @@ public class LiConfig {
 		public static boolean isSandboxModeEnabled() {
 			return ENABLE_IAP_SANDBOX;
 		}
-
-	
+		
+		
+		/**
+		* Enter CHARTBOOST ID
+		*/
+		private final static String CHARTBOOST_ID = "4f7b433509b6025804000002";
+		/**
+		 * Enter CHARTBOOST SIGNATURE 
+		 */
+		private final static String CHARTBOOST_SIGNATURE= "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+		
+		/**
+		 * Should enable Chartboost Promotions
+		 */
+		private final static boolean ENABLE_CHARTBOOST = false;
+		
+		public static String getCahartboostId() {
+			return CHARTBOOST_ID;
+		}
+		
+		public static String getCahartboostSignature() {
+			return CHARTBOOST_SIGNATURE;
+		}
+		
+		public static boolean isChartboostEnabled() {
+			return ENABLE_CHARTBOOST;
+		}
 }

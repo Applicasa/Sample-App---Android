@@ -1,7 +1,5 @@
 package com.example.appvilleegg.main;
 
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
@@ -18,20 +16,10 @@ import android.widget.Toast;
 import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
-import applicasa.LiCore.LiLogger;
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiFilters.Operation;
-import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
 import applicasa.LiCore.communication.LiObjRequest.LiCallbackInitialize;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.LiCore.communication.LiRequestConst.SortType;
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback;
-import applicasa.kit.IAP.billing.Utils.LiIabHelper;
-import applicasa.kit.IAP.billing.Utils.LiIabResult;
-import applicasa.kit.IAP.billing.Utils.LiInventory;
-import applicasa.kit.IAP.billing.Utils.LiPurchase;
 
 import com.applicasa.ApplicasaManager.LiManager;
 import com.applicasa.ApplicasaManager.LiPromo;
@@ -41,7 +29,6 @@ import com.applicasa.ApplicasaManager.LiUserLocation;
 import com.applicasa.Dynamic.Dynamic;
 import com.applicasa.Promotion.Promotion;
 import com.applicasa.User.User;
-import com.applicasa.User.UserData.LiFieldUser;
 import com.appvilleegg.R;
 import com.example.appvilleegg.sampleApp.DynamicListActivity;
 import com.example.appvilleegg.sampleApp.FriendsListActivity;
@@ -49,7 +36,6 @@ import com.example.appvilleegg.sampleApp.LoginActivity;
 import com.example.appvilleegg.sampleApp.RegisterActivity;
 import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
 import com.example.appvilleegg.sampleApp.UsersRadiusListActivity;
-import com.facebook.Session;
 
 public class MainActivity extends Activity implements LiCallbackInitialize {
 	
@@ -158,7 +144,12 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		
 		//Start session
 		Log.w("Session", "Start Main Activity");
-		LiSession.sessionStart(this,promoCallback);
+		
+		/**
+		 *  No need to call this anymore
+		 *  After initalize applicasa calls sessionstart automatically
+		 **/
+		//LiSession.sessionStart(this);
 		
 		// Updates User Location
 		LiUserLocation.updateLocation();
@@ -304,7 +295,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	}
 	protected void onResume() {
 		super.onResume();
-		LiSession.sessionResume(context);
+		LiSession.sessionResume(this);
 		
 		if (Applicasa.isInitialized())
 			initView();

@@ -1,7 +1,5 @@
 package com.applicasa.ApplicasaManager;
 
-import com.appvilleegg.R;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +7,8 @@ import android.content.Intent;
 import android.util.Log;
 import applicasa.LiCore.Push.LiPushIntentService;
 import applicasa.LiCore.Push.LiPushManager;
+
+import com.appvilleegg.R;
 
 public class LiGCMReceiver extends BroadcastReceiver {
 

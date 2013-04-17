@@ -3,7 +3,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import applicasa.LiCore.LiLocation;
 import applicasa.LiCore.LiField;
 import applicasa.LiJson.LiJSONObject;
 import applicasa.kit.IAP.IAP.LiCurrency;
@@ -23,6 +22,7 @@ public class VirtualCurrencyData {
 	, VirtualCurrencyGoogleIdentifier
 	, VirtualCurrencyDescription
 	, VirtualCurrencyPrice
+	, VirtualCurrencyPos
 	, VirtualCurrencyCredit
 	, VirtualCurrencyKind
 	, VirtualCurrencyImageA
@@ -64,6 +64,8 @@ public class VirtualCurrencyData {
 		public String VirtualCurrencyDescription;
 	
 		public float VirtualCurrencyPrice;
+	
+		public int VirtualCurrencyPos;
 	
 		public int VirtualCurrencyCredit;
 	
@@ -130,6 +132,14 @@ public class VirtualCurrencyData {
 		
 		public void setVirtualCurrencyPrice(float VirtualCurrencyPrice) {
 			this.VirtualCurrencyPrice = VirtualCurrencyPrice;
+		}
+		
+		public int getVirtualCurrencyPos() {
+			return VirtualCurrencyPos;
+		}
+		
+		public void setVirtualCurrencyPos(int VirtualCurrencyPos) {
+			this.VirtualCurrencyPos = VirtualCurrencyPos;
 		}
 		
 		public int getVirtualCurrencyCredit() {
@@ -232,6 +242,9 @@ public class VirtualCurrencyData {
 			case VirtualCurrencyPrice:
 				return VirtualCurrencyPrice;
 				
+			case VirtualCurrencyPos:
+				return VirtualCurrencyPos;
+				
 			case VirtualCurrencyCredit:
 				return VirtualCurrencyCredit;
 				
@@ -293,6 +306,10 @@ public class VirtualCurrencyData {
 					
 			case VirtualCurrencyPrice:
 					VirtualCurrencyPrice = (Float)value;
+					break;
+					
+			case VirtualCurrencyPos:
+					VirtualCurrencyPos = (Integer)value;
 					break;
 					
 			case VirtualCurrencyCredit:
