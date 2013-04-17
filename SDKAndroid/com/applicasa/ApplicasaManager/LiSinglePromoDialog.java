@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import applicasa.LiCore.LiErrorHandler;
+import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
@@ -35,6 +36,10 @@ import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResult
 import applicasa.LiCore.promotion.sessions.LiPromotionCallback.LiPromotionResultCallback;
 import applicasa.LiJson.LiJSONException;
 import applicasa.kit.IAP.IAP.LiCurrency;
+import applicasa.kit.IAP.IAP.LiIapAction;
+import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
+import applicasa.kit.IAP.Callbacks.LiCallbackVirtualCurrencyRequest;
+import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
 
 import com.applicasa.Promotion.Promotion;
 import com.applicasa.VirtualCurrency.VirtualCurrency;
@@ -63,6 +68,7 @@ public class LiSinglePromoDialog extends Dialog   {
 	
 	protected boolean isBackgroundAvailable = false;
 	protected boolean isButtonAvailable = false;
+	protected LiPromotionResult liPromotionResult;
 	
     public LiSinglePromoDialog(final Activity activity, Promotion singlePromo, LiPromotionResultCallback liPromotionResultCallback) {
         super(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -71,26 +77,16 @@ public class LiSinglePromoDialog extends Dialog   {
         singlePromo.changeWaitingToBeViewedToFalse();
         mLiPromotionResultCallback = liPromotionResultCallback;
         isPromotionDisplayed = true;
-        
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-		            WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
-		
+    /**
+     * Loads all Promotion Data
+     */
+    public void loadPromotion() {
 		/**
 		 * Call to create the layouts
 		 */
 		createPromoLayout();
-		
-		mSpinner = new ProgressDialog(getContext());
-        mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mSpinner.setMessage("Loading Promotion...");
-        mSpinner.show();
 		
 		/**
 		 * Sets the Promos Button
@@ -106,6 +102,20 @@ public class LiSinglePromoDialog extends Dialog   {
 		 * Loads the promotion materials
 		 */
 		LoadPromo();
+	}
+    
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+		            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
+//		mSpinner = new ProgressDialog(getContext());
+//        mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        mSpinner.setMessage("Loading Promotion...");
+//        mSpinner.show();
 	}
     
     /**
@@ -185,8 +195,6 @@ public class LiSinglePromoDialog extends Dialog   {
             public void onClick(View v) {
         		// updates analytics that the Promo was only viewed
             	handleExit();
-            	
-               
             }
         });
        
@@ -213,7 +221,6 @@ public class LiSinglePromoDialog extends Dialog   {
 			}
 
 			public void onSuccessfullBitmap(Bitmap bitmap) {
-				
 				Drawable dr = new BitmapDrawable(bitmap);
 				mRelativeLayout.setBackgroundDrawable(dr);
 				// indicates bg is ready
@@ -251,8 +258,8 @@ public class LiSinglePromoDialog extends Dialog   {
 	protected void showPromo() {
 		if (isBackgroundAvailable && isButtonAvailable)
 		{
-			 mSpinner.dismiss();
 			 mFrameLayout.addView(mRelativeLayout, rl);
+			 show();
 		}
 	}
 
@@ -271,6 +278,9 @@ public class LiSinglePromoDialog extends Dialog   {
 				  case NOTHING:
 					  if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultNothing, null);
+					  
+					  isPromotionDisplayed = false;
+					  dismiss();
 					  
 					  break;
 				  case LINK:
@@ -322,51 +332,40 @@ public class LiSinglePromoDialog extends Dialog   {
 					  if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultStringInfo, text);
 					  
+					  isPromotionDisplayed = false;
+					  dismiss();
+					  
 					  break;
 				  case GIVE_VC:
 					  int amount = mSinglePromo.PromotionActionData.getInt("amount");
 					  int vcKind = mSinglePromo.PromotionActionData.getInt("virtualCurrencyKind");
-					  LiStore.giveVirtualCurrency(amount, LiCurrency.values()[vcKind], null);
-					  /**
-					   * Notifies IAP Obeserver
-					   */
-					  if (mLiPromotionResultCallback != null)
-		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded,(vcKind==1)?LiPromotionResult.PromotionResultGiveMainCurrencyVirtualCurrency:
-		                 		LiPromotionResult.PromotionResultGiveSeconedaryCurrencyVirtualCurrency, amount);
-					  
+					  liPromotionResult = (LiCurrency.values()[vcKind] == LiCurrency.MainCurrency)? LiPromotionResult.PromotionResultGiveMainCurrencyVirtualCurrency:LiPromotionResult.PromotionResultGiveSeconedaryCurrencyVirtualCurrency;
+					  LiStore.giveVirtualCurrency(amount, LiCurrency.values()[vcKind], virualCurrencyCallback);
+					 					  
 					  break;
 				  case GIVE_VG:
 					  String id= mSinglePromo.PromotionActionData.getString("_id");
 					  VirtualGood item = LiStore.getVirtualGoodById(id);
-					  LiStore.giveVirtualGoods(item, 1 ,null );
+					  liPromotionResult = LiPromotionResult.PromotionResultGiveVirtualGood;
+					  LiStore.giveVirtualGoods(item, 1 ,virtualGoodCallback );
 					 
-					  if (mLiPromotionResultCallback != null)
-		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultGiveVirtualGood, item);
-					  
 					  break;
 				  case DEAL_VC:
 					   id= mSinglePromo.PromotionActionData.getString("_id");
 					   VirtualCurrency itemVC = LiStore.getVirtualCurrencyDealById(id);
-					   result = LiStore.buyVirtualCurrency(mActivity, itemVC, null );
+					   liPromotionResult = (itemVC.VirtualCurrencyKind==LiCurrency.MainCurrency)?LiPromotionResult.PromotionResultDealMainVirtualCurrency:
+	                 		LiPromotionResult.PromotionResultDealSeconedaryVirtualCurrency;
+					   result = LiStore.buyVirtualCurrency(mActivity, itemVC, virtualCurrencyPurchaseCallback );
 					   
-					   if (mLiPromotionResultCallback != null)
-		                 	mLiPromotionResultCallback.onPromotionResultCallback(result?LiPromotionAction.Succeded:LiPromotionAction.Failed, (itemVC.VirtualCurrencyKind==LiCurrency.MainCurrency)?LiPromotionResult.PromotionResultDealMainVirtualCurrency:
-		                 		LiPromotionResult.PromotionResultDealSeconedaryVirtualCurrency, itemVC);
+					   
 					  break;
 				  case DEAL_VG:
 					   id= mSinglePromo.PromotionActionData.getString("_id");
 					   item = LiStore.getVirtualGoodDealById(id);
-					   
-					   result = LiStore.buyVirtualGoods(item, 1, (item.VirtualGoodMainCurrency!=0) ? LiCurrency.MainCurrency:LiCurrency.SencondaryCurrency, null );
-					   
-					   if (mLiPromotionResultCallback != null)
-		                 	mLiPromotionResultCallback.onPromotionResultCallback(result?LiPromotionAction.Succeded:LiPromotionAction.Failed, LiPromotionResult.PromotionResultGiveVirtualGood, item);
-					   
-					   
+					   liPromotionResult = LiPromotionResult.PromotionResultDealVirtualGood;
+					   result = LiStore.buyVirtualGoods(item, 1, (item.VirtualGoodMainCurrency!=0) ? LiCurrency.MainCurrency:LiCurrency.SencondaryCurrency, virtualGoodCallback );
 					  break;
 				  }
-			  isPromotionDisplayed = false;
-			  dismiss();
 			  
 			} catch (LiJSONException e) {
 				LiLogger.logError(LiSinglePromoDialog.class.getSimpleName(), "Failed generating Promotion action "+e.getMessage());
@@ -411,4 +410,85 @@ public class LiSinglePromoDialog extends Dialog   {
     {
         return (int) (dp * this.getContext().getResources().getDisplayMetrics().density);
     }
+    
+    
+    LiCallbackVirtualGoodRequest virtualGoodCallback = new LiCallbackVirtualGoodRequest() {
+		
+		@Override
+		public void onActionFinisedSuccessfully(LiIapAction liIapAction,
+				VirtualGood item) {
+			// TODO Auto-generated method stub
+			if (mLiPromotionResultCallback != null)
+             	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, liPromotionResult, item);
+			
+			 isPromotionDisplayed = false;
+			 dismiss();
+		}
+		
+		@Override
+		public void onActionFailed(LiIapAction liIapAction, VirtualGood item,
+				LiErrorHandler errors) {
+			// TODO Auto-generated method stub
+			if (mLiPromotionResultCallback != null)
+             	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Failed, liPromotionResult, item);
+			
+			 isPromotionDisplayed = false;
+			 dismiss();
+		}
+	};
+	
+	LiCallbackVirtualCurrencyRequest virualCurrencyCallback = new LiCallbackVirtualCurrencyRequest() {
+		
+		@Override
+		public void onActionFinisedSuccessfully(LiIapAction liIapAction, int coins,
+				LiCurrency licurrency) {
+			// TODO Auto-generated method stub
+			if (mLiPromotionResultCallback != null)
+             	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded,liPromotionResult, coins);
+			
+			 isPromotionDisplayed = false;
+			 dismiss();
+		}
+		
+		@Override
+		public void onActionFailed(LiIapAction liIapAction, int coins,
+				LiCurrency licurrency, LiErrorHandler errors) {
+			// TODO Auto-generated method stub
+			if (mLiPromotionResultCallback != null)
+             	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Failed,liPromotionResult, coins);
+			
+			 isPromotionDisplayed = false;
+			 dismiss();
+		}
+	};
+	
+	LiCallbackIAPPurchase virtualCurrencyPurchaseCallback = new LiCallbackIAPPurchase() {
+		
+		@Override
+		public void onActionFinisedSuccessfully(LiIapAction liIapAction,
+				VirtualCurrency item) {
+			// TODO Auto-generated method stub
+			if (mLiPromotionResultCallback != null)
+             	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded,liPromotionResult, item);
+			
+			 isPromotionDisplayed = false;
+			 dismiss();
+		}
+		
+		@Override
+		public void onActionFailed(LiIapAction liIapAction, VirtualCurrency item,
+				LiErrorHandler errors) {
+			// TODO Auto-generated method stub
+			if (mLiPromotionResultCallback != null)
+			{
+				if  (errors.errorType == ApplicasaResponse.PURCHASED_CANCELED)
+					mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Cancelled,liPromotionResult, item);
+				else
+					mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Failed,liPromotionResult, item);
+			}
+			
+			 isPromotionDisplayed = false;
+			 dismiss();
+		}
+	};
 }
