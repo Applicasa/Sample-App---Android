@@ -5,9 +5,12 @@ import java.util.WeakHashMap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,24 +23,29 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import applicasa.LiCore.LiErrorHandler;
+import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.Push.LiCallbackPush;
+import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 import applicasa.LiCore.communication.LiFilters;
 import applicasa.LiCore.communication.LiFilters.Condition;
 import applicasa.LiCore.communication.LiFilters.Operation;
 import applicasa.LiCore.communication.LiQuery;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
+import applicasa.LiCore.communication.LiRequestConst.RequestAction;
 import applicasa.LiCore.communication.LiRequestConst.SortType;
 import applicasa.LiJson.LiJSONException;
 
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiChatGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiGCMPushMessage;
+import com.applicasa.ApplicasaManager.LiManager.LiObject;
 import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.Chat.Chat;
 import com.applicasa.Chat.ChatData.LiFieldChat;
 import com.applicasa.User.User;
 import com.appvilleegg.R;
+import com.example.appvilleegg.main.MainActivity;
 
 public class ChatActivity extends Activity implements OnClickListener {
 
@@ -63,7 +71,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 		scroller = (ScrollView)findViewById(R.id.scrollContainer);
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		bar.setVisibility(View.VISIBLE);
-		LiSession.sessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity);
 		
 		send = (Button)findViewById(R.id.btn_sendPush);
 		send.setOnClickListener(this);
@@ -74,6 +82,18 @@ public class ChatActivity extends Activity implements OnClickListener {
 	}
 	
 	
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+//	        Log.d(this.getClass().getName(), "back button pressed");
+//	        Intent i = new Intent(this, MainActivity.class);
+//			 startActivity(i); 
+//			 finish();
+//	    }
+//	    return super.onKeyDown(keyCode, event);
+//	}
+	
+
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		final String text = msg.getText().toString();
@@ -103,7 +123,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 					Toast.makeText(mActivity, "Message sent", Toast.LENGTH_SHORT).show();
 					Chat chat = new Chat();
 					chat.ChatSender = User.getCurrentUser();
-					chat.ChatRecipient = new User(receipientId); // Create an empty user because when we save we want to save the recipientsId, This doesn't affect the recipient Data
+					chat.ChatReciepent = new User(receipientId); // Create an empty user because when we save we want to save the recipientsId, This doesn't affect the recipient Data
 					chat.ChatText = text;
 					chat.save(null);
 					
@@ -163,14 +183,14 @@ public class ChatActivity extends Activity implements OnClickListener {
 		LiQuery query = new LiQuery();
 		
 		// current user sent message to recipient
-		LiFilters f1 = new LiFilters(LiFieldChat.ChatRecipient, Operation.EQUAL, receipientId);
+		LiFilters f1 = new LiFilters(LiFieldChat.ChatReciepent, Operation.EQUAL, receipientId);
 		LiFilters f2 = new LiFilters(LiFieldChat.ChatSender, Operation.EQUAL, User.getCurrentUser().UserID);
 		LiFilters f3 = new LiFilters(f1, Condition.AND, f2);
 		
 		//OR
 		
 		// recipient sent message to current  
-		LiFilters f4 = new LiFilters(LiFieldChat.ChatRecipient, Operation.EQUAL, User.getCurrentUser().UserID);
+		LiFilters f4 = new LiFilters(LiFieldChat.ChatReciepent, Operation.EQUAL, User.getCurrentUser().UserID);
 		LiFilters f5 = new LiFilters(LiFieldChat.ChatSender, Operation.EQUAL, receipientId);
 		LiFilters f6 = new LiFilters(f5, Condition.AND, f4);
 		

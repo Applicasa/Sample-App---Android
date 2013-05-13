@@ -73,7 +73,7 @@ public class ShareDialog extends Dialog   {
 					 LiLogger.logInfo(TAG , "Facebook session is null");
 					 if (LiConfig.getFbApplicationKey().startsWith("<FB_APPLICATION_KEY>"))
 		        	 {	// fb id was added as meta data
-						 session = Session.openActiveSession(mActivity,true,null);		
+						 session = Session.openActiveSession(mActivity,true,null);	        		
 		        	 }
 		        	else
 		        	{

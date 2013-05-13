@@ -1,6 +1,8 @@
 package com.example.appvilleegg.fragments;
 
 
+import java.util.List;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,7 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
     private GridView                mGridView;
     private static VirtualGoodAdapter  	mProductAdapter;
     Activity activity;
+    List<VirtualGood> vgList;
 	   
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -39,9 +42,9 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		final View v = inflater.inflate(R.layout.grid_frag, container, false);
 		mGridView = (GridView) v.findViewById(R.id.grid_view);
 		mGridView.setVisibility(View.VISIBLE);	
+		
 	    return v;
 	}
-	
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -50,14 +53,16 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		activity = getActivity();
 		 if (activity != null) {
 	            // gets an instance of the custom adapter for the Virtual Product.
-			 	mProductAdapter = VirtualGoodAdapter.getInstance(activity, LiStore.getAllVirtualGoods(GetVirtualGoodKind.ALL));
+			  vgList = LiStore.getAllVirtualGoods(GetVirtualGoodKind.ALL);
+			 
+			 mProductAdapter = VirtualGoodAdapter.getInstance(activity, vgList);
 	            
 	            if (mGridView != null) {
 	                mGridView.setAdapter(mProductAdapter);
 	            }
 	            mGridView.setOnItemClickListener(this);
-	 	
 		 }
+		 
 	}
 	
 	
@@ -71,7 +76,15 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 		LiLogger.logWarning(Tag, "Clicked");
 		if (TabsFragmentActivity.clickEnabled)	
 		{
-				(LiStore.getAllVirtualGoods(GetVirtualGoodKind.ALL)).get(position).buyVirtualGoods(1,LiCurrency.MainCurrency, new LiCallbackVirtualGoodRequest() {
+			VirtualGood item = vgList.get(position);
+			if (item.VirtualGoodMainCurrency == 0)
+			{
+				item.buyVirtualGoods(activity, TabsFragmentActivity.purchaseCallback);
+			}
+			else
+			{
+				
+			item.buyVirtualGoods(1,LiCurrency.MainCurrency, new LiCallbackVirtualGoodRequest() {
 					
 					@Override
 					public void onActionFinisedSuccessfully(LiIapAction liIapAction,
@@ -85,6 +98,7 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 							LiErrorHandler errors) {
 					}
 				});
+			}
 		}
 	}
 

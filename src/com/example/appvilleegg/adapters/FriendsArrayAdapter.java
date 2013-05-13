@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONException;
@@ -40,6 +41,7 @@ import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.Session.OpenRequest;
 
 public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 	private static FriendsArrayAdapter adapter;

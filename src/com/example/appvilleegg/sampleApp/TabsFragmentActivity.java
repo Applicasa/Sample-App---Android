@@ -34,6 +34,7 @@ import applicasa.kit.IAP.IAP;
 import applicasa.kit.IAP.IAP.LiCurrency;
 import applicasa.kit.IAP.IAP.LiIapAction;
 import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
+import applicasa.kit.IAP.Data.VirtualItem;
 
 import com.applicasa.ApplicasaManager.LiPromo;
 import com.applicasa.ApplicasaManager.LiSession;
@@ -61,7 +62,6 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 	   private  TextView 				mBalanceSecondary;
 	   private  ProgressBar			mProgressBar;
 	   private  ImageView 			mImageView;
-	   
 	   public static boolean clickEnabled = true; 
 	   Bundle mBundle;
 	   private ImageButton logout;
@@ -163,7 +163,6 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		// ReRegister for promotion callback 
 	    LiPromo.setPromoCallbackAndCheckForAvailablePromotions(new LiPromotionCallback() {
 			
-				@Override
 				public void onHasPromotionToDisplay(List<Promotion> promotions) {
 					// TODO Auto-generated method stub
 					promotions.get(0).show(TabsFragmentActivity.this,TabsFragmentActivity.this);
@@ -171,6 +170,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		}, true);
 		
 	}
+	
 
 	/** (non-Javadoc)
      * @see android.support.v4.app.FragmentActivity#onSaveInstanceState(android.os.Bundle)
@@ -288,7 +288,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 				
 				public void onSuccessfull(RequestAction action) {
 					// TODO Auto-generated method stub
-					LiSession.sessionStart(mActivity,null);
+					LiSession.sessionStart(mActivity);
 					Intent i = new Intent(mActivity, MainActivity.class);
 					startActivity(i);
 					mProgressBar.setVisibility(View.INVISIBLE);
@@ -383,7 +383,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		
 		@Override
 		public void onActionFinisedSuccessfully(LiIapAction liIapAction,
-				VirtualCurrency item) {
+				VirtualItem item) {
 			// TODO Auto-generated method stub
 			Log.i("VirtualCurrency", "Purchase Currency success");
 			refreshUI();
@@ -391,7 +391,7 @@ public class TabsFragmentActivity extends FragmentActivity implements TabHost.On
 		}
 		
 		@Override
-		public void onActionFailed(LiIapAction liIapAction, VirtualCurrency item,
+		public void onActionFailed(LiIapAction liIapAction, VirtualItem item,
 				LiErrorHandler errors) {
 			// TODO Auto-generated method stub
 			Log.i("VirtualCurrency", "Purchase Currency Failed");

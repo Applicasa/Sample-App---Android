@@ -1,5 +1,7 @@
 package com.example.appvilleegg.main;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -139,22 +141,33 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
     }
 
 	public void onCompleteInitialize() {
-
+	
 		initView();
 		
 		//Start session
 		Log.w("Session", "Start Main Activity");
 		
-		/**
-		 *  No need to call this anymore
-		 *  After initalize applicasa calls sessionstart automatically
-		 **/
-		//LiSession.sessionStart(this);
 		
 		// Updates User Location
 		LiUserLocation.updateLocation();
 		
+		/**
+		* Trial pay example of receving all old actions 
+		*
+		*	TrialPayManager.getTPAction(new LiTPActionResultCallback() {
+		*
+		*		@Override
+		*		public void onComplete(List<LiObjTrialPayAction> list,
+		*				LiErrorHandler error) {
+		*			Log.w("LiTPActionResultCallback", String.valueOf(list.size()));
+		*		}
+		*			
+		*	});
+		* */
 		
+		/*
+		 * Option to receive all promotion when requesting
+		 */
 		List<Promotion> list = LiPromo.getAvailablePromotions();
 		if (list.size()>0)
 			list.get(0).show(mActivity, null);
@@ -295,7 +308,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	}
 	protected void onResume() {
 		super.onResume();
-		LiSession.sessionResume(this);
+		LiSession.sessionResume(context);
 		
 		if (Applicasa.isInitialized())
 			initView();
@@ -309,6 +322,10 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		LiStore.dispose();
 		LiFileCacher.clearMemory();
 		super.onDestroy();
+	}
+	
+	protected void onStart(){
+		super.onStart();
 	}
 	
 }

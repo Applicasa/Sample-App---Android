@@ -23,6 +23,7 @@ import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiObjRequest;
 import applicasa.LiCore.communication.LiRequestConst.QueryKind;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
+import applicasa.LiJson.LiJSONException;
 
 import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
@@ -47,9 +48,17 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		
 		LiSession.sessionStart(this);
-		refreshView();
 		
-		
+		try {
+			int count = LiObjRequest.deleteItemsAccordingToClassName("Dynamic");
+			refreshView();
+		} catch (LiErrorHandler e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LiJSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -57,7 +66,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 		// TODO Auto-generated method stub
 		bar.setVisibility(View.VISIBLE);
 		
-	 	Dynamic.getArrayWithQuery(null, QueryKind.FULL, new LiDynamicGetArrayCallback() {
+	 	Dynamic.getArrayWithQuery(null, QueryKind.LIGHT, new LiDynamicGetArrayCallback() {
 			
 			public void onGetDynamicFailure(LiErrorHandler error) {
 				// TODO Auto-generated method stub
@@ -145,7 +154,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 								// TODO Auto-generated method stub
 								dialog.dismiss();
 								Log.e("Failed Saving Item", arg0.getMessage());
-								Toast.makeText(mActivity, "Failed Saving Item "+arg0.errorMessage, Toast.LENGTH_LONG).show();
+								Toast.makeText(mActivity, "Failed Saving Item "+arg0.ErrorMessage, Toast.LENGTH_LONG).show();
 								Log.e("Failed Saving Item", arg0.getMessage());
 							}
 							
@@ -182,7 +191,7 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 										// TODO Auto-generated method stub
 										dialog.dismiss();
 										Log.e("Failed deleteing Item", arg0.getMessage());
-										Toast.makeText(mActivity, "Failed deleteing Item "+arg0.errorMessage, Toast.LENGTH_LONG).show();
+										Toast.makeText(mActivity, "Failed deleteing Item "+arg0.ErrorMessage, Toast.LENGTH_LONG).show();
 										Log.e("Failed Saving Item", arg0.getMessage());
 									}
 									

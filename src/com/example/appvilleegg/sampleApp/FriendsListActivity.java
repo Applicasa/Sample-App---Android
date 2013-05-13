@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.communication.LiRequestConst.LiObjResponse;
+import applicasa.kit.facebook.LiFacebookResponse;
 import applicasa.kit.facebook.LiFacebookResponse.LiFacebookResponseGetFriends;
 import applicasa.kit.facebook.LiObjFacebookFriends;
 
@@ -31,7 +33,7 @@ public class FriendsListActivity extends ListActivity {
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		bar.setVisibility(View.VISIBLE);
 		
-		LiSession.sessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity);
 		
 		
 		/**

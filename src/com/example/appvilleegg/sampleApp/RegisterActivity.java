@@ -288,8 +288,21 @@ public class RegisterActivity extends Activity  {
 	
 	private void refreshInventory()
 	{
-		try {	IAP.refreshInventory();}
-		catch (LiErrorHandler e) {	e.printStackTrace();	}
+//		try {	IAP.refreshInventory(new LiCallbackGetVirtualGoodInventory() {
+//			
+//			@Override
+//			public void onFailure(LiErrorHandler error) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void onCompleteGetInventory() {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//		});}
+//		catch (LiErrorHandler e) {	e.printStackTrace();	}
 
 	}
 	
@@ -318,15 +331,20 @@ public class RegisterActivity extends Activity  {
 				
 				public void onFailure(LiErrorHandler error) {
 					// TODO Auto-generated method stub
+					Log.w("Register","Server Down "+ error.errorType.toString());
 					
+					Dynamic d1 = d;
+					d1.DynamicID = "";
+					d1.updloadFile(LiFieldDynamic.DynamicImage, filePath, null);
 				}
 				
 				public void onComplete(ApplicasaResponse response, String msg,
 						RequestAction action, String itemID, LiObject liobject) {
 					// TODO Auto-generated method stub
+					Log.w("Register","Server UP? "+ response.toString());
 					Dynamic d1 = d;
 					d1.DynamicID = itemID;
-					d1.updloadFile(LiFieldDynamic.DynamicText, filePath, null);
+					d1.updloadFile(LiFieldDynamic.DynamicImage, filePath, null);
 				}
 			});
 	

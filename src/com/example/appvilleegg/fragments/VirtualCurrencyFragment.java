@@ -8,7 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiLogger;
+import applicasa.kit.IAP.Callbacks.LiCallbackIAPPurchase;
+import applicasa.kit.IAP.IAP.LiIapAction;
 
 import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.VirtualCurrency.VirtualCurrency;

@@ -45,7 +45,7 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 		LiUserLocation.enableNetwork();
 		LiUserLocation.getLocation(this);
 		
-		LiSession.sessionStart(mActivity,null);
+		LiSession.sessionStart(mActivity);
 		
 	}
 	

@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: C:\\Android\\repositories\\REPOSITORY\\Appville-Android-public\\SDKAndroid\\com\\android\\vending\\billing\\IInAppBillingService.aidl
+ * Original file: C:\\Android\\repositories\\REPOSITORY\\Appville-Android-public\\ApplicasaSDK\\com\\android\\vending\\billing\\IInAppBillingService.aidl
  */
 package com.android.vending.billing;
 /**
