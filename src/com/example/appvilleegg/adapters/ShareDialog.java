@@ -19,8 +19,7 @@ import applicasa.kit.IAP.IAP.LiCurrency;
 
 import com.applicasa.ApplicasaManager.LiConfig;
 import com.applicasa.ApplicasaManager.LiStore;
-import com.appvilleegg.R;
-import com.facebook.FacebookException;
+import com.example.appvilleegg.R;
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
 import com.facebook.Request;

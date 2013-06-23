@@ -5,7 +5,6 @@ import java.io.InputStream;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -28,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import applicasa.LiCore.Applicasa;
+import applicasa.LiCore.LiConfigInner;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiErrorHandler.ApplicasaResponse;
 import applicasa.LiCore.LiFileCacher;
@@ -60,6 +61,7 @@ public class LiSinglePromoDialog extends Dialog   {
 	Context mContext;
 	private ImageView mExitButton;
 	
+	private LiSinglePromoDialog mPromoDialog;
 	private Promotion mSinglePromo;
 	
 	FrameLayout mFrameLayout;
@@ -79,6 +81,7 @@ public class LiSinglePromoDialog extends Dialog   {
         mActivity = activity;
         mSinglePromo = singlePromo;
         mLiPromotionResultCallback = liPromotionResultCallback;
+        mPromoDialog = this;
     }
 
     /**
@@ -89,13 +92,18 @@ public class LiSinglePromoDialog extends Dialog   {
     	switch (mSinglePromo.PromotionActionKind)
     	{
     	case CHARTBOOST:
-    		if (LiConfig.isChartboostEnabled())
+    		if(!Applicasa.isOnline())
+    			LiLogger.logError(TAG, "Cant display Chartboost Without Internet Connection");
+    		else if (LiConfigInner.isChartboostEnabled())
 				LiChartboostManager.getInstance().show(mActivity,mSinglePromo);
 			else
 				LiLogger.logError(TAG, "Cant display Chartboost Without Chartboosts SDK");
     		break;
     	case TRIAL_PAY:
-    		buildTrialPayPromotion();
+    		if (!Applicasa.isOnline())
+    			LiLogger.logError(TAG, "Cant display Trialpay Without Internet Connection");
+    		else
+    			buildTrialPayPromotion();
     		break;
     		
     	default:
@@ -211,7 +219,7 @@ public class LiSinglePromoDialog extends Dialog   {
 			
 			public void onFailure(LiErrorHandler error) {
 				LiLogger.logError("Promo Adapter", "Source not found");
-				dismiss();
+				mPromoDialog.dismiss();
 			}
 
 			public void onSuccessfullBitmap(Bitmap bitmap) {
@@ -229,7 +237,7 @@ public class LiSinglePromoDialog extends Dialog   {
 			
 			public void onFailure(LiErrorHandler error) {
 				LiLogger.logError("Promo Adapter", "Source not found");
-				dismiss();
+				mPromoDialog.dismiss();
 			}
 
 			public void onSuccessfullBitmap(Bitmap bitmap) {
@@ -370,7 +378,7 @@ public class LiSinglePromoDialog extends Dialog   {
 					  if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultNothing, null);
 					  
-					  dismiss();
+					  mPromoDialog.dismiss();
 					  
 					  break;
 				  case LINK:
@@ -401,7 +409,7 @@ public class LiSinglePromoDialog extends Dialog   {
 						  if (mLiPromotionResultCallback != null)
 			                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultLinkOpened, link);
 						  
-						 dismiss();
+						 mPromoDialog.dismiss();
 					  break;
 				  case STRING:
 					  // The promotion text is retrieved 
@@ -422,7 +430,7 @@ public class LiSinglePromoDialog extends Dialog   {
 					  if (mLiPromotionResultCallback != null)
 		                 	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultStringInfo, text);
 					  
-					  dismiss();
+					  mPromoDialog.dismiss();
 					  
 					  break;
 				  case GIVE_VC:
@@ -488,7 +496,7 @@ public class LiSinglePromoDialog extends Dialog   {
     	 if (mLiPromotionResultCallback != null)
          	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Cancelled, LiPromotionResult.PromotionResultNothing, null);
     	 
-        LiSinglePromoDialog.this.dismiss();
+        LiSinglePromoDialog.this.mPromoDialog.dismiss();
 	}
 	
 
@@ -512,7 +520,7 @@ public class LiSinglePromoDialog extends Dialog   {
 			if (mLiPromotionResultCallback != null)
              	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, liPromotionResult, item);
 			
-			 dismiss();
+			mPromoDialog.mPromoDialog.dismiss();
 		}
 		
 		@Override
@@ -522,7 +530,7 @@ public class LiSinglePromoDialog extends Dialog   {
 			if (mLiPromotionResultCallback != null)
              	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Failed, liPromotionResult, item);
 			
-			 dismiss();
+			mPromoDialog.mPromoDialog.dismiss();
 		}
 	};
 	
@@ -535,7 +543,7 @@ public class LiSinglePromoDialog extends Dialog   {
 			if (mLiPromotionResultCallback != null)
              	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded,liPromotionResult, coins);
 			
-			 dismiss();
+			 mPromoDialog.dismiss();
 		}
 		
 		@Override
@@ -545,7 +553,7 @@ public class LiSinglePromoDialog extends Dialog   {
 			if (mLiPromotionResultCallback != null)
              	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Failed,liPromotionResult, coins);
 			
-			 dismiss();
+			mPromoDialog.mPromoDialog.dismiss();
 		}
 	};
 	
@@ -558,7 +566,7 @@ public class LiSinglePromoDialog extends Dialog   {
 			if (mLiPromotionResultCallback != null)
              	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded,liPromotionResult, (item.vcItem != null)?item.vcItem:item.vgItem);
 			
-			 dismiss();
+			 mPromoDialog.dismiss();
 		}
 		
 		@Override
@@ -573,7 +581,7 @@ public class LiSinglePromoDialog extends Dialog   {
 					mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Failed,liPromotionResult, (item.vcItem != null)?item.vcItem:item.vgItem);
 			}
 			
-			 dismiss();
+			 mPromoDialog.dismiss();
 		}
 	};
 	

@@ -24,7 +24,7 @@ public class LiGCMPushMessage {
 	 */
 	public void addRecipient(User user)
 	{
-		message.addRecipientUserIDList(user.UserID);
+		message.addRecipient(user.UserID);
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class LiGCMPushMessage {
 	 */
 	public void addRecipient(String userId)
 	{
-		message.addRecipientUserIDList(userId);
+		message.addRecipient(userId);
 	}
 	
 	/**

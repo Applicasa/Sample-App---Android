@@ -25,7 +25,7 @@ import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.ApplicasaManager.LiUserLocation;
 import com.applicasa.User.User;
 import com.applicasa.User.UserData.LiFieldUser;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 import com.example.appvilleegg.adapters.UserRadiusArrayAdapter;
 
 public class UsersRadiusListActivity extends ListActivity implements LiLocationCallback{

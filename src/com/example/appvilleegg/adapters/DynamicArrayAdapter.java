@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.applicasa.Dynamic.Dynamic;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 
 public class DynamicArrayAdapter extends ArrayAdapter<Dynamic> {
 	private Activity activity;

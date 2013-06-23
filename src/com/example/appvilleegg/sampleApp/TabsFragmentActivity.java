@@ -43,7 +43,7 @@ import com.applicasa.Promotion.Promotion;
 import com.applicasa.User.User;
 import com.applicasa.VirtualCurrency.VirtualCurrency;
 import com.applicasa.VirtualGood.VirtualGood;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 import com.example.appvilleegg.adapters.ShareDialog;
 import com.example.appvilleegg.fragments.InventoryFragment;
 import com.example.appvilleegg.fragments.VirtualCurrencyFragment;

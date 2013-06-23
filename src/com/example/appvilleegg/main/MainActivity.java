@@ -1,7 +1,5 @@
 package com.example.appvilleegg.main;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -31,7 +29,7 @@ import com.applicasa.ApplicasaManager.LiUserLocation;
 import com.applicasa.Dynamic.Dynamic;
 import com.applicasa.Promotion.Promotion;
 import com.applicasa.User.User;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 import com.example.appvilleegg.sampleApp.DynamicListActivity;
 import com.example.appvilleegg.sampleApp.FriendsListActivity;
 import com.example.appvilleegg.sampleApp.LoginActivity;

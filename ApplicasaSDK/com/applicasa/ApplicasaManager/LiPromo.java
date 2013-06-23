@@ -50,6 +50,20 @@ public class LiPromo {
 		LiPromoManager.getPromotions(liCallBackGetPromotion);
 	}
 	
+	/**
+	 * Dismiss all promotion waiting to be viewed
+	 */
+	public static void dismissAllPromotion()
+	{
+		LiPromoManager.dismissAllPromotion();
+	}
 	
-	
+	/**
+	 * raise custom event by event key name
+	 * @param key the name of the event
+	 */
+	public static void raiseCustomEvent(String key)
+	{
+		LiPromoManager.raiseCustomEvent(key);
+	}
 }

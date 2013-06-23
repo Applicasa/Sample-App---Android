@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -20,10 +19,8 @@ import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 
-import com.applicasa.VirtualCurrency.VirtualCurrency;
 import com.applicasa.VirtualGood.VirtualGood;
-import com.appvilleegg.R;
-import com.example.appvilleegg.adapters.VirtualCurrencyAdapter.ViewHolder;
+import com.example.appvilleegg.R;
 
 public class InventoryArrayAdapter extends ArrayAdapter<VirtualGood> {
 	

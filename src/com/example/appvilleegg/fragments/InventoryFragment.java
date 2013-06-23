@@ -17,7 +17,7 @@ import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
 
 import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.VirtualGood.VirtualGood;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 import com.example.appvilleegg.adapters.InventoryArrayAdapter;
 import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
 

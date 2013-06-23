@@ -6,7 +6,6 @@ import java.util.WeakHashMap;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 
 import com.applicasa.VirtualCurrency.VirtualCurrency;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 
 public class VirtualCurrencyAdapter extends BaseAdapter {
 
@@ -113,7 +112,7 @@ public class VirtualCurrencyAdapter extends BaseAdapter {
 
         View  view = convertView;
         final ViewHolder viewHolder;
-        Typeface face=Typeface.createFromAsset(mContext.getAssets(), "font.ttf"); 
+//        Typeface face=Typeface.createFromAsset(mContext.getAssets(), "font.ttf"); 
 		if (view == null) {
 			 // pull the cached data for the image assigned to this position
 			view = mInflater.inflate(R.layout.grid_store_item, null);
@@ -138,7 +137,7 @@ public class VirtualCurrencyAdapter extends BaseAdapter {
 				String price = String.valueOf(item.VirtualCurrencyPrice);
 				viewHolder.itemName.setText("$"+price);
 				viewHolder.title.setText(String.valueOf(credit));
-				viewHolder.title.setTypeface(face);
+//				viewHolder.title.setTypeface(face);
 				if (imageMap.containsKey(item.VirtualCurrencyImageA))
 				{
 					viewHolder.img.setImageDrawable(new BitmapDrawable(imageMap.get(item.VirtualCurrencyImageA)));

@@ -300,9 +300,14 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				dynamicCallbacks.remove(requestID);
 				if (response.action == RequestAction.ADD_ACTION)
 					((Dynamic)response.addedObject).DynamicID = response.newObjID;
+					
 				if (response.action == RequestAction.UPLOAD_FILE)
+				{
 					((Dynamic)response.addedObject).setDynamicFieldbySortType((LiFieldDynamic)response.field, response.newObjID);
-				
+					if (response.actionResponseList.get(0).objId != null && response.actionResponseList.get(0).requestID == requestID )
+						((Dynamic)response.addedObject).DynamicID = response.actionResponseList.get(0).objId;
+				}
+								
 				((LiCallbackAction)callback).onComplete(response.LiRespType, response.LiRespMsg, response.action,response.newObjID, LiObject.getLiObject(response.className));
 			}
 		}

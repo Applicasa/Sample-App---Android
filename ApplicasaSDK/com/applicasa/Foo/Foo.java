@@ -302,9 +302,14 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				fooCallbacks.remove(requestID);
 				if (response.action == RequestAction.ADD_ACTION)
 					((Foo)response.addedObject).FooID = response.newObjID;
+					
 				if (response.action == RequestAction.UPLOAD_FILE)
+				{
 					((Foo)response.addedObject).setFooFieldbySortType((LiFieldFoo)response.field, response.newObjID);
-				
+					if (response.actionResponseList.get(0).objId != null && response.actionResponseList.get(0).requestID == requestID )
+						((Foo)response.addedObject).FooID = response.actionResponseList.get(0).objId;
+				}
+								
 				((LiCallbackAction)callback).onComplete(response.LiRespType, response.LiRespMsg, response.action,response.newObjID, LiObject.getLiObject(response.className));
 			}
 		}

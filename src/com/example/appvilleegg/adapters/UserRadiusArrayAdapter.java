@@ -2,7 +2,6 @@ package com.example.appvilleegg.adapters;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 
 import com.applicasa.User.User;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 
 public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 	private static UserRadiusArrayAdapter adapter;

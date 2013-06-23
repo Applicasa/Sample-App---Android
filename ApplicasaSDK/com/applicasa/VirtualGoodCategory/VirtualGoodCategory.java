@@ -300,9 +300,14 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				virtualGoodCategoryCallbacks.remove(requestID);
 				if (response.action == RequestAction.ADD_ACTION)
 					((VirtualGoodCategory)response.addedObject).VirtualGoodCategoryID = response.newObjID;
+					
 				if (response.action == RequestAction.UPLOAD_FILE)
+				{
 					((VirtualGoodCategory)response.addedObject).setVirtualGoodCategoryFieldbySortType((LiFieldVirtualGoodCategory)response.field, response.newObjID);
-				
+					if (response.actionResponseList.get(0).objId != null && response.actionResponseList.get(0).requestID == requestID )
+						((VirtualGoodCategory)response.addedObject).VirtualGoodCategoryID = response.actionResponseList.get(0).objId;
+				}
+								
 				((LiCallbackAction)callback).onComplete(response.LiRespType, response.LiRespMsg, response.action,response.newObjID, LiObject.getLiObject(response.className));
 			}
 		}

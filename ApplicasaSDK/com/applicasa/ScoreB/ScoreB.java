@@ -301,9 +301,14 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				scoreBCallbacks.remove(requestID);
 				if (response.action == RequestAction.ADD_ACTION)
 					((ScoreB)response.addedObject).ScoreBID = response.newObjID;
+					
 				if (response.action == RequestAction.UPLOAD_FILE)
+				{
 					((ScoreB)response.addedObject).setScoreBFieldbySortType((LiFieldScoreB)response.field, response.newObjID);
-				
+					if (response.actionResponseList.get(0).objId != null && response.actionResponseList.get(0).requestID == requestID )
+						((ScoreB)response.addedObject).ScoreBID = response.actionResponseList.get(0).objId;
+				}
+								
 				((LiCallbackAction)callback).onComplete(response.LiRespType, response.LiRespMsg, response.action,response.newObjID, LiObject.getLiObject(response.className));
 			}
 		}

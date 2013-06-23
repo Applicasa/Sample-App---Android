@@ -300,9 +300,14 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				levelsCallbacks.remove(requestID);
 				if (response.action == RequestAction.ADD_ACTION)
 					((Levels)response.addedObject).LevelsID = response.newObjID;
+					
 				if (response.action == RequestAction.UPLOAD_FILE)
+				{
 					((Levels)response.addedObject).setLevelsFieldbySortType((LiFieldLevels)response.field, response.newObjID);
-				
+					if (response.actionResponseList.get(0).objId != null && response.actionResponseList.get(0).requestID == requestID )
+						((Levels)response.addedObject).LevelsID = response.actionResponseList.get(0).objId;
+				}
+								
 				((LiCallbackAction)callback).onComplete(response.LiRespType, response.LiRespMsg, response.action,response.newObjID, LiObject.getLiObject(response.className));
 			}
 		}

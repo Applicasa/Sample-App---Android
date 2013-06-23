@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import applicasa.LiCore.Applicasa;
 import applicasa.LiCore.Push.LiPushIntentService;
 import applicasa.LiCore.Push.LiPushManager;
 
@@ -27,7 +28,9 @@ public class LiGCMReceiver extends BroadcastReceiver {
 		 * @param pushClass
 		 * Enter class and remove comment 
 		 */
-		pushManager.setNotificationClass( LiGCMActivity.class , context.getPackageName());
+		pushManager.setNotificationClass(LiGCMActivity.class);
+		pushManager.setPackageName(context.getPackageName());
+
 
 		
 		/** 
@@ -37,8 +40,13 @@ public class LiGCMReceiver extends BroadcastReceiver {
 		pushManager.setIcon(context.getResources().getIdentifier("app_icon", "drawable", context.getPackageName()));
 		
 		
-		pushManager.setStatusBarText("New Message Received");
-		pushManager.setMessageTitleText(pushManager.getAlertFromIntent());
+		String statusBar = "New Message Received";
+		if (Applicasa.isUnity(context))
+		{
+			statusBar = Applicasa.getStatusBar();
+		}
+		pushManager.setNotificationBarText(statusBar);
+		pushManager.setAlert(pushManager.getAlertFromIntent());
 		
 		LiPushIntentService.runIntentInService(context, intent, pushManager);
         

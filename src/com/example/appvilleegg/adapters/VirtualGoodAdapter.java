@@ -9,7 +9,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,9 @@ import android.widget.TextView;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
-import applicasa.kit.IAP.IAP.GetVirtualGoodKind;
 
-import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.VirtualGood.VirtualGood;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 
 public class VirtualGoodAdapter extends BaseAdapter {
 

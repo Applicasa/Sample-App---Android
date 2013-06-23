@@ -300,9 +300,14 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				dataManagerCallbacks.remove(requestID);
 				if (response.action == RequestAction.ADD_ACTION)
 					((DataManager)response.addedObject).DataManagerID = response.newObjID;
+					
 				if (response.action == RequestAction.UPLOAD_FILE)
+				{
 					((DataManager)response.addedObject).setDataManagerFieldbySortType((LiFieldDataManager)response.field, response.newObjID);
-				
+					if (response.actionResponseList.get(0).objId != null && response.actionResponseList.get(0).requestID == requestID )
+						((DataManager)response.addedObject).DataManagerID = response.actionResponseList.get(0).objId;
+				}
+								
 				((LiCallbackAction)callback).onComplete(response.LiRespType, response.LiRespMsg, response.action,response.newObjID, LiObject.getLiObject(response.className));
 			}
 		}

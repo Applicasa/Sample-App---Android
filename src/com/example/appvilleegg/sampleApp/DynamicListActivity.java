@@ -29,7 +29,7 @@ import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
 import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.Dynamic.Dynamic;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 import com.example.appvilleegg.adapters.DynamicArrayAdapter;
 
 public class DynamicListActivity extends ListActivity implements OnItemClickListener{

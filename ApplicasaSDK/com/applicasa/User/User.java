@@ -760,13 +760,13 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		(this.UserLastLogin = new GregorianCalendar()).setTimeInMillis(0);
 		(this.UserRegisterDate = new GregorianCalendar()).setTimeInMillis(0);
 		this.UserLocation = new LiLocation(0, 0);
-		this.UserIsRegisteredFacebook = false;
 		this.UserIsRegistered = false;
+		this.UserIsRegisteredFacebook = false;
 		(this.UserLastUpdate = new GregorianCalendar()).setTimeInMillis(0);
-		this.UserFacebookID = "";
 		this.UserImage = "";
 		this.UserMainCurrencyBalance = 0;
 		this.UserSecondaryCurrencyBalance = 0;
+		this.UserFacebookID = "";
 		(this.UserTempDate = new GregorianCalendar()).setTimeInMillis(0);
 	}
 
@@ -855,16 +855,16 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			 Latitude= cursor.getFloat(columnIndex);
 		this.UserLocation = new LiLocation(Longitude, Latitude);
 		
-		columnIndex = cursor.getColumnIndex(header + LiFieldUser.UserIsRegisteredFacebook.toString());
-		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
-		{
-			this.UserIsRegisteredFacebook = cursor.getInt(columnIndex)==1?true:false;
-		}
-		
 		columnIndex = cursor.getColumnIndex(header + LiFieldUser.UserIsRegistered.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 		{
 			this.UserIsRegistered = cursor.getInt(columnIndex)==1?true:false;
+		}
+		
+		columnIndex = cursor.getColumnIndex(header + LiFieldUser.UserIsRegisteredFacebook.toString());
+		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
+		{
+			this.UserIsRegisteredFacebook = cursor.getInt(columnIndex)==1?true:false;
 		}
 		
 		columnIndex = cursor.getColumnIndex(header + LiFieldUser.UserLastUpdate.toString());
@@ -876,9 +876,6 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			this.UserLastUpdate = gc;
 		}
 		
-		columnIndex = cursor.getColumnIndex(header + LiObjRequest.UserFacebookID);
-		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
-			this.UserFacebookID = cursor.getString(columnIndex);
 		columnIndex = cursor.getColumnIndex(header + LiFieldUser.UserImage.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.UserImage = cursor.getString(columnIndex);
@@ -891,6 +888,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.UserSecondaryCurrencyBalance = cursor.getInt(columnIndex);
 		
+		columnIndex = cursor.getColumnIndex(header + LiObjRequest.UserFacebookID);
+		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
+			this.UserFacebookID = cursor.getString(columnIndex);
 		columnIndex = cursor.getColumnIndex(header + LiFieldUser.UserTempDate.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 		{
@@ -926,13 +926,13 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		this.UserLastLogin			= item.UserLastLogin;
 		this.UserRegisterDate			= item.UserRegisterDate;
 		this.UserLocation			= item.UserLocation;
-		this.UserIsRegisteredFacebook			= item.UserIsRegisteredFacebook;
 		this.UserIsRegistered			= item.UserIsRegistered;
+		this.UserIsRegisteredFacebook			= item.UserIsRegisteredFacebook;
 		this.UserLastUpdate			= item.UserLastUpdate;
-		this.UserFacebookID			= item.UserFacebookID;
 		this.UserImage			= item.UserImage;
 		this.UserMainCurrencyBalance			= item.UserMainCurrencyBalance;
 		this.UserSecondaryCurrencyBalance			= item.UserSecondaryCurrencyBalance;
+		this.UserFacebookID			= item.UserFacebookID;
 		this.UserTempDate			= item.UserTempDate;
 	
 		return UserID;
@@ -971,19 +971,19 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	
 		dictionary.put(LiFieldUser.UserLocation, UserLocation.getJsonArrayRepresentation());
 	
-		dictionary.put(LiFieldUser.UserIsRegisteredFacebook, UserIsRegisteredFacebook);
-	
 		dictionary.put(LiFieldUser.UserIsRegistered, UserIsRegistered);
+	
+		dictionary.put(LiFieldUser.UserIsRegisteredFacebook, UserIsRegisteredFacebook);
 	
 		dictionary.put(LiFieldUser.UserLastUpdate, LiUtility.convertDateToDictionaryRepresenataion(UserLastUpdate));
 	
-		dictionary.put(LiObjRequest.UserFacebookID, UserFacebookID);
 		dictionary.put(LiFieldUser.UserImage, UserImage);
 	
 		dictionary.put(LiFieldUser.UserMainCurrencyBalance, UserMainCurrencyBalance);
 	
 		dictionary.put(LiFieldUser.UserSecondaryCurrencyBalance, UserSecondaryCurrencyBalance);
 	
+		dictionary.put(LiObjRequest.UserFacebookID, UserFacebookID);
 		dictionary.put(LiFieldUser.UserTempDate, LiUtility.convertDateToDictionaryRepresenataion(UserTempDate));
 	
 		return dictionary;
@@ -1006,13 +1006,13 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		dbObject.put(LiFieldUser.UserLastLogin, LiCoreDBmanager.DATE,0);
 		dbObject.put(LiFieldUser.UserRegisterDate, LiCoreDBmanager.DATE,0);
 		dbObject.put(LiFieldUser.UserLocation, LiCoreDBmanager.LOCATION,"[0,0]");
-		dbObject.put(LiFieldUser.UserIsRegisteredFacebook, LiCoreDBmanager.BOOL,false);
 		dbObject.put(LiFieldUser.UserIsRegistered, LiCoreDBmanager.BOOL,false);
+		dbObject.put(LiFieldUser.UserIsRegisteredFacebook, LiCoreDBmanager.BOOL,false);
 		dbObject.put(LiFieldUser.UserLastUpdate, LiCoreDBmanager.DATE,0);
-		dbObject.put(LiObjRequest.UserFacebookID, LiCoreDBmanager.TEXT);
 		dbObject.put(LiFieldUser.UserImage, LiCoreDBmanager.TEXT,"");
 		dbObject.put(LiFieldUser.UserMainCurrencyBalance, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldUser.UserSecondaryCurrencyBalance, LiCoreDBmanager.INTEGER,0);
+		dbObject.put(LiObjRequest.UserFacebookID, LiCoreDBmanager.TEXT);
 		dbObject.put(LiFieldUser.UserTempDate, LiCoreDBmanager.DATE,0);
 	return dbObject;
 }

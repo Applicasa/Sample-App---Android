@@ -300,9 +300,14 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				languagesCallbacks.remove(requestID);
 				if (response.action == RequestAction.ADD_ACTION)
 					((Languages)response.addedObject).LanguagesID = response.newObjID;
+					
 				if (response.action == RequestAction.UPLOAD_FILE)
+				{
 					((Languages)response.addedObject).setLanguagesFieldbySortType((LiFieldLanguages)response.field, response.newObjID);
-				
+					if (response.actionResponseList.get(0).objId != null && response.actionResponseList.get(0).requestID == requestID )
+						((Languages)response.addedObject).LanguagesID = response.actionResponseList.get(0).objId;
+				}
+								
 				((LiCallbackAction)callback).onComplete(response.LiRespType, response.LiRespMsg, response.action,response.newObjID, LiObject.getLiObject(response.className));
 			}
 		}

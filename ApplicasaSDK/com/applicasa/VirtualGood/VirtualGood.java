@@ -345,11 +345,11 @@ public class VirtualGood extends VirtualGoodData {
 		this.VirtualGoodMainCurrency = 0;
 		this.VirtualGoodSecondaryCurrency = 0;
 		this.VirtualGoodRelatedVirtualGood = "";
-		this.VirtualGoodStoreItemPrice = 0f;
 		this.VirtualGoodIOSBundleMin = 0f;
 		this.VirtualGoodIOSBundleMax = 0f;
 		this.VirtualGoodAndroidBundleMin = 0f;
 		this.VirtualGoodAndroidBundleMax = 0f;
+		this.VirtualGoodStoreItemPrice = 0f;
 		this.VirtualGoodPos = 1;
 		this.VirtualGoodQuantity = 0;
 		this.VirtualGoodMaxForUser = 0;
@@ -432,10 +432,6 @@ public class VirtualGood extends VirtualGoodData {
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.VirtualGoodRelatedVirtualGood = cursor.getString(columnIndex);
 		
-		columnIndex = cursor.getColumnIndex(header +LiFieldVirtualGood.VirtualGoodStoreItemPrice.toString());
-		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
-			this.VirtualGoodStoreItemPrice = cursor.getFloat(columnIndex);
-		
 		columnIndex = cursor.getColumnIndex(header +LiFieldVirtualGood.VirtualGoodIOSBundleMin.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.VirtualGoodIOSBundleMin = cursor.getFloat(columnIndex);
@@ -451,6 +447,10 @@ public class VirtualGood extends VirtualGoodData {
 		columnIndex = cursor.getColumnIndex(header +LiFieldVirtualGood.VirtualGoodAndroidBundleMax.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.VirtualGoodAndroidBundleMax = cursor.getFloat(columnIndex);
+		
+		columnIndex = cursor.getColumnIndex(header +LiFieldVirtualGood.VirtualGoodStoreItemPrice.toString());
+		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
+			this.VirtualGoodStoreItemPrice = cursor.getFloat(columnIndex);
 		
 		columnIndex = cursor.getColumnIndex(header + LiFieldVirtualGood.VirtualGoodPos.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
@@ -546,11 +546,11 @@ public class VirtualGood extends VirtualGoodData {
 		this.VirtualGoodMainCurrency			= item.VirtualGoodMainCurrency;
 		this.VirtualGoodSecondaryCurrency			= item.VirtualGoodSecondaryCurrency;
 		this.VirtualGoodRelatedVirtualGood			= item.VirtualGoodRelatedVirtualGood;
-		this.VirtualGoodStoreItemPrice			= item.VirtualGoodStoreItemPrice;
 		this.VirtualGoodIOSBundleMin			= item.VirtualGoodIOSBundleMin;
 		this.VirtualGoodIOSBundleMax			= item.VirtualGoodIOSBundleMax;
 		this.VirtualGoodAndroidBundleMin			= item.VirtualGoodAndroidBundleMin;
 		this.VirtualGoodAndroidBundleMax			= item.VirtualGoodAndroidBundleMax;
+		this.VirtualGoodStoreItemPrice			= item.VirtualGoodStoreItemPrice;
 		this.VirtualGoodPos			= item.VirtualGoodPos;
 		this.VirtualGoodQuantity			= item.VirtualGoodQuantity;
 		this.VirtualGoodMaxForUser			= item.VirtualGoodMaxForUser;
@@ -609,8 +609,6 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	
 		dictionary.put(LiFieldVirtualGood.VirtualGoodRelatedVirtualGood, VirtualGoodRelatedVirtualGood);
 	
-		dictionary.put(LiFieldVirtualGood.VirtualGoodStoreItemPrice, VirtualGoodStoreItemPrice);
-	
 		dictionary.put(LiFieldVirtualGood.VirtualGoodIOSBundleMin, VirtualGoodIOSBundleMin);
 	
 		dictionary.put(LiFieldVirtualGood.VirtualGoodIOSBundleMax, VirtualGoodIOSBundleMax);
@@ -618,6 +616,8 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		dictionary.put(LiFieldVirtualGood.VirtualGoodAndroidBundleMin, VirtualGoodAndroidBundleMin);
 	
 		dictionary.put(LiFieldVirtualGood.VirtualGoodAndroidBundleMax, VirtualGoodAndroidBundleMax);
+	
+		dictionary.put(LiFieldVirtualGood.VirtualGoodStoreItemPrice, VirtualGoodStoreItemPrice);
 	
 		dictionary.put(LiFieldVirtualGood.VirtualGoodPos, VirtualGoodPos);
 	
@@ -668,11 +668,11 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		dbObject.put(LiFieldVirtualGood.VirtualGoodMainCurrency, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodSecondaryCurrency, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodRelatedVirtualGood, LiCoreDBmanager.TEXT,"");
-		dbObject.put(LiFieldVirtualGood.VirtualGoodStoreItemPrice, LiCoreDBmanager.REAL,0f);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodIOSBundleMin, LiCoreDBmanager.REAL,0f);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodIOSBundleMax, LiCoreDBmanager.REAL,0f);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodAndroidBundleMin, LiCoreDBmanager.REAL,0f);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodAndroidBundleMax, LiCoreDBmanager.REAL,0f);
+		dbObject.put(LiFieldVirtualGood.VirtualGoodStoreItemPrice, LiCoreDBmanager.REAL,0f);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodPos, LiCoreDBmanager.INTEGER,1);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodQuantity, LiCoreDBmanager.INTEGER,0);
 		dbObject.put(LiFieldVirtualGood.VirtualGoodMaxForUser, LiCoreDBmanager.INTEGER,0);

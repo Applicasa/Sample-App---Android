@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONException;
@@ -33,15 +32,13 @@ import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 import applicasa.kit.facebook.LiObjFacebookFriends;
 
 import com.applicasa.ApplicasaManager.LiConfig;
-import com.appvilleegg.R;
-import com.facebook.FacebookException;
+import com.example.appvilleegg.R;
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.Session.OpenRequest;
 
 public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 	private static FriendsArrayAdapter adapter;

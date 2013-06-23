@@ -300,9 +300,14 @@ static RequestCallback callbackHandler = new RequestCallback() {
 				gameVCallbacks.remove(requestID);
 				if (response.action == RequestAction.ADD_ACTION)
 					((GameV)response.addedObject).GameVID = response.newObjID;
+					
 				if (response.action == RequestAction.UPLOAD_FILE)
+				{
 					((GameV)response.addedObject).setGameVFieldbySortType((LiFieldGameV)response.field, response.newObjID);
-				
+					if (response.actionResponseList.get(0).objId != null && response.actionResponseList.get(0).requestID == requestID )
+						((GameV)response.addedObject).GameVID = response.actionResponseList.get(0).objId;
+				}
+								
 				((LiCallbackAction)callback).onComplete(response.LiRespType, response.LiRespMsg, response.action,response.newObjID, LiObject.getLiObject(response.className));
 			}
 		}

@@ -25,12 +25,13 @@ public class UserData {
 	, UserLastLogin
 	, UserRegisterDate
 	, UserLocation
-	, UserIsRegisteredFacebook
 	, UserIsRegistered
+	, UserIsRegisteredFacebook
 	, UserLastUpdate
 	, UserImage
 	, UserMainCurrencyBalance
 	, UserSecondaryCurrencyBalance
+	, UserFacebookID
 	, UserTempDate
 
 	;
@@ -73,19 +74,19 @@ public class UserData {
 	
 		public LiLocation UserLocation;
 	
-		public Boolean UserIsRegisteredFacebook;
-	
 		public Boolean UserIsRegistered;
 	
-		public GregorianCalendar UserLastUpdate;
+		public Boolean UserIsRegisteredFacebook;
 	
-		public String UserFacebookID;
+		public GregorianCalendar UserLastUpdate;
 	
 		public String UserImage;
 	
 		public int UserMainCurrencyBalance;
 	
 		public int UserSecondaryCurrencyBalance;
+	
+		public String UserFacebookID;
 	
 		public GregorianCalendar UserTempDate;
 	
@@ -171,14 +172,6 @@ public class UserData {
 			this.UserLocation = UserLocation;
 		}
 		
-		public Boolean getUserIsRegisteredFacebook() {
-			return UserIsRegisteredFacebook;
-		}
-		
-		public void setUserIsRegisteredFacebook(Boolean UserIsRegisteredFacebook) {
-			this.UserIsRegisteredFacebook = UserIsRegisteredFacebook;
-		}
-		
 		public Boolean getUserIsRegistered() {
 			return UserIsRegistered;
 		}
@@ -187,20 +180,20 @@ public class UserData {
 			this.UserIsRegistered = UserIsRegistered;
 		}
 		
+		public Boolean getUserIsRegisteredFacebook() {
+			return UserIsRegisteredFacebook;
+		}
+		
+		public void setUserIsRegisteredFacebook(Boolean UserIsRegisteredFacebook) {
+			this.UserIsRegisteredFacebook = UserIsRegisteredFacebook;
+		}
+		
 		public GregorianCalendar getUserLastUpdate() {
 			return UserLastUpdate;
 		}
 		
 		public void setUserLastUpdate(GregorianCalendar UserLastUpdate) {
 			this.UserLastUpdate = UserLastUpdate;
-		}
-		
-		public String getUserFacebookID() {
-			return UserFacebookID;
-		}
-		
-		public void setUserFacebookID(String UserFacebookID) {
-			this.UserFacebookID = UserFacebookID;
 		}
 		
 		public String getUserImage() {
@@ -225,6 +218,14 @@ public class UserData {
 		
 		public void setUserSecondaryCurrencyBalance(int UserSecondaryCurrencyBalance) {
 			this.UserSecondaryCurrencyBalance = UserSecondaryCurrencyBalance;
+		}
+		
+		public String getUserFacebookID() {
+			return UserFacebookID;
+		}
+		
+		public void setUserFacebookID(String UserFacebookID) {
+			this.UserFacebookID = UserFacebookID;
 		}
 		
 		public GregorianCalendar getUserTempDate() {
@@ -269,11 +270,11 @@ public class UserData {
 			case UserRegisterDate:
 				return UserRegisterDate;
 				
-			case UserIsRegisteredFacebook:
-					return UserIsRegisteredFacebook;
-					
 			case UserIsRegistered:
 					return UserIsRegistered;
+					
+			case UserIsRegisteredFacebook:
+					return UserIsRegisteredFacebook;
 					
 			case UserLastUpdate:
 				return UserLastUpdate;
@@ -286,6 +287,9 @@ public class UserData {
 				
 			case UserSecondaryCurrencyBalance:
 				return UserSecondaryCurrencyBalance;
+				
+			case UserFacebookID:
+				return UserFacebookID;
 				
 			case UserTempDate:
 				return UserTempDate;
@@ -338,12 +342,12 @@ public class UserData {
 					UserLocation = (LiLocation)value;
 					break;
 					
-			case UserIsRegisteredFacebook:
-					UserIsRegisteredFacebook = (Boolean)value;
-					break;
-					
 			case UserIsRegistered:
 					UserIsRegistered = (Boolean)value;
+					break;
+					
+			case UserIsRegisteredFacebook:
+					UserIsRegisteredFacebook = (Boolean)value;
 					break;
 					
 			case UserLastUpdate:

@@ -26,11 +26,11 @@ public class VirtualGoodData {
 	, VirtualGoodMainCurrency
 	, VirtualGoodSecondaryCurrency
 	, VirtualGoodRelatedVirtualGood
-	, VirtualGoodStoreItemPrice
 	, VirtualGoodIOSBundleMin
 	, VirtualGoodIOSBundleMax
 	, VirtualGoodAndroidBundleMin
 	, VirtualGoodAndroidBundleMax
+	, VirtualGoodStoreItemPrice
 	, VirtualGoodPos
 	, VirtualGoodQuantity
 	, VirtualGoodMaxForUser
@@ -82,8 +82,6 @@ public class VirtualGoodData {
 	
 		public String VirtualGoodRelatedVirtualGood;
 	
-		public float VirtualGoodStoreItemPrice;
-	
 		public float VirtualGoodIOSBundleMin;
 	
 		public float VirtualGoodIOSBundleMax;
@@ -91,6 +89,8 @@ public class VirtualGoodData {
 		public float VirtualGoodAndroidBundleMin;
 	
 		public float VirtualGoodAndroidBundleMax;
+	
+		public float VirtualGoodStoreItemPrice;
 	
 		public int VirtualGoodPos;
 	
@@ -185,14 +185,6 @@ public class VirtualGoodData {
 			this.VirtualGoodRelatedVirtualGood = VirtualGoodRelatedVirtualGood;
 		}
 		
-		public float getVirtualGoodStoreItemPrice() {
-			return VirtualGoodStoreItemPrice;
-		}
-		
-		public void setVirtualGoodStoreItemPrice(float VirtualGoodStoreItemPrice) {
-			this.VirtualGoodStoreItemPrice = VirtualGoodStoreItemPrice;
-		}
-		
 		public float getVirtualGoodIOSBundleMin() {
 			return VirtualGoodIOSBundleMin;
 		}
@@ -223,6 +215,14 @@ public class VirtualGoodData {
 		
 		public void setVirtualGoodAndroidBundleMax(float VirtualGoodAndroidBundleMax) {
 			this.VirtualGoodAndroidBundleMax = VirtualGoodAndroidBundleMax;
+		}
+		
+		public float getVirtualGoodStoreItemPrice() {
+			return VirtualGoodStoreItemPrice;
+		}
+		
+		public void setVirtualGoodStoreItemPrice(float VirtualGoodStoreItemPrice) {
+			this.VirtualGoodStoreItemPrice = VirtualGoodStoreItemPrice;
 		}
 		
 		public int getVirtualGoodPos() {
@@ -371,9 +371,6 @@ public class VirtualGoodData {
 			case VirtualGoodRelatedVirtualGood:
 				return VirtualGoodRelatedVirtualGood;
 				
-			case VirtualGoodStoreItemPrice:
-				return VirtualGoodStoreItemPrice;
-				
 			case VirtualGoodIOSBundleMin:
 				return VirtualGoodIOSBundleMin;
 				
@@ -385,6 +382,9 @@ public class VirtualGoodData {
 				
 			case VirtualGoodAndroidBundleMax:
 				return VirtualGoodAndroidBundleMax;
+				
+			case VirtualGoodStoreItemPrice:
+				return VirtualGoodStoreItemPrice;
 				
 			case VirtualGoodPos:
 				return VirtualGoodPos;
@@ -472,10 +472,6 @@ public class VirtualGoodData {
 					VirtualGoodRelatedVirtualGood = (String)value;
 					break;
 					
-			case VirtualGoodStoreItemPrice:
-					VirtualGoodStoreItemPrice = (Float)value;
-					break;
-					
 			case VirtualGoodIOSBundleMin:
 					VirtualGoodIOSBundleMin = (Float)value;
 					break;
@@ -490,6 +486,10 @@ public class VirtualGoodData {
 					
 			case VirtualGoodAndroidBundleMax:
 					VirtualGoodAndroidBundleMax = (Float)value;
+					break;
+					
+			case VirtualGoodStoreItemPrice:
+					VirtualGoodStoreItemPrice = (Float)value;
 					break;
 					
 			case VirtualGoodPos:

@@ -28,7 +28,6 @@ import applicasa.LiCore.communication.LiCallback.LiCallbackAction;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 import applicasa.LiCore.communication.LiCallback.LiCallbackUser;
 import applicasa.LiCore.communication.LiRequestConst.RequestAction;
-import applicasa.kit.IAP.IAP;
 
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
 import com.applicasa.ApplicasaManager.LiSession;
@@ -36,7 +35,7 @@ import com.applicasa.Dynamic.Dynamic;
 import com.applicasa.Dynamic.DynamicData.LiFieldDynamic;
 import com.applicasa.User.User;
 import com.applicasa.User.UserData.LiFieldUser;
-import com.appvilleegg.R;
+import com.example.appvilleegg.R;
 
 public class RegisterActivity extends Activity  {
  
