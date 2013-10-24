@@ -55,7 +55,6 @@ public class RegisterActivity extends Activity  {
 	private boolean imageChanged = false;
 	boolean viewProfile = false;
 	private String filePath;
-	private RegisterActivity mActivity;
 	private EditText userName;
 //	private ProgressBar progressBar;
 	private ProgressBar progressBarBig;
@@ -65,7 +64,6 @@ public class RegisterActivity extends Activity  {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register);
-		mActivity = this;
 		
 		Bundle extras = getIntent().getExtras();
 		
@@ -80,7 +78,7 @@ public class RegisterActivity extends Activity  {
 		title_register = (ImageView)findViewById(R.id.title_register);
 		progressBarBig = (ProgressBar)findViewById(R.id.progressBarBig);
 		
-		LiSession.sessionStart(mActivity);
+		LiSession.sessionStart(this);
 		
 		view = (ImageView)findViewById(R.id.img_picture);
 		
@@ -199,14 +197,14 @@ public class RegisterActivity extends Activity  {
 							
 							public void onFailure(LiErrorHandler error) {
 								// TODO Auto-generated method stub
-								Toast.makeText(mActivity, "error occured "+error.getMessage(), Toast.LENGTH_LONG).show();
+								Toast.makeText(RegisterActivity.this, "error occured "+error.getMessage(), Toast.LENGTH_LONG).show();
 								progressBarBig.setVisibility(View.INVISIBLE);
 							}
 							
 							public void onComplete(ApplicasaResponse response, String msg,
 									RequestAction action, String itemID, LiObject liobject) {
 								// TODO Auto-generated method stub
-								Toast.makeText(mActivity, "Saved successfully", Toast.LENGTH_LONG).show();
+								Toast.makeText(RegisterActivity.this, "Saved successfully", Toast.LENGTH_LONG).show();
 								btnRegister.setClickable(true);
 								progressBarBig.setVisibility(View.INVISIBLE);
 							}
@@ -249,7 +247,7 @@ public class RegisterActivity extends Activity  {
 									// TODO Auto-generated method stub
 									progressBarBig.setVisibility(View.INVISIBLE);
 									LiLogger.logInfo("UserImage", Applicasa.getCurrentUser().UserImage);
-									Toast.makeText(mActivity, "Image loaded successfully", Toast.LENGTH_LONG).show();
+									Toast.makeText(RegisterActivity.this, "Image loaded successfully", Toast.LENGTH_LONG).show();
 								}
 							}); 
 						}
@@ -275,7 +273,7 @@ public class RegisterActivity extends Activity  {
 							public void onFailure(RequestAction action, LiErrorHandler error) {
 								btnRegister.setClickable(true);
 								progressBarBig.setVisibility(View.INVISIBLE);
-								Toast.makeText(mActivity, "Can't Register User", Toast.LENGTH_SHORT).show();
+								Toast.makeText(RegisterActivity.this, "Can't Register User", Toast.LENGTH_SHORT).show();
 							}
 						});
 						
@@ -412,12 +410,12 @@ public class RegisterActivity extends Activity  {
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.sessionEnd(mActivity);
+		LiSession.sessionEnd(this);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.sessionResume(mActivity);
+		LiSession.sessionResume(this);
 		super.onResume();
 	}
 	

@@ -31,13 +31,11 @@ import com.example.appvilleegg.adapters.UserRadiusArrayAdapter;
 public class UsersRadiusListActivity extends ListActivity implements LiLocationCallback{
 
 	static UserRadiusArrayAdapter adapter;
-	static Activity mActivity;
 	 ProgressBar bar;
      List<User> users;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
-		mActivity = this;
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		bar.setVisibility(View.VISIBLE);
 		
@@ -45,7 +43,7 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 		LiUserLocation.enableNetwork();
 		LiUserLocation.getLocation(this);
 		
-		LiSession.sessionStart(mActivity);
+		LiSession.sessionStart(this);
 		
 	}
 	
@@ -80,7 +78,7 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 			public void onGetUserComplete(List<User> items) {
 				// TODO Auto-generated method stub
 				users = items;
-				adapter = new UserRadiusArrayAdapter(mActivity,items);
+				adapter = new UserRadiusArrayAdapter(UsersRadiusListActivity.this,items);
 				setListAdapter(adapter);
 				bar.setVisibility(View.INVISIBLE);
 			}
@@ -105,14 +103,14 @@ public class UsersRadiusListActivity extends ListActivity implements LiLocationC
 		
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.sessionEnd(mActivity);
+		LiSession.sessionEnd(this);
 		LiUserLocation.disableGps();
 		LiUserLocation.disableNetwork();
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.sessionResume(mActivity);
+		LiSession.sessionResume(this);
 		super.onResume();
 	}
 }

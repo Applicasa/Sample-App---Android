@@ -14,6 +14,18 @@
     <!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
     <uses-permission android:name="com.android.vending.BILLING" />
   
+    <!-- TrialPay Permissions -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- End TrialPay Permissions -->
+    
+    <!-- MMedia Permissions -->
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-feature android:name="android.hardware.microphone" android:required="false" />
+	<!-- End MMedia Permissions -->
+	
     <uses-permission android:name="android.permission.ACCESS_GPS" />
 	<uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
 	<uses-permission android:name="android.permission.ACCESS_LOCATION" />
@@ -81,10 +93,38 @@
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         
-                  <activity android:name="com.example.appvilleegg.sampleApp.FriendsListActivity"
-                      android:screenOrientation="portrait"
-                     android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+       
+          <!-- MMedia Activity -->
+        <activity
+            android:name="com.millennialmedia.android.MMActivity"
+            android:configChanges="keyboardHidden|orientation|keyboard"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
+           <activity
+            android:name="com.applicasa.MMedia.LiMMediaActivity"
+            android:configChanges="keyboardHidden|orientation|keyboard"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            />
+           
+           <!-- SponsorPay Activity -->   
+            <activity android:name="com.sponsorpay.sdk.android.publisher.OfferWallActivity" android:configChanges="orientation" />
+             <activity android:name="com.sponsorpay.sdk.android.publisher.mbe.SPBrandEngageActivity" android:configChanges="orientation" />
+           <activity
+            android:name="com.applicasa.SponsorPay.LiSponsorPayActivity"
+            android:configChanges="keyboardHidden|orientation|keyboard"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            /> 
+            
+           <!-- SuperSonic Activity --> 
+        <activity
+			android:name="com.supersonicads.sdk.android.WebViewActivity"
+			android:configChanges="orientation|screenSize"
+			android:hardwareAccelerated="true" >
+		</activity>
+        
+    	<activity android:name="com.example.appvilleegg.sampleApp.FriendsListActivity"
+        android:screenOrientation="portrait"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" > </activity>
                 
         <!-- <activity android:name="main.MainActivity" > -->
         <activity android:name="com.example.appvilleegg.main.MainActivity" 
@@ -143,6 +183,10 @@
              android:windowSoftInputMode="adjustPan"
              android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
+        
+            <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/applicationId" />
         
     </application>
 

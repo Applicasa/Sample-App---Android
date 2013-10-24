@@ -33,7 +33,6 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 	
     private GridView                mGridView;
     private static VirtualGoodAdapter  	mProductAdapter;
-    Activity activity;
     List<VirtualGood> vgList;
 	   
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,12 +49,11 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		activity = getActivity();
-		 if (activity != null) {
+		 if (getActivity() != null) {
 	            // gets an instance of the custom adapter for the Virtual Product.
 			  vgList = LiStore.getAllVirtualGoods(GetVirtualGoodKind.ALL);
 			 
-			 mProductAdapter = VirtualGoodAdapter.getInstance(activity, vgList);
+			 mProductAdapter = VirtualGoodAdapter.getInstance(getActivity(), vgList);
 	            
 	            if (mGridView != null) {
 	                mGridView.setAdapter(mProductAdapter);
@@ -79,7 +77,7 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 			VirtualGood item = vgList.get(position);
 			if (item.VirtualGoodMainCurrency == 0)
 			{
-				item.buyVirtualGoods(activity, TabsFragmentActivity.purchaseCallback);
+				item.buyVirtualGoods(getActivity(), TabsFragmentActivity.purchaseCallback);
 			}
 			else
 			{
@@ -117,6 +115,5 @@ public class VirtualGoodFragment extends Fragment implements GridView.OnItemClic
 	public void onResume() {
 		super.onResume();
 		LiLogger.logInfo("TABS Virtual" , "on resume");
-		activity = getActivity();
 	}
 }

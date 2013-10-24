@@ -19,6 +19,7 @@ public class LevelsData {
 	, LevelsID
 	, LevelsLastUpdate
 	, LevelsGtgtg
+	, LevelsHTML
 	, LevelsTgtggtg
 
 	;
@@ -47,6 +48,8 @@ public class LevelsData {
 	
 		public String LevelsGtgtg;
 	
+		public String LevelsHTML;
+	
 		public int LevelsTgtggtg;
 	
 	
@@ -72,6 +75,14 @@ public class LevelsData {
 		
 		public void setLevelsGtgtg(String LevelsGtgtg) {
 			this.LevelsGtgtg = LevelsGtgtg;
+		}
+		
+		public String getLevelsHTML() {
+			return LevelsHTML;
+		}
+		
+		public void setLevelsHTML(String LevelsHTML) {
+			this.LevelsHTML = LevelsHTML;
 		}
 		
 		public int getLevelsTgtggtg() {
@@ -101,6 +112,9 @@ public class LevelsData {
 			case LevelsGtgtg:
 				return LevelsGtgtg;
 				
+			case LevelsHTML:
+				return LevelsHTML;
+				
 			case LevelsTgtggtg:
 				return LevelsTgtggtg;
 				
@@ -126,6 +140,10 @@ public class LevelsData {
 				
 			case LevelsGtgtg:
 					LevelsGtgtg = (String)value;
+					break;
+					
+			case LevelsHTML:
+					LevelsHTML = (String)value;
 					break;
 					
 			case LevelsTgtggtg:

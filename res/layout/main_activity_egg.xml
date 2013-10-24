@@ -112,4 +112,15 @@
          android:onClick="onClickHandler"
          android:src="@drawable/main_tab_dynamic_content" />
 
+     <Button
+         android:id="@+id/btn_RaiseEvent"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/btn_store"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="30dp"
+         android:onClick="onClickHandler"
+         android:background="@android:color/transparent"
+         android:text="Raise Promotion" />
+
 </RelativeLayout>

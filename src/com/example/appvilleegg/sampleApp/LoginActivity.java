@@ -32,14 +32,12 @@ public class LoginActivity extends Activity  {
 	
 	EditText email;
 	EditText password;
-	private LoginActivity mActivity;
 	private TextView textForgot;
 	private ProgressBar progressBar;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-		mActivity = this;
 		 
 		btnLoginLater = (ImageButton)findViewById(R.id.btn_log_in_later);
 		btnLogin = (ImageButton)findViewById(R.id.btn_log_in);
@@ -52,7 +50,7 @@ public class LoginActivity extends Activity  {
 		textForgot.setClickable(true);
 		
 		Log.w("Session", "start Login Activity");
-		LiSession.sessionStart(mActivity);
+		LiSession.sessionStart(this);
 	}
 
  
@@ -83,7 +81,7 @@ public class LoginActivity extends Activity  {
 					
 					public void onFailure(RequestAction action, LiErrorHandler error) {
 						progressBar.setVisibility(View.INVISIBLE);
-						Toast.makeText(mActivity, "Can't Login User", Toast.LENGTH_LONG).show();
+						Toast.makeText(LoginActivity.this, "Can't Login User", Toast.LENGTH_LONG).show();
 						
 						btnLogin.setClickable(true);
 					}
@@ -188,13 +186,13 @@ public class LoginActivity extends Activity  {
 		protected void onPause() {
 			// TODO Auto-generated method stub
 			Log.w("Session", "End Login Activity");
-			LiSession.sessionEnd(mActivity);
+			LiSession.sessionEnd(this);
 			super.onPause();
 		}
 		protected void onResume() {
 			// TODO Auto-generated method stub
 			Log.w("Session", "Resume Login Activity");
-			LiSession.sessionResume(mActivity);
+			LiSession.sessionResume(this);
 			super.onResume();
 		}
 }

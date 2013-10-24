@@ -55,6 +55,15 @@ public class LiGCMPushMessage {
 	}
 	
 	/**
+	 * Set dispatchMinutes
+	 * @param dispatchMinutes
+	 */
+	public void setDispatchMinutesFromNow(int dispatchMinutes)
+	{
+		message.setDispatchMinutes(dispatchMinutes);
+	}
+	
+	/**
 	* Set the ringtone sound
 	* enter the file name of the ringtone
 	* sound file should be stored under res\raw\filename
@@ -73,6 +82,8 @@ public class LiGCMPushMessage {
 	{
 		message.setTag(tag);
 	}
+	
+	
 	
 	/**
 	 * add Tags

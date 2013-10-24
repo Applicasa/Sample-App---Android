@@ -21,17 +21,15 @@ import com.example.appvilleegg.adapters.FriendsArrayAdapter;
 public class FriendsListActivity extends ListActivity {
 
 	static FriendsArrayAdapter adpater;
-	static Activity mActivity;
 	 ProgressBar bar;
      
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
-		mActivity = this;
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		bar.setVisibility(View.VISIBLE);
 		
-		LiSession.sessionStart(mActivity);
+		LiSession.sessionStart(this);
 		
 		
 		/**
@@ -44,14 +42,14 @@ public class FriendsListActivity extends ListActivity {
 				public void onGetFriendsResponse(LiObjResponse requestResponse,
 						List<LiObjFacebookFriends> friendsList) {
 					// TODO Auto-generated method stub
-					adpater = new FriendsArrayAdapter(mActivity, friendsList);
+					adpater = new FriendsArrayAdapter(FriendsListActivity.this, friendsList);
 					setListAdapter(adpater);
 					bar.setVisibility(View.INVISIBLE);
 				}
 				
 				public void onFBError(LiErrorHandler error) {
 					// TODO Auto-generated method stub
-					Toast.makeText(mActivity, error.getMessage(), Toast.LENGTH_LONG).show();
+					Toast.makeText(FriendsListActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
 					finish();
 				}
 			});
@@ -59,19 +57,19 @@ public class FriendsListActivity extends ListActivity {
 		else
 		{
 			bar.setVisibility(View.INVISIBLE);
-			Toast.makeText(mActivity, "please login to facebook", Toast.LENGTH_LONG).show();
+			Toast.makeText(FriendsListActivity.this, "please login to facebook", Toast.LENGTH_LONG).show();
 			finish();
 		}
 	}
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.sessionEnd(mActivity);
+		LiSession.sessionEnd(this);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.sessionResume(mActivity);
+		LiSession.sessionResume(this);
 		super.onResume();
 	}
 }

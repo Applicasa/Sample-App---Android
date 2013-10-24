@@ -335,7 +335,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public static List<Levels> buildLevelsFromCursor(String requestID ,Cursor cursor)
 	{
 		List<Levels> returnList = new ArrayList<Levels>();
-		if (cursor == null || cursor.getCount() == 0 ) {}// nothing received
+		if (cursor == null || cursor.getCount() == 0 ) {return returnList; }// nothing received
 		else
 		{
 			cursor.moveToFirst();
@@ -363,7 +363,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			idsList = null;
 			idsToDelete = null;			
 		}
+		
 		cursor.close();
+	
 	
 		return returnList;
 		
@@ -466,6 +468,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		this.LevelsID = "0";
 		(this.LevelsLastUpdate = new GregorianCalendar()).setTimeInMillis(0);
 		this.LevelsGtgtg = "";
+		this.LevelsHTML = "www.yahoo.com";
 		this.LevelsTgtggtg = 0;
 	}
 
@@ -482,6 +485,11 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public Levels(String LevelsID)
 	{
 		this.LevelsID = LevelsID;
+	}
+
+	public Levels(Levels item)
+	{
+		initWithObject(item);
 	}
 
 	/**
@@ -520,6 +528,10 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.LevelsGtgtg = cursor.getString(columnIndex);
 		
+		columnIndex = cursor.getColumnIndex(header + LiFieldLevels.LevelsHTML.toString());
+		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
+			this.LevelsHTML = cursor.getString(columnIndex);
+		
 		columnIndex = cursor.getColumnIndex(header + LiFieldLevels.LevelsTgtggtg.toString());
 		if (columnIndex != LiCoreDBmanager.COLUMN_NOT_EXIST)
 			this.LevelsTgtggtg = cursor.getInt(columnIndex);
@@ -538,6 +550,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 		this.LevelsID			= item.LevelsID;
 		this.LevelsLastUpdate			= item.LevelsLastUpdate;
 		this.LevelsGtgtg			= item.LevelsGtgtg;
+		this.LevelsHTML			= item.LevelsHTML;
 		this.LevelsTgtggtg			= item.LevelsTgtggtg;
 	
 		return LevelsID;
@@ -564,6 +577,8 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 	
 		dictionary.put(LiFieldLevels.LevelsGtgtg, LevelsGtgtg);
 	
+		dictionary.put(LiFieldLevels.LevelsHTML, LevelsHTML);
+	
 		dictionary.put(LiFieldLevels.LevelsTgtggtg, LevelsTgtggtg);
 	
 		return dictionary;
@@ -580,6 +595,7 @@ public LiJSONObject dictionaryRepresentation(boolean withFK) throws LiErrorHandl
 		dbObject.put(LiFieldLevels.LevelsID, LiCoreDBmanager.PRIMARY_KEY,-1);
 		dbObject.put(LiFieldLevels.LevelsLastUpdate, LiCoreDBmanager.DATE,0);
 		dbObject.put(LiFieldLevels.LevelsGtgtg, LiCoreDBmanager.TEXT,"");
+		dbObject.put(LiFieldLevels.LevelsHTML, LiCoreDBmanager.TEXT,"www.yahoo.com");
 		dbObject.put(LiFieldLevels.LevelsTgtggtg, LiCoreDBmanager.INTEGER,0);
 	return dbObject;
 }

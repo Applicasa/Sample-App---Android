@@ -335,7 +335,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public static List<GameV> buildGameVFromCursor(String requestID ,Cursor cursor)
 	{
 		List<GameV> returnList = new ArrayList<GameV>();
-		if (cursor == null || cursor.getCount() == 0 ) {}// nothing received
+		if (cursor == null || cursor.getCount() == 0 ) {return returnList; }// nothing received
 		else
 		{
 			cursor.moveToFirst();
@@ -363,7 +363,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			idsList = null;
 			idsToDelete = null;			
 		}
+		
 		cursor.close();
+	
 	
 		return returnList;
 		
@@ -482,6 +484,11 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public GameV(String GameVID)
 	{
 		this.GameVID = GameVID;
+	}
+
+	public GameV(GameV item)
+	{
+		initWithObject(item);
 	}
 
 	/**

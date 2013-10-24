@@ -20,7 +20,7 @@ public class LiConfig {
 	/**
 	* Indicates whether working in live or sandbox environment
 	*/
-	private final static boolean SANDBOX = true;
+	private final static boolean SANDBOX = false;
 
 	/**
 	*	
@@ -54,17 +54,14 @@ public class LiConfig {
 	/**
 	 * Enable push services
 	 */
-	private final static boolean ENABLE_PUSH = false;
+	private final static boolean ENABLE_PUSH = true;
 			
 	/**
 	* Enter GCM SenderID (projectId or email)
 	*/
 	private final static String GOOGLE_GCM = "423501440257";
  
-	
-
  
-	
 	/**
 	*	
 	*	Facebook
@@ -80,7 +77,6 @@ public class LiConfig {
 	 * Enter FaceBook Application key
 	 */
 	private final static String FB_APPLICATION_KEY = "494708670563462";
- 
 
 	/**
 	 * Enable Fb debug
@@ -98,6 +94,61 @@ public class LiConfig {
 	*/
 	private final static boolean ENABLE_LOCATION_SERVICE = true;
 	
+	/**
+	*
+	* MMedia
+	*/ 
+	
+	/**
+	 * Should enable MMedia Promotions
+	 */
+	private final static boolean ENABLE_MMEDIA = true;
+	
+	/**
+	*
+	* SupersonicAds
+	*/ 
+	
+	/**
+	 * Should enable SuperSonic Promotions
+	 */
+	private final static boolean ENABLE_SUPERSONICADS = true;
+	
+	/**
+	* Enter SuperSonic App ID
+	*/
+	private final static String SUPERSONICADS_APPID = "2d8de069";
+	
+	/**
+	*
+	* SponorPay
+	*/ 
+	
+	/**
+	 * Should enable SponserPay Promotions
+	 */
+	private final static boolean ENABLE_SPONSORPAY = true;
+	
+	/**
+	* Enter SponserPay App ID
+	*/
+	
+	private final static String SPONSORPAY_ID = "17287";
+	/**
+	 * Enter SponserPay SecurityToken 
+	 */
+	private final static String SPONSORPAY_SECURITYTOKEN = "250b3d9fdb4cc51cb6c67a775f39c275";
+	
+	
+	/**
+	*
+	* AppNext
+	*/
+	/**
+	 * Should enable AppNext Promotions
+	 */
+	private final static boolean ENABLE_APPNEXT = true;
+	
 	
 	/**
 	*
@@ -107,7 +158,7 @@ public class LiConfig {
 	/**
 	* Should enable Chartboost Promotions
 	*/
-	 private final static boolean ENABLE_CHARTBOOST = false;
+	 private final static boolean ENABLE_CHARTBOOST = true;
 	
 	/**
 	 * Enter CHARTBOOST ID
@@ -117,6 +168,7 @@ public class LiConfig {
 	  * Enter CHARTBOOST SIGNATURE 
 	  */
 	 private final static String CHARTBOOST_SIGNATURE= "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+	
 	
 	
 	/**
@@ -135,12 +187,12 @@ public class LiConfig {
 	/**
 	 *  Minimum Framework Version - DO NOT ALTER
 	 */
-	private final static double FRAMEWORK_VERSION = 3.0;
+	private final static double FRAMEWORK_VERSION = 3.1;
 	
 	/**
 	 *   SDK Version - DO NOT ALTER
 	 */
-	private final static double SDK_VERSION = 3.0;
+	private final static double SDK_VERSION = 3.1;
 		
 	
 	private final static String SCHEMA_VERISON = "3.0";
@@ -148,7 +200,7 @@ public class LiConfig {
 	/**
      * Schema Generated Timestamp in sec
      */
-    private final static int SCHEMA_DATE = 1370936568;
+    private final static int SCHEMA_DATE = 1382511981;
 	
 	/**
 	 * Enable offline Action
@@ -251,17 +303,46 @@ public class LiConfig {
 		return ENABLE_IAP_SANDBOX;
 	}
 
-	 public static String getCahartboostId() {
+	 public static String getChartboostId() {
 		return CHARTBOOST_ID;
 	}
  
-	public static String getCahartboostSignature() {
+	public static String getChartboostSignature() {
 		return CHARTBOOST_SIGNATURE;
 	}
  
 	public static boolean isChartboostEnabled() {
 		return ENABLE_CHARTBOOST;
 	}
+	
+	public static boolean isMMediaEnabled() {
+		return ENABLE_MMEDIA;
+	}
+	
+	public static boolean isSupersonicAdsEnabled() {
+		return ENABLE_SUPERSONICADS;
+	}
+	
+	public static String getSupersonicAdsAppId() {
+		return SUPERSONICADS_APPID;
+	}
+	
+	public static boolean isAppnextEnabled() {
+		return ENABLE_APPNEXT;
+	}
+	
+	public static String getSponserPayAppId() {
+		return SPONSORPAY_ID;
+	}
+	
+	public static String getSponserPaySecurityToken() {
+		return SPONSORPAY_SECURITYTOKEN;
+	}
+	
+	public static boolean isSponsorPayEnabled() {
+		return ENABLE_SPONSORPAY;
+	}
+	
 	
 	public static int getSessionPauseTime()
 	{

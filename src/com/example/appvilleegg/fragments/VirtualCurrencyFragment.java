@@ -25,7 +25,6 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 	
     private GridView                mGridView;
     private VirtualCurrencyAdapter  			mStoreAdapter = null;
-    Activity activity;
 	   
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -41,14 +40,12 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		activity = getActivity();
-		
-		 if (activity != null ) {
+		 if (getActivity() != null ) {
 	            // Create an instance of the custom adapter for the GridView. A static array of location data
 	            // is stored in the Application sub-class for this app. This data would normally come
 	            // from a database or a web service.
 			 if (mStoreAdapter == null)
-			 	mStoreAdapter = VirtualCurrencyAdapter.getInstance(activity, LiStore.getAllVirtualCurrency());
+			 	mStoreAdapter = VirtualCurrencyAdapter.getInstance(getActivity(), LiStore.getAllVirtualCurrency());
 	            
 	            if (mGridView != null) {
 	                mGridView.setAdapter(mStoreAdapter);
@@ -69,7 +66,7 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 		if (TabsFragmentActivity.clickEnabled)	
 		{
 			VirtualCurrency vc = LiStore.getAllVirtualCurrency().get(position);
-			LiStore.buyVirtualCurrency(activity, vc, TabsFragmentActivity.purchaseCallback);
+			LiStore.buyVirtualCurrency(getActivity(), vc, TabsFragmentActivity.purchaseCallback);
 		}
 	}
 	
@@ -85,6 +82,5 @@ public class VirtualCurrencyFragment extends Fragment implements GridView.OnItem
 	public void onResume() {
 		super.onResume();
 		LiLogger.logInfo("TABS Virtual" , "on resume");
-		activity = getActivity();
 	}
 }

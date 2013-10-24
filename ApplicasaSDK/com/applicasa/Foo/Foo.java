@@ -337,7 +337,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public static List<Foo> buildFooFromCursor(String requestID ,Cursor cursor)
 	{
 		List<Foo> returnList = new ArrayList<Foo>();
-		if (cursor == null || cursor.getCount() == 0 ) {}// nothing received
+		if (cursor == null || cursor.getCount() == 0 ) {return returnList; }// nothing received
 		else
 		{
 			cursor.moveToFirst();
@@ -365,7 +365,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			idsList = null;
 			idsToDelete = null;			
 		}
+		
 		cursor.close();
+	
 	
 		return returnList;
 		
@@ -492,6 +494,11 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public Foo(String FooID)
 	{
 		this.FooID = FooID;
+	}
+
+	public Foo(Foo item)
+	{
+		initWithObject(item);
 	}
 
 	/**

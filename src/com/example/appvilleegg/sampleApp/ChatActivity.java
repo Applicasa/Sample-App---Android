@@ -23,25 +23,16 @@ import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.Push.LiCallbackPush;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
-import applicasa.LiCore.communication.LiFilters;
-import applicasa.LiCore.communication.LiFilters.Condition;
-import applicasa.LiCore.communication.LiFilters.Operation;
 import applicasa.LiCore.communication.LiQuery;
-import applicasa.LiCore.communication.LiRequestConst.QueryKind;
-import applicasa.LiCore.communication.LiRequestConst.SortType;
 import applicasa.LiJson.LiJSONException;
 
-import com.applicasa.ApplicasaManager.LiCallbackQuery.LiChatGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiGCMPushMessage;
 import com.applicasa.ApplicasaManager.LiSession;
-import com.applicasa.Chat.Chat;
-import com.applicasa.Chat.ChatData.LiFieldChat;
 import com.applicasa.User.User;
 import com.example.appvilleegg.R;
 
 public class ChatActivity extends Activity implements OnClickListener {
 
-	static Activity mActivity;
 	 ProgressBar bar;
      List<User> users;
      Button send; 
@@ -55,7 +46,6 @@ public class ChatActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat);
-		mActivity = this;
 		
 		Bundle extras = getIntent().getExtras();
 		receipientId = extras.getString("id");
@@ -63,7 +53,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 		scroller = (ScrollView)findViewById(R.id.scrollContainer);
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		bar.setVisibility(View.VISIBLE);
-		LiSession.sessionStart(mActivity);
+		LiSession.sessionStart(this);
 		
 		send = (Button)findViewById(R.id.btn_sendPush);
 		send.setOnClickListener(this);
@@ -112,12 +102,12 @@ public class ChatActivity extends Activity implements OnClickListener {
 				
 				public void onComplete() {
 					// TODO Auto-generated method stub
-					Toast.makeText(mActivity, "Message sent", Toast.LENGTH_SHORT).show();
-					Chat chat = new Chat();
-					chat.ChatSender = User.getCurrentUser();
-					chat.ChatReciepent = new User(receipientId); // Create an empty user because when we save we want to save the recipientsId, This doesn't affect the recipient Data
-					chat.ChatText = text;
-					chat.save(null);
+					Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+					//Chat chat = new Chat();
+					//chat.ChatSender = User.getCurrentUser();
+					//chat.ChatReciepent = new User(receipientId); // Create an empty user because when we save we want to save the recipientsId, This doesn't affect the recipient Data
+					//chat.ChatText = text;
+					//chat.save(null);
 					
 					
 					mMsgHolder.removeAllViews();
@@ -175,24 +165,24 @@ public class ChatActivity extends Activity implements OnClickListener {
 		LiQuery query = new LiQuery();
 		
 		// current user sent message to recipient
-		LiFilters f1 = new LiFilters(LiFieldChat.ChatReciepent, Operation.EQUAL, receipientId);
-		LiFilters f2 = new LiFilters(LiFieldChat.ChatSender, Operation.EQUAL, User.getCurrentUser().UserID);
-		LiFilters f3 = new LiFilters(f1, Condition.AND, f2);
+		//LiFilters f1 = new LiFilters(LiFieldChat.ChatReciepent, Operation.EQUAL, receipientId);
+		//LiFilters f2 = new LiFilters(LiFieldChat.ChatSender, Operation.EQUAL, User.getCurrentUser().UserID);
+		//LiFilters f3 = new LiFilters(f1, Condition.AND, f2);
 		
 		//OR
 		
 		// recipient sent message to current  
-		LiFilters f4 = new LiFilters(LiFieldChat.ChatReciepent, Operation.EQUAL, User.getCurrentUser().UserID);
-		LiFilters f5 = new LiFilters(LiFieldChat.ChatSender, Operation.EQUAL, receipientId);
-		LiFilters f6 = new LiFilters(f5, Condition.AND, f4);
+		//LiFilters f4 = new LiFilters(LiFieldChat.ChatReciepent, Operation.EQUAL, User.getCurrentUser().UserID);
+		//LiFilters f5 = new LiFilters(LiFieldChat.ChatSender, Operation.EQUAL, receipientId);
+		//LiFilters f6 = new LiFilters(f5, Condition.AND, f4);
 		
-		LiFilters f7 = new LiFilters(f6, Condition.OR, f3);
-		query.Lifilters = f7;
+		//LiFilters f7 = new LiFilters(f6, Condition.OR, f3);
+		//query.Lifilters = f7;
 		
 		// add order by last update
-		query.addOrderBy(LiFieldChat.ChatLastUpdate, SortType.ASCESNDING);
+		//query.addOrderBy(LiFieldChat.ChatLastUpdate, SortType.ASCESNDING);
 		
-		Chat.getArrayWithQuery(query, QueryKind.LIGHT, new LiChatGetArrayCallback() {
+		/*Chat.getArrayWithQuery(query, QueryKind.LIGHT, new LiChatGetArrayCallback() {
 			
 			public void onGetChatFailure(LiErrorHandler error) {
 				// TODO Auto-generated method stub
@@ -221,7 +211,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 				updateUIThread();
 				bar.setVisibility(View.INVISIBLE);
 			}
-		});
+		});*/
 	}
 	
 	private void setImage(final String url, final ImageView image) {
@@ -252,12 +242,12 @@ public class ChatActivity extends Activity implements OnClickListener {
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.sessionEnd(mActivity);
+		LiSession.sessionEnd(this);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.sessionResume(mActivity);
+		LiSession.sessionResume(this);
 		super.onResume();
 	}
 

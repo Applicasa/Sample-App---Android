@@ -3,7 +3,6 @@ package com.example.appvilleegg.main;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,7 +26,12 @@ import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.ApplicasaManager.LiUserLocation;
 import com.applicasa.Dynamic.Dynamic;
+import com.applicasa.Promotion.LiPromoManager;
 import com.applicasa.Promotion.Promotion;
+import com.applicasa.SupersonicAds.LiSupersonicAdsManager;
+import com.applicasa.ThirdParty.LiObjThirdPartyAction;
+import com.applicasa.ThirdParty.ThirdPartyManager;
+import com.applicasa.TrialPay.TrialPayManager.LiTPActionResultCallback;
 import com.applicasa.User.User;
 import com.example.appvilleegg.R;
 import com.example.appvilleegg.sampleApp.DynamicListActivity;
@@ -39,18 +43,39 @@ import com.example.appvilleegg.sampleApp.UsersRadiusListActivity;
 
 public class MainActivity extends Activity implements LiCallbackInitialize {
 	
+	/**
+	 Instruction to raise custom events.
+	 The "Egg" sample app implemented custom events that will raise the different ad network possible (TrialPay, MMedia, SupersonicAds, SponsorPay Appnext and Chartboost)
+
+	 To raise different AdNetwork just change the name of the variable "customEvent" below.
+	 use the the following names to raise the different ad network:
+
+	 1. TrialPay:
+		A. MainCurrency ------------------->OfferwallMainCurrency
+	 	B. SecondaryCurrency -------------->OfferwallSecondaryCurrency
+	 2. Millennial Media ------------------>@"MMedia"
+	 3. SupersonicAds
+	 	A. SupersonicAds BrandConnect ----->@"SuperSonicBrand"
+	 	B. SupersonicAds offerwall -------->@"SuperSonic"
+	 3. SponsorPay
+	 	A. SponsorPay BrandEngage --------->@"SponsorPayBrand"
+	 	B. SponsorPay offerwall ----------->@"SponsorPay"
+	 4.Appnext ---------------------------->@"Appnext"
+	 5.Chartboost ------------------------->@"Chartboost"
+	 
+	 **/
 	
-	Context cont;
+	private static String customEvent = "OfferwallMainCurrency";
+	
 	List<Dynamic> arrDynamic;
 	ListView lvMain;
-	Context context;
-	Activity mActivity = this;
 	ImageButton btn_login;
 	ImageButton btn_play;
 	ImageButton btn_Store;
 	ImageButton btn_Radius_Friends;
 	ImageButton btn_myProfile;
 	ImageButton btn_fb_Friends;
+	
 	ImageButton btn_dynamicContent;
 	ProgressBar bar;
 	
@@ -65,16 +90,43 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		@Override
 		public void onHasPromotionToDisplay(List<Promotion> promotions) {
 			// TODO Auto-generated method stub
-			promotions.get(0).show(mActivity, new LiPromotionResultCallback() {
+			promotions.get(0).show(MainActivity.this, new LiPromotionResultCallback() {
 				
 				public void onPromotionResultCallback(LiPromotionAction promoAction,
 						LiPromotionResult result, Object object) {
 					
 					Log.i("MainActivity", "Promo result = "+result.toString() + " promoAction = " + promoAction.toString());
 					
-					if (object instanceof String)
+					switch (result)
 					{
-						Log.i("MainActivity Promotion object", "Promo string = " +(String)object);
+						/*
+						 * These three ad networks will notify applicasa servers via callbacks of users operations.
+						 * To receive to the device (updated balance) you must do the following call:
+						 */
+						case PromotionResultSponorPay:
+						case PromotionResultSuperSonic:
+						case PromotionResultTrialPay:
+							ThirdPartyManager.getTPAction(new LiTPActionResultCallback() {
+								
+								@Override
+								public void onComplete(List<LiObjThirdPartyAction> list, LiErrorHandler error) {
+									// TODO Auto-generated method stub
+									if (error == null){
+										Log.i("MainActivity ThirdPartyManager", "received "+list.size()+" callbacks");
+										initView();
+									}
+									else
+										Log.i("MainActivity ThirdPartyManager",error.errorMessage);
+								}
+							});
+						default:
+								
+							if (object instanceof String)
+								{
+									Log.i("MainActivity Promotion object", "Promo string = " +(String)object);
+								}
+								
+							
 					}
 					
 				}
@@ -87,8 +139,6 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity_egg);
-        cont = this;
-        mActivity = this;
         btn_login = (ImageButton)findViewById(R.id.btn_login_main);
         btn_play = (ImageButton)findViewById(R.id.btn_play);
         btn_Store = (ImageButton)findViewById(R.id.btn_store);
@@ -111,7 +161,6 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
         btn_myProfile.setClickable(false);
         btn_dynamicContent.setClickable(false);
         
-        context = this;
       	LiPromo.setPromoCallback(promoCallback);
       	
 		LiManager.initialize(this, this);
@@ -136,6 +185,8 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	        	btn_login.setImageResource(R.drawable.btn_logout);
 	        }
 	       refreshProfileImages();
+	       
+	       LiSupersonicAdsManager.setShowDemoCampaigns();
     }
 
 	public void onCompleteInitialize() {
@@ -149,27 +200,15 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 		// Updates User Location
 		LiUserLocation.updateLocation();
 		
-		/**
-		* Trial pay example of receving all old actions 
-		*
-		*	TrialPayManager.getTPAction(new LiTPActionResultCallback() {
-		*
-		*		@Override
-		*		public void onComplete(List<LiObjTrialPayAction> list,
-		*				LiErrorHandler error) {
-		*			Log.w("LiTPActionResultCallback", String.valueOf(list.size()));
-		*		}
-		*			
-		*	});
-		* */
+		LiSupersonicAdsManager.setShowDemoCampaigns();
 		
 		/*
 		 * Option to receive all promotion when requesting
-		 */
+		
 		List<Promotion> list = LiPromo.getAvailablePromotions();
 		if (list.size()>0)
 			list.get(0).show(mActivity, null);
-		
+		*/
 	 }
 		
 	
@@ -239,7 +278,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 					public void onFailure(RequestAction action, LiErrorHandler error) {
 						// TODO Auto-generated method stub
 						bar.setVisibility(View.INVISIBLE);
-						Toast.makeText(context, "logout failed", Toast.LENGTH_LONG).show();
+						Toast.makeText(MainActivity.this, "logout failed", Toast.LENGTH_LONG).show();
 					}
 				});
 			}
@@ -251,9 +290,16 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 			break;
 			
 		case R.id.btn_play:
-			 i = new Intent(this, GameActivity.class);
-				startActivity(i);
+			 //i = new Intent(this, GameActivity.class);
+				//startActivity(i);
+			
 			break;
+		case R.id.btn_RaiseEvent:
+			 /*i = new Intent(this, GameActivity.class);
+				startActivity(i);*/
+			LiPromo.raiseCustomEvent(customEvent);
+			break;
+			
 			
 		case R.id.btn_store:
 			   btn_Store.setClickable(false);
@@ -306,7 +352,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	}
 	protected void onResume() {
 		super.onResume();
-		LiSession.sessionResume(context);
+		LiSession.sessionResume(this);
 		
 		if (Applicasa.isInitialized())
 			initView();

@@ -46,8 +46,13 @@ import applicasa.kit.IAP.Callbacks.LiCallbackVirtualCurrencyRequest;
 import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
 import applicasa.kit.IAP.Data.VirtualItem;
 
+import com.applicasa.Appnext.LiAppnextManager;
 import com.applicasa.Chartboost.LiChartboostManager;
+import com.applicasa.MMedia.LiMMediaManager;
 import com.applicasa.Promotion.Promotion;
+import com.applicasa.SponsorPay.LiSponsorPayManager;
+import com.applicasa.SupersonicAds.LiSupersonicAdsManager;
+import com.applicasa.TrialPay.TrialPayManager;
 import com.applicasa.User.User;
 import com.applicasa.VirtualCurrency.VirtualCurrency;
 import com.applicasa.VirtualGood.VirtualGood;
@@ -70,7 +75,13 @@ public class LiSinglePromoDialog extends Dialog   {
 	ImageButton mImageButton;
 	RelativeLayout.LayoutParams rl;
 	LiPromotionResultCallback mLiPromotionResultCallback;
+	static boolean isMainDialog = true;
 	
+	
+	static WebView offerWallWebView;
+	String offerwallUrl;
+	int height = 0;
+	int width = 0;
 	
 	protected boolean isBackgroundAvailable = false;
 	protected boolean isButtonAvailable = false;
@@ -82,20 +93,57 @@ public class LiSinglePromoDialog extends Dialog   {
         mSinglePromo = singlePromo;
         mLiPromotionResultCallback = liPromotionResultCallback;
         mPromoDialog = this;
+        isMainDialog = true;
+     // Set's the padding of the Promo
+	  DisplayMetrics displaymetrics = new DisplayMetrics();
+	  mActivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+	  height = displaymetrics.heightPixels;
+	  width = displaymetrics.widthPixels;
     }
 
     /**
      * Loads all Promotion Data
      */
     public void loadPromotion() {
-    	
     	switch (mSinglePromo.PromotionActionKind)
     	{
+    	case SUPERSONICADS:
+    		if(!Applicasa.isOnline())
+    			LiLogger.logError(TAG, "Cant display SupersonicAds Without Internet Connection");
+    		else if (LiConfigInner.isSupersonicAdsEnabled())
+				LiSupersonicAdsManager.getInstance().show(mActivity, mSinglePromo, mLiPromotionResultCallback);
+			else
+				LiLogger.logError(TAG, "Cant display SupersonicAds Without SupersonicAds SDK");
+    		break;
+    	case APPNEXT:
+    		if(!Applicasa.isOnline())
+    			LiLogger.logError(TAG, "Cant display Appnext Without Internet Connection");
+    		else if (LiConfigInner.isAppnextEnabled())
+				LiAppnextManager.getInstance().show(mActivity, mSinglePromo, mLiPromotionResultCallback);
+			else
+				LiLogger.logError(TAG, "Cant display Appnext Without Appnext SDK");
+    		break;
+    	case SPONSORPAY:
+    		if(!Applicasa.isOnline())
+    			LiLogger.logError(TAG, "Cant display SponsorPay Without Internet Connection");
+    		else if (LiConfigInner.isSponsorPayEnabled())
+				LiSponsorPayManager.getInstance().show(mActivity, mSinglePromo, mLiPromotionResultCallback);
+			else
+				LiLogger.logError(TAG, "Cant display SponsorPay Without SponsorPay SDK");
+    		break;
+    	case MMEDIA:
+    		if(!Applicasa.isOnline())
+    			LiLogger.logError(TAG, "Cant display MMedia Without Internet Connection");
+    		else if (LiConfigInner.isMMediaEnabled())
+				LiMMediaManager.getInstance().show(mActivity,mSinglePromo,mLiPromotionResultCallback);
+			else
+				LiLogger.logError(TAG, "Cant display MMedia Without MMedia SDK");
+    		break;
     	case CHARTBOOST:
     		if(!Applicasa.isOnline())
     			LiLogger.logError(TAG, "Cant display Chartboost Without Internet Connection");
     		else if (LiConfigInner.isChartboostEnabled())
-				LiChartboostManager.getInstance().show(mActivity,mSinglePromo);
+				LiChartboostManager.getInstance().show(mActivity,mSinglePromo,mLiPromotionResultCallback);
 			else
 				LiLogger.logError(TAG, "Cant display Chartboost Without Chartboosts SDK");
     		break;
@@ -130,16 +178,12 @@ public class LiSinglePromoDialog extends Dialog   {
 		 */
 		mFrameLayout = new FrameLayout(getContext());
 		FrameLayout.LayoutParams fp = new FrameLayout.LayoutParams(
-				FrameLayout.LayoutParams.MATCH_PARENT,
-				FrameLayout.LayoutParams.MATCH_PARENT);
+				/*FrameLayout.LayoutParams.MATCH_PARENT,
+				FrameLayout.LayoutParams.MATCH_PARENT*/width,height);
 		
-		// Set's the padding of the Promo
-		DisplayMetrics displaymetrics = new DisplayMetrics();
-		mActivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-		int height = displaymetrics.heightPixels;
-		int width = displaymetrics.widthPixels;
+		if (mSinglePromo.PromotionActionKind != Actionkind.TRIAL_PAY)
+			mFrameLayout.setPadding(width/18, height/18, width/18, height/18);
 		
-		mFrameLayout.setPadding(width/18, height/18, width/18, height/18);
 		addContentView(mFrameLayout, fp);
 		
 		
@@ -178,20 +222,24 @@ public class LiSinglePromoDialog extends Dialog   {
 	 */
 	private void createExitImage() {
 		mExitButton = new ImageView(getContext());
+		
+		RelativeLayout.LayoutParams btn_rl = new RelativeLayout.LayoutParams(pxFromDp(40),pxFromDp(40));//,width-20,height-20);
+		btn_rl.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		try { 
 			AssetManager mngr = mActivity.getAssets();
 			// Create an input stream to read from the asset folder
             InputStream ins = mngr.open("x_btn.png");
             // Convert the input stream into a bitmap
             Bitmap bitmap= BitmapFactory.decodeStream(ins);
+            
+            mExitButton.setScaleType(ScaleType.CENTER_CROP);
             mExitButton.setImageBitmap(bitmap);
             mExitButton.setClickable(true);
             
 		} catch ( IOException e) {
 			LiLogger.logError(LiSinglePromoDialog.class.getSimpleName(), "Failed Creating x_btn.png " +e.getMessage());
 		}
-		
-		 mRelativeLayout.addView(mExitButton);
+		mRelativeLayout.addView(mExitButton,btn_rl);
 		 
 		 mExitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -223,7 +271,8 @@ public class LiSinglePromoDialog extends Dialog   {
 			}
 
 			public void onSuccessfullBitmap(Bitmap bitmap) {
-				Drawable dr = new BitmapDrawable(bitmap);
+//				 = new BitmapDrawable(bitmap);
+				 Drawable dr = new BitmapDrawable(mActivity.getResources(),bitmap);
 				mRelativeLayout.setBackgroundDrawable(dr);
 				// indicates bg is ready
 				isBackgroundAvailable  = true;
@@ -260,7 +309,7 @@ public class LiSinglePromoDialog extends Dialog   {
     	
 		LiLogger.logDebug("**** PromoAvailable ****", "Promo Type "+mSinglePromo.PromotionAppEvent.toString()+" "+mSinglePromo.PromotionAppEvent.getId());
 		
-			WebView wv = new WebView(mActivity);
+			offerWallWebView = new WebView(mActivity);
 			 StringBuilder link = new StringBuilder();
 			 try {
 				  if (mSinglePromo.PromotionActionData.has("link"))
@@ -275,28 +324,58 @@ public class LiSinglePromoDialog extends Dialog   {
 			  if (link != null && link.length() != 0)
 			  {
 				  String userId = User.getCurrentUser().UserID;
-				  link.append("sid="+userId+"&Promotion="+mSinglePromo.PromotionID);
-				  RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+				  String deviceInfo = TrialPayManager.getTrialPayDeviceInfo();
+				  link.append("sid="+userId+"&Promotion="+mSinglePromo.PromotionID+"&IsSandbox="+(LiConfigInner.isSandbox()?"true":"false")+"&"+deviceInfo);
+				  final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
 		                    RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+				 
 				  mRelativeLayout.setLayoutParams(params);
-				  mRelativeLayout.addView(wv);
-				  wv.getSettings().setJavaScriptEnabled(true);
-				  wv.setWebViewClient(new WebViewClient(){
+				  mRelativeLayout.addView(offerWallWebView,params);
+				  offerWallWebView.getSettings().setJavaScriptEnabled(true);
+				  offerWallWebView.getSettings().setUseWideViewPort(true);
+				  offerWallWebView.getSettings().setLoadWithOverviewMode(true);
+				  offerWallWebView.getSettings().setBuiltInZoomControls(true);
+				  offerWallWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
+				  
+				  offerWallWebView.setWebViewClient(new WebViewClient(){
+					  @Override
+					    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+					        if (url.startsWith("http")) {
+					            view.loadUrl(url);
+					        } else {
+					            if (url.startsWith("tpbow")) {
+					                url = url.substring(5);
+					            }
+					            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					            mActivity.startActivity( intent );
+					        }
+					        return true;
+					    }
+					  
 					  public void onPageFinished(WebView view, String url)
 					  {
+						  if (offerwallUrl == null && url.contains("tp_base_page=1")) {
+					            offerwallUrl = url;
+					        }
+						  
+						  if (!isMainDialog) 
+						  {
+							  return;
+						   }
 						 /**
 						 * Create the Exit Image
 						 */
+						isMainDialog = false;
+						
 						createExitImage();
-						mProgressBar.setVisibility(View.INVISIBLE);
-						mRelativeLayout.removeView(mProgressBar);
 						showPromo();
 						
 					  }
 				  });
-				  wv.loadUrl(link.toString());
-				 
-				 
+				  LiLogger.logDebug(LiSinglePromoDialog.class.getSimpleName(), "Opening url: "+link.toString());
+				  offerWallWebView.loadUrl(link.toString());
+				  
+				  
 				
 			  }
 	}
@@ -347,15 +426,18 @@ public class LiSinglePromoDialog extends Dialog   {
 	
 	private void buildTrialPayPromotion()
 	{
+		
+		if (offerWallWebView != null) return;
 		/**
 		 * Call to create the layouts
 		 */
 		createPromoLayout();
-		
+
+		    
 		/**
 		 *  add Spinner
 		 */
-		addSpinner();
+//		addSpinner();
 		
 		/**
 		 * Loads the promotion Url and open the webView
@@ -480,12 +562,27 @@ public class LiSinglePromoDialog extends Dialog   {
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-	        Log.d(this.getClass().getName(), "back button pressed");
+		 Log.d(this.getClass().getName(), "back button pressed");
+		if (keyCode == KeyEvent.KEYCODE_BACK && (offerWallWebView!= null && offerWallWebView.getVisibility() == WebView.VISIBLE)) {
+	        this.goBack(keyCode, event);
+	        return true;
+	    } else if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	        Log.d(this.getClass().getName(), "back button pressed Existing");
 	        handleExit();
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
+	
+	private void goBack(int keyCode, KeyEvent event) {
+	    if (offerWallWebView.canGoBack()) {
+	        offerWallWebView.goBack();
+	    } else {
+	    	offerWallWebView = null;
+	        onKeyDown(keyCode, event);
+	    }
+	}
+	
+	
 	
 	/**
 	 * Handles Exist
@@ -493,9 +590,14 @@ public class LiSinglePromoDialog extends Dialog   {
 	 */
 	protected void handleExit() {
 		mSinglePromo.updateViewUseCount(1, 0);
-    	 if (mLiPromotionResultCallback != null)
-         	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Cancelled, LiPromotionResult.PromotionResultNothing, null);
-    	 
+		 if (mLiPromotionResultCallback != null)
+		 {
+			 if (mSinglePromo.PromotionActionKind == Actionkind.TRIAL_PAY)
+              	mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Succeded, LiPromotionResult.PromotionResultTrialPay, null);
+		     else
+				mLiPromotionResultCallback.onPromotionResultCallback(LiPromotionAction.Cancelled, LiPromotionResult.PromotionResultNothing, null);
+		 }
+		offerWallWebView = null;
         LiSinglePromoDialog.this.mPromoDialog.dismiss();
 	}
 	
@@ -584,13 +686,4 @@ public class LiSinglePromoDialog extends Dialog   {
 			 mPromoDialog.dismiss();
 		}
 	};
-	
-	
-	private void addSpinner() {
-		// TODO Auto-generated method stub
-		mProgressBar = new ProgressBar(mActivity);
-		mProgressBar.setClickable(false);
-		mProgressBar.setVisibility(View.VISIBLE);
-		mRelativeLayout.addView(mProgressBar);
-	}
 }

@@ -335,7 +335,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public static List<Achievments> buildAchievmentsFromCursor(String requestID ,Cursor cursor)
 	{
 		List<Achievments> returnList = new ArrayList<Achievments>();
-		if (cursor == null || cursor.getCount() == 0 ) {}// nothing received
+		if (cursor == null || cursor.getCount() == 0 ) {return returnList; }// nothing received
 		else
 		{
 			cursor.moveToFirst();
@@ -363,7 +363,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			idsList = null;
 			idsToDelete = null;			
 		}
+		
 		cursor.close();
+	
 	
 		return returnList;
 		
@@ -482,6 +484,11 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public Achievments(String AchievmentsID)
 	{
 		this.AchievmentsID = AchievmentsID;
+	}
+
+	public Achievments(Achievments item)
+	{
+		initWithObject(item);
 	}
 
 	/**

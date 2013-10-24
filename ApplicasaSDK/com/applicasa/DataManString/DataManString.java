@@ -335,7 +335,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public static List<DataManString> buildDataManStringFromCursor(String requestID ,Cursor cursor)
 	{
 		List<DataManString> returnList = new ArrayList<DataManString>();
-		if (cursor == null || cursor.getCount() == 0 ) {}// nothing received
+		if (cursor == null || cursor.getCount() == 0 ) {return returnList; }// nothing received
 		else
 		{
 			cursor.moveToFirst();
@@ -363,7 +363,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			idsList = null;
 			idsToDelete = null;			
 		}
+		
 		cursor.close();
+	
 	
 		return returnList;
 		
@@ -482,6 +484,11 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public DataManString(String DataManStringID)
 	{
 		this.DataManStringID = DataManStringID;
+	}
+
+	public DataManString(DataManString item)
+	{
+		initWithObject(item);
 	}
 
 	/**

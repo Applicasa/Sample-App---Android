@@ -337,7 +337,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public static List<Chat> buildChatFromCursor(String requestID ,Cursor cursor)
 	{
 		List<Chat> returnList = new ArrayList<Chat>();
-		if (cursor == null || cursor.getCount() == 0 ) {}// nothing received
+		if (cursor == null || cursor.getCount() == 0 ) {return returnList; }// nothing received
 		else
 		{
 			cursor.moveToFirst();
@@ -365,7 +365,9 @@ static RequestCallback callbackHandler = new RequestCallback() {
 			idsList = null;
 			idsToDelete = null;			
 		}
+		
 		cursor.close();
+	
 	
 		return returnList;
 		
@@ -487,6 +489,11 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public Chat(String ChatID)
 	{
 		this.ChatID = ChatID;
+	}
+
+	public Chat(Chat item)
+	{
+		initWithObject(item);
 	}
 
 	/**

@@ -34,7 +34,6 @@ import com.example.appvilleegg.adapters.DynamicArrayAdapter;
 
 public class DynamicListActivity extends ListActivity implements OnItemClickListener{
 
-	static Activity mActivity;
 	 ProgressBar bar;
 	 
 	  private DynamicArrayAdapter mDynamicArrayAdapter;
@@ -44,7 +43,6 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dynamic_list_holder);
-		mActivity = this;
 		bar = (ProgressBar)findViewById(R.id.progressBar);
 		
 		LiSession.sessionStart(this);
@@ -71,14 +69,14 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 			public void onGetDynamicFailure(LiErrorHandler error) {
 				// TODO Auto-generated method stub
 				bar.setVisibility(View.INVISIBLE);
-				Toast.makeText(mActivity, "Error occured "+ error.getMessage(), Toast.LENGTH_LONG).show();
+				Toast.makeText(DynamicListActivity.this, "Error occured "+ error.getMessage(), Toast.LENGTH_LONG).show();
 			}
 			
 			public void onGetDynamicComplete(List<Dynamic> items) {
 				// TODO Auto-generated method stub
 				list = items;
 				bar.setVisibility(View.INVISIBLE);
-				mDynamicArrayAdapter = new DynamicArrayAdapter(mActivity,list );
+				mDynamicArrayAdapter = new DynamicArrayAdapter(DynamicListActivity.this,list );
 			 	setListAdapter(mDynamicArrayAdapter);
 			}
 		});
@@ -110,11 +108,11 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 	 */
 	private void createDialog(final Dynamic item) {
 		// TODO Auto-generated method stub
-			  final AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-			  	LinearLayout lila1= new LinearLayout(mActivity);
+			  final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+			  	LinearLayout lila1= new LinearLayout(this);
 			  	lila1.setOrientation(1); //1 is for vertical orientation
-			    final EditText text = new EditText(mActivity);
-			    final EditText number = new EditText(mActivity);
+			    final EditText text = new EditText(this);
+			    final EditText number = new EditText(this);
 			    number.setInputType(InputType.TYPE_CLASS_NUMBER);
 			  	lila1.addView(text);
 			  	lila1.addView(number);
@@ -154,17 +152,17 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 								// TODO Auto-generated method stub
 								dialog.dismiss();
 								Log.e("Failed Saving Item", arg0.getMessage());
-								Toast.makeText(mActivity, "Failed Saving Item "+arg0.ErrorMessage, Toast.LENGTH_LONG).show();
+								Toast.makeText(DynamicListActivity.this, "Failed Saving Item "+arg0.ErrorMessage, Toast.LENGTH_LONG).show();
 								Log.e("Failed Saving Item", arg0.getMessage());
 							}
 							
 							public void onComplete(ApplicasaResponse arg0, String arg1,
 									RequestAction arg2, String arg3, LiObject arg4) {
 								// TODO Auto-generated method stub
-								Toast.makeText(mActivity, "Item Saved", Toast.LENGTH_LONG).show();
+								Toast.makeText(DynamicListActivity.this, "Item Saved", Toast.LENGTH_LONG).show();
 								
 								Cursor cursor = LiObjRequest.GetRawSQL("Select * from tbl_Dynamic where DynamicID =?", new String[]{arg3});
-								Toast.makeText(mActivity, String.valueOf(cursor.getCount()), Toast.LENGTH_LONG).show();
+								Toast.makeText(DynamicListActivity.this, String.valueOf(cursor.getCount()), Toast.LENGTH_LONG).show();
 								
 								refreshView();
 								dialog.dismiss();
@@ -191,14 +189,14 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 										// TODO Auto-generated method stub
 										dialog.dismiss();
 										Log.e("Failed deleteing Item", arg0.getMessage());
-										Toast.makeText(mActivity, "Failed deleteing Item "+arg0.ErrorMessage, Toast.LENGTH_LONG).show();
+										Toast.makeText(DynamicListActivity.this, "Failed deleteing Item "+arg0.ErrorMessage, Toast.LENGTH_LONG).show();
 										Log.e("Failed Saving Item", arg0.getMessage());
 									}
 									
 									public void onComplete(ApplicasaResponse arg0, String arg1,
 											RequestAction arg2, String arg3, LiObject arg4) {
 										// TODO Auto-generated method stub
-										Toast.makeText(mActivity, "Item Deleted", Toast.LENGTH_LONG).show();
+										Toast.makeText(DynamicListActivity.this, "Item Deleted", Toast.LENGTH_LONG).show();
 										refreshView();
 										dialog.dismiss();
 									}
@@ -211,12 +209,12 @@ public class DynamicListActivity extends ListActivity implements OnItemClickList
 	
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		LiSession.sessionEnd(mActivity);
+		LiSession.sessionEnd(this);
 		super.onPause();
 	}
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		LiSession.sessionResume(mActivity);
+		LiSession.sessionResume(this);
 		super.onResume();
 	}
 }

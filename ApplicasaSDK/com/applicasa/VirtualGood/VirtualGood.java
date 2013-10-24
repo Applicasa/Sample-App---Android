@@ -381,6 +381,11 @@ public class VirtualGood extends VirtualGoodData {
 		this.VirtualGoodID = VirtualGoodID;
 	}
 
+	public VirtualGood(VirtualGood item)
+	{
+		initWithObject(item);
+	}
+
 	/**
 	* Init Object with Cursor
 	* @param corsor

@@ -10,11 +10,22 @@ Applicasa is a Mobile Game Management Platform that provides developers a series
 
 Egg is an imagined game that shows common scenarios and code samples that developers can learn from and emulate in their own applications.
 
-### What New (24.1.2013):
-1. Implementation of new Facebook version
-2. Bug fixes
-3. Chat messages after finding users by radius
+### What New (24.10.2013):
+1. Custom events for monetization.
+2. More Ad networks to the monetization section.
+3. Send delayed push messages
+4. Bug Fix
  
+## Raise Custom events:
+``
+Sample app Introduces the variety of Ad networks, All you need to do is:
+
+A. Go to MainActivity.
+
+B. Set the value of the parameter "customEvent" from the list stated in the activity.
+
+C. Build & Run, and press on the "Raise Promotions" button
+``
 
 ### What New:
 1. Implementation of Android's New In app Billing (ver 3)
@@ -44,9 +55,25 @@ As usual, you get started by cloning the project to your local machine:
 $ git://github.com/Applicasa/Sample-App---Android.git
 ```
 
+## Prerequisites
+1. Add the facebook library to your worksapce 
+```
+https://developers.facebook.com/docs/android/
+```
+
+
 ### Open and Run Project in eclipse
 
-Now that you have cloned the repo, open the project up in Eclipse. At this point, you *should* be able to build and run the project in the Android device or emulator.
+Now that you have cloned the repo:
+1. open the project up in Eclipse. 
+2. Go to the project and link it with the Facebook library
+3. Import the SupersonicAds to your workspace.
+	A. File -> Import -> "Existing Projects into your workspace"
+	B. Go to the path where you cloned the Repo: (repoFolder)\AdNetwork\SSA_production-sdk
+	C. Link "AppVille" with the SupersonicAds SDK
+	
+At this point, you *should* be able to build and run the project in the Android device or emulator.
+
 
 ### Making Test IAP Purchases
 

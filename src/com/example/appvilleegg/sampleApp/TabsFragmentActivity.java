@@ -57,7 +57,6 @@ import com.example.appvilleegg.main.MainActivity;
  */
 public class TabsFragmentActivity extends FragmentActivity implements TabHost.OnTabChangeListener, LiPromotionResultCallback{
 
-	   private static final String TAG = TabsFragmentActivity.class.getCanonicalName();
 	   private  TextView 				mBalanceMain;
 	   private  TextView 				mBalanceSecondary;
 	   private  ProgressBar			mProgressBar;

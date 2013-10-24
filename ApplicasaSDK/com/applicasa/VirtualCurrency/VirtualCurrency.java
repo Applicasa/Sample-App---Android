@@ -139,6 +139,11 @@ public class VirtualCurrency extends VirtualCurrencyData {
 		this.VirtualCurrencyID = VirtualCurrencyID;
 	}
 
+	public VirtualCurrency(VirtualCurrency item)
+	{
+		initWithObject(item);
+	}
+
 	/**
 	* Init Object with Cursor
 	* @param corsor

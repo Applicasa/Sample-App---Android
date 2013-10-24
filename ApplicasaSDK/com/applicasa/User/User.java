@@ -324,7 +324,7 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public static List<User> buildUserFromCursor(String requestID ,Cursor cursor)
 	{
 		List<User> returnList = new ArrayList<User>();
-		if (cursor.getCount() == 0 ) {}// nothing received
+		if (cursor == null || cursor.getCount() == 0 ) {return returnList; }// nothing received
 		else
 		{
 			cursor.moveToFirst();
@@ -783,6 +783,11 @@ static RequestCallback callbackHandler = new RequestCallback() {
 	public User(String UserID)
 	{
 		this.UserID = UserID;
+	}
+
+	public User(User item)
+	{
+		initWithObject(item);
 	}
 
 	/**
