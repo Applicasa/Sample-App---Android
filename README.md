@@ -17,7 +17,7 @@ Egg is an imagined game that shows common scenarios and code samples that develo
 4. Bug Fix
  
 ## Raise Custom events:
-``
+```
 Sample app Introduces the variety of Ad networks, All you need to do is:
 
 A. Go to MainActivity.
@@ -25,7 +25,7 @@ A. Go to MainActivity.
 B. Set the value of the parameter "customEvent" from the list stated in the activity.
 
 C. Build & Run, and press on the "Raise Promotions" button
-``
+```
 
 ### What New:
 1. Implementation of Android's New In app Billing (ver 3)
