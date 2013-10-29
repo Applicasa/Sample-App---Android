@@ -256,20 +256,21 @@ containing a value of this type.
         public static final int rockfelle=0x7f02004e;
         public static final int sender=0x7f02004f;
         public static final int sergeantx=0x7f020050;
-        public static final int store_tab_selector=0x7f020051;
-        public static final int taxpayer=0x7f020052;
-        public static final int title_dnamic_content=0x7f020053;
-        public static final int title_login=0x7f020054;
-        public static final int title_my_profile=0x7f020055;
-        public static final int title_register=0x7f020056;
-        public static final int title_store=0x7f020057;
-        public static final int turist=0x7f020058;
-        public static final int us_private=0x7f020059;
-        public static final int x_btn=0x7f02005a;
-        public static final int xbutton=0x7f02005b;
-        public static final int zombie=0x7f02005c;
-        public static final int zoomin=0x7f02005d;
-        public static final int zoomout=0x7f02005e;
+        public static final int showpromotion=0x7f020051;
+        public static final int store_tab_selector=0x7f020052;
+        public static final int taxpayer=0x7f020053;
+        public static final int title_dnamic_content=0x7f020054;
+        public static final int title_login=0x7f020055;
+        public static final int title_my_profile=0x7f020056;
+        public static final int title_register=0x7f020057;
+        public static final int title_store=0x7f020058;
+        public static final int turist=0x7f020059;
+        public static final int us_private=0x7f02005a;
+        public static final int x_btn=0x7f02005b;
+        public static final int xbutton=0x7f02005c;
+        public static final int zombie=0x7f02005d;
+        public static final int zoomin=0x7f02005e;
+        public static final int zoomout=0x7f02005f;
     }
     public static final class id {
         public static final int btn_DynamicContent=0x7f060049;

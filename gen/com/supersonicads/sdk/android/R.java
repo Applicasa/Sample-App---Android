@@ -11,9 +11,9 @@ public final class R {
 		public static final int ic_launcher = 0x7f020042;
 		public static final int pause = 0x7f020049;
 		public static final int play = 0x7f02004a;
-		public static final int xbutton = 0x7f02005b;
-		public static final int zoomin = 0x7f02005d;
-		public static final int zoomout = 0x7f02005e;
+		public static final int xbutton = 0x7f02005c;
+		public static final int zoomin = 0x7f02005e;
+		public static final int zoomout = 0x7f02005f;
 	}
 	public static final class id {
 		public static final int error_console = 0x7f060022;

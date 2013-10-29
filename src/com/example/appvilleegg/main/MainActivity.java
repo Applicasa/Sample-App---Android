@@ -65,7 +65,7 @@ public class MainActivity extends Activity implements LiCallbackInitialize {
 	 
 	 **/
 	
-	private static String customEvent = "OfferwallMainCurrency";
+	private static String customEvent = "MMedia";
 	
 	List<Dynamic> arrDynamic;
 	ListView lvMain;
