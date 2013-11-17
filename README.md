@@ -65,9 +65,11 @@ https://developers.facebook.com/docs/android/
 ### Open and Run Project in eclipse
 
 Now that you have cloned the repo:
-1. open the project up in Eclipse. 
+1. open the project up in Eclipse.
+
 2. Go to the project and link it with the Facebook library
-3. Import the SupersonicAds to your workspace. ** Not needed, SupersonicAds jar was added directly to the libs folder for you convenience. **
+
+3. Import the SupersonicAds to your workspace. **NOTE:**  ** Not needed, SupersonicAds jar was added directly to the libs folder for you convenience. **
   A. File -> Import -> "Existing Projects into your workspace"
   B. Go to the path where you cloned the Repo: (repoFolder)\AdNetwork\SSA_production-sdk
   C. Link "AppVille" with the SupersonicAds SDK
