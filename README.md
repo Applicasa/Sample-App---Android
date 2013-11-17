@@ -65,13 +65,18 @@ https://developers.facebook.com/docs/android/
 ### Open and Run Project in eclipse
 
 Now that you have cloned the repo:
+
 1. open the project up in Eclipse.
 
 2. Go to the project and link it with the Facebook library
 
-3. Import the SupersonicAds to your workspace. **NOTE:**  ** Not needed, SupersonicAds jar was added directly to the libs folder for you convenience. **
+3. Import the SupersonicAds to your workspace. 
+**NOTE:** Not needed, SupersonicAds jar was added directly to the libs folder for you convenience. 
+
   A. File -> Import -> "Existing Projects into your workspace"
+  
   B. Go to the path where you cloned the Repo: (repoFolder)\AdNetwork\SSA_production-sdk
+  
   C. Link "AppVille" with the SupersonicAds SDK
 	
 At this point, you *should* be able to build and run the project in the Android device or emulator.
@@ -114,7 +119,7 @@ All customization of IAP items, Promotions, Virtual Currencies, Virtual Goods, a
 
 The screenshot below is one of the steps required to create a promotion. Here it's a promo in the form of a deal, offering 20% off on another virtual good. This promo is triggered once the player has made his/her first purchase. Our promotional tool offers many different events that can trigger these kinds of promotions during the game.
 
-<img src="https://github.com/Applicasa/Sample-App-iOS/blob/stable/readme_imgs/Offer.png"/>
+<img src="https://raw.github.com/Applicasa/Sample-App-iOS/stable/readme_imgs/Offer.png"/>
 
 ### A Word on Branches
 
