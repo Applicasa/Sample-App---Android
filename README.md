@@ -67,10 +67,10 @@ https://developers.facebook.com/docs/android/
 Now that you have cloned the repo:
 1. open the project up in Eclipse. 
 2. Go to the project and link it with the Facebook library
-3. Import the SupersonicAds to your workspace.
-	A. File -> Import -> "Existing Projects into your workspace"
-	B. Go to the path where you cloned the Repo: (repoFolder)\AdNetwork\SSA_production-sdk
-	C. Link "AppVille" with the SupersonicAds SDK
+3. Import the SupersonicAds to your workspace. ** Not needed, SupersonicAds jar was added directly to the libs folder for you convenience. **
+  A. File -> Import -> "Existing Projects into your workspace"
+  B. Go to the path where you cloned the Repo: (repoFolder)\AdNetwork\SSA_production-sdk
+  C. Link "AppVille" with the SupersonicAds SDK
 	
 At this point, you *should* be able to build and run the project in the Android device or emulator.
 
@@ -108,11 +108,11 @@ Three types of Promotions can be used in your game:
 
 All customization of IAP items, Promotions, Virtual Currencies, Virtual Goods, and custom data are handled via the Applicsa web console. [Sign up for a private beta account](http://applicasa.com/#Register) to experience more.
 
-<img src="https://raw.github.com/Applicasa/Sample-App---iOS/stable/readme_imgs/web-console.png"/>
+<img src="https://raw.github.com/Applicasa/Sample-App-iOS/stable/readme_imgs/web-console.png"/>
 
 The screenshot below is one of the steps required to create a promotion. Here it's a promo in the form of a deal, offering 20% off on another virtual good. This promo is triggered once the player has made his/her first purchase. Our promotional tool offers many different events that can trigger these kinds of promotions during the game.
 
-<img src="https://raw.github.com/Applicasa/Sample-App---iOS/stable/readme_imgs/Offer.png"/>
+<img src="https://github.com/Applicasa/Sample-App-iOS/blob/stable/readme_imgs/Offer.png"/>
 
 ### A Word on Branches
 
@@ -123,4 +123,4 @@ This project was build on JDK 1.6
 
 ### Having Trouble?
 
-Please feel free to submit issues with any bugs or other unforseen issues you experience. We work diligently to ensure that the ```stable``` branch is always bug-free and easy to clone and run from Xcode. If you experience problems, open an issue describing the problem and how to reproduce it, and we'll be sure to take a look at it.
+Please feel free to submit issues with any bugs or other unforseen issues you experience. We work diligently to ensure that the ```master``` branch is always bug-free and easy to clone and run from Eclipse. If you experience problems, open an issue describing the problem and how to reproduce it, and we'll be sure to take a look at it.
