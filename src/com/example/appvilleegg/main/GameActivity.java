@@ -14,7 +14,7 @@ import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.promotion.sessions.LiSessionManager.LiGameResult;
 
 import com.applicasa.ApplicasaManager.LiSession;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 
 public class GameActivity extends Activity {
 

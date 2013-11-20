@@ -3,7 +3,6 @@ package com.example.appvilleegg.sampleApp;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +24,7 @@ import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.ApplicasaManager.LiUserLocation;
 import com.applicasa.User.User;
 import com.applicasa.User.UserData.LiFieldUser;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.UserRadiusArrayAdapter;
 
 public class UsersRadiusListActivity extends ListActivity implements LiLocationCallback{

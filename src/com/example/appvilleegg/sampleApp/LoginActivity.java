@@ -21,7 +21,7 @@ import applicasa.kit.facebook.LiFacebookResponse.LiFacebookResponseLogin;
 
 import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.User.User;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
  
 public class LoginActivity extends Activity  {
  

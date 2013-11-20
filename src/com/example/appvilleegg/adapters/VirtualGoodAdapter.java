@@ -20,7 +20,7 @@ import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 
 import com.applicasa.VirtualGood.VirtualGood;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 
 public class VirtualGoodAdapter extends BaseAdapter {
 

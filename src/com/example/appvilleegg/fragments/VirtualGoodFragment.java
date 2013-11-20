@@ -3,7 +3,6 @@ package com.example.appvilleegg.fragments;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ import applicasa.kit.IAP.Callbacks.LiCallbackVirtualGoodRequest;
 
 import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.VirtualGood.VirtualGood;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.VirtualGoodAdapter;
 import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
 

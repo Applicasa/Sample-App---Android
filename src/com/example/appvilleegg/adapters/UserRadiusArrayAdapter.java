@@ -20,7 +20,7 @@ import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 
 import com.applicasa.User.User;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 
 public class UserRadiusArrayAdapter extends ArrayAdapter<User> {
 	private static UserRadiusArrayAdapter adapter;

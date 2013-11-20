@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /Users/bennyd/Desktop/Generators/SampleApp/Sample-App---Android/ApplicasaSDK/com/android/vending/billing/IInAppBillingService.aidl
+ * Original file: C:\\Users\\Lior\\Desktop\\GIT_Generators\\Appville-Android-public\\ApplicasaSDK\\com\\android\\vending\\billing\\IInAppBillingService.aidl
  */
 package com.android.vending.billing;
 /**

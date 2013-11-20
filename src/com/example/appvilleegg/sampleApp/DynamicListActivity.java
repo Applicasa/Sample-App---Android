@@ -2,7 +2,6 @@ package com.example.appvilleegg.sampleApp;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -29,7 +28,7 @@ import com.applicasa.ApplicasaManager.LiCallbackQuery.LiDynamicGetArrayCallback;
 import com.applicasa.ApplicasaManager.LiManager.LiObject;
 import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.Dynamic.Dynamic;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.DynamicArrayAdapter;
 
 public class DynamicListActivity extends ListActivity implements OnItemClickListener{

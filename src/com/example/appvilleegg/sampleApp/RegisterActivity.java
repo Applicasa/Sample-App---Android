@@ -35,7 +35,7 @@ import com.applicasa.Dynamic.Dynamic;
 import com.applicasa.Dynamic.DynamicData.LiFieldDynamic;
 import com.applicasa.User.User;
 import com.applicasa.User.UserData.LiFieldUser;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 
 public class RegisterActivity extends Activity  {
  

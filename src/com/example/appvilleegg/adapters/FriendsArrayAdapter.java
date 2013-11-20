@@ -26,7 +26,7 @@ import applicasa.LiCore.LiFileCacher;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 import applicasa.kit.facebook.LiObjFacebookFriends;
 
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 import com.example.appvilleegg.sampleApp.FriendsListActivity;
 import com.facebook.Session;
 import com.facebook.widget.WebDialog;

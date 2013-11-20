@@ -29,7 +29,7 @@ import applicasa.LiJson.LiJSONException;
 import com.applicasa.ApplicasaManager.LiGCMPushMessage;
 import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.User.User;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 
 public class ChatActivity extends Activity implements OnClickListener {
 

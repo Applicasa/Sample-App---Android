@@ -1,6 +1,5 @@
 package com.example.appvilleegg.sampleApp;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import applicasa.kit.facebook.LiObjFacebookFriends;
 
 import com.applicasa.ApplicasaManager.LiSession;
 import com.applicasa.User.User;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.FriendsArrayAdapter;
 import com.facebook.Session;
 import com.facebook.Session.NewPermissionsRequest;
@@ -37,39 +36,7 @@ public class FriendsListActivity extends ListActivity {
 		
 		LiSession.sessionStart(this);
 		
-		
-		/**
-		 * see if the user is register to facebook, if so retrieves his friends. If not, show an error Via toast message
-		 */
 		login();
-		
-		/*
-		if (User.getCurrentUser().UserIsRegisteredFacebook)
-		 {
-			 User.getFacebookFriendsWithUser(this,new LiFacebookResponseGetFriends() {
-				
-				public void onGetFriendsResponse(LiObjResponse requestResponse,
-						List<LiObjFacebookFriends> friendsList) {
-					// TODO Auto-generated method stub
-					adpater = new FriendsArrayAdapter(FriendsListActivity.this, friendsList);
-					setListAdapter(adpater);
-					bar.setVisibility(View.INVISIBLE);
-				}
-				
-				public void onFBError(LiErrorHandler error) {
-					// TODO Auto-generated method stub
-					Toast.makeText(FriendsListActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-					finish();
-				}
-			});
-		 }
-		else
-		{
-			bar.setVisibility(View.INVISIBLE);
-			Toast.makeText(FriendsListActivity.this, "please login to facebook", Toast.LENGTH_LONG).show();
-			finish();
-		}
-		*/
 	}
 	
 	protected void onPause() {

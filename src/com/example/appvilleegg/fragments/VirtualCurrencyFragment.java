@@ -1,6 +1,5 @@
 package com.example.appvilleegg.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import applicasa.LiCore.LiLogger;
 
 import com.applicasa.ApplicasaManager.LiStore;
 import com.applicasa.VirtualCurrency.VirtualCurrency;
-import com.example.appvilleegg.R;
+import com.appvilleegg.R;
 import com.example.appvilleegg.adapters.VirtualCurrencyAdapter;
 import com.example.appvilleegg.sampleApp.TabsFragmentActivity;
 
