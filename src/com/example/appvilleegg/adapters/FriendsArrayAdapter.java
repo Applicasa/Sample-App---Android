@@ -6,15 +6,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,18 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import applicasa.LiCore.LiErrorHandler;
 import applicasa.LiCore.LiFileCacher;
-import applicasa.LiCore.LiLogger;
 import applicasa.LiCore.communication.LiCallback.LiCallbackGetCachedFile;
 import applicasa.kit.facebook.LiObjFacebookFriends;
 
-import com.applicasa.ApplicasaManager.LiConfig;
 import com.example.appvilleegg.R;
-import com.facebook.FacebookRequestError;
-import com.facebook.HttpMethod;
-import com.facebook.Request;
-import com.facebook.RequestAsyncTask;
-import com.facebook.Response;
+import com.example.appvilleegg.sampleApp.FriendsListActivity;
 import com.facebook.Session;
+import com.facebook.widget.WebDialog;
 
 public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 	private static FriendsArrayAdapter adapter;
@@ -144,56 +135,13 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 					
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						
-							 Session session = Session.getActiveSession();
-							 
-							 if (session == null)
-							 {
-								 LiLogger.logInfo(TAG , "Facebook session is null");
-								 if (LiConfig.getFbApplicationKey().startsWith("<FB_APPLICATION_KEY>"))
-					        	 {	// fb id was added as meta data
-									 session = Session.openActiveSession(mActivity,true,null);	        		
-					        	 }
-					        	else
-					        	{
-					        		session = new Session.Builder(mActivity).setApplicationId(LiConfig.getFbApplicationKey()).build();
-					        		Session.setActiveSession(session);
-					        	}
-							 }
-							 
-						     Bundle params = new Bundle();
-						     params.putString("message", "Download AppVille");
-						     params.putString("name", "AppVille");
-						     params.putString("link", "https://play.google.com/store/apps/details?id=com.appvilleegg");
-						     params.putString("description", "AppVille invitation");
-						     params.putString("picture", "https://lh6.ggpht.com/C_at3-AXnhBCMTVIvdn7aZghbE_cO3Rkwv9DwxRuk85mOHIlx-4nIF2LrByGL6pmO3RK=w124");
-						     
-						     Request.Callback callback= new Request.Callback() {
-						            public void onCompleted(Response response) {
-						                JSONObject graphResponse = response
-						                                           .getGraphObject()
-						                                           .getInnerJSONObject();
-						                String postId = null;
-						                try {
-						                    postId = graphResponse.getString("id");
-						                } catch (JSONException e) {
-						                    Log.i(TAG, "JSON error "+ e.getMessage());
-						                }
-						                FacebookRequestError error = response.getError();
-						                if (error != null) {
-						                    Toast.makeText(getContext(), error.getErrorMessage(), Toast.LENGTH_SHORT).show();
-						                    } else {
-						                        Toast.makeText(getContext(), "Invitation sent", Toast.LENGTH_LONG).show();
-						                }
-						            }
-						        };
-
-						        
-						        Request request = new Request(session, friend.mFacebookID+"/feed", params, 
-						                              HttpMethod.POST, callback);
-
-						        RequestAsyncTask task = new RequestAsyncTask(request);
-						        task.execute();
+	
+					 if (!FriendsListActivity.canPost())
+					 {
+						 Toast.makeText(mActivity, "Please add publish permission", Toast.LENGTH_LONG).show();
+						 return;
+					 }
+					 	publishFeedDialog(friend.mFacebookID);
 					}
 				});
 			}
@@ -234,7 +182,28 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 		return friends;
 	}
 	
-	
+	private void publishFeedDialog(String friendsFbId) {
+	    try{
+	    	 Bundle params = new Bundle();
+			 params.putString("message", "Download AppVille");
+			 params.putString("name", "AppVille");
+			 params.putString("link", "https://play.google.com/store/apps/details?id=com.appvilleegg");
+			 params.putString("description", "AppVille invitation");
+			 params.putString("caption", "Come and Join me...");//caption 
+			 params.putString("picture", "https://lh6.ggpht.com/C_at3-AXnhBCMTVIvdn7aZghbE_cO3Rkwv9DwxRuk85mOHIlx-4nIF2LrByGL6pmO3RK=w124");
+			 params.putString("to", friendsFbId);
+	        WebDialog feedDialog = (
+	                new WebDialog.FeedDialogBuilder(mActivity,
+	                    Session.getActiveSession(),
+	                    params))
+	                .setOnCompleteListener(null)
+	                .build();
+	            feedDialog.show();
+	}
+	catch(Exception e){
+	    e.printStackTrace();
+	}
+	}
 	
 	/**
 	 * Notify the adapter that our data has changed so it can
@@ -261,5 +230,9 @@ public class FriendsArrayAdapter extends ArrayAdapter<LiObjFacebookFriends> {
 	    return true;
 	}
 	
+	
+
+	
+
 
 }

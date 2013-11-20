@@ -79,7 +79,12 @@ Now that you have cloned the repo:
   
   C. Link "AppVille" with the SupersonicAds SDK
 	
+
+4. Click on the project name "AppVilleEgg" -> "Android Tools" -> "Add Support library"
+
 At this point, you *should* be able to build and run the project in the Android device or emulator.
+
+if you are facing issues see the Help section "Having Trouble?"
 
 
 ### Making Test IAP Purchases
@@ -129,5 +134,25 @@ Egg is, like any Github project, a constant work-in-progress. This means that yo
 This project was build on JDK 1.6
 
 ### Having Trouble?
+
+1. If you get errors in classes FriendsArrayAdapter, make sure you have added the Facebook SDK and linked it to the project:
+
+Right click on the project name "AppVilleEgg" -> "properties" - > "Android" -> in the library section mark the Facebook project.
+
+2. If you try to login with Facebook and you have native Facebook app, you will receive an error for invalid hashkey, please use the debug.keystore OR remove the native Facebook app to login via webpage.
+
+how to change the KeyStore:
+On Windows:
+
+Click on "Window" tab - > "Preferences" - > "Android" - > "Build" and set the custom debug keystore
+
+on Mac:
+
+Click on "ADT" tab - > "Preferences" - > "Android" - > "Build" and set the custom debug keystore
+
+3. In this version you can purchase only the test item, To purchase real items you should download the version from google play
+
+
+
 
 Please feel free to submit issues with any bugs or other unforseen issues you experience. We work diligently to ensure that the ```master``` branch is always bug-free and easy to clone and run from Eclipse. If you experience problems, open an issue describing the problem and how to reproduce it, and we'll be sure to take a look at it.
